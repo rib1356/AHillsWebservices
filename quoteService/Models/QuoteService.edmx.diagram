@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="18e33c9235b24a73a8c1ad6322eed945" Name="Diagram1">
+        <EntityTypeShape EntityType="HillsStock1Model.CustomerInformation" Width="2" PointX="1" PointY="0.875" />
+        <EntityTypeShape EntityType="HillsStock1Model.PlantsForQuote" Width="1.5" PointX="6.625" PointY="1" />
+        <EntityTypeShape EntityType="HillsStock1Model.Quote" Width="1.5" PointX="4.375" PointY="1" />
+        <AssociationConnector Association="HillsStock1Model.FK_PlantsForQuote_Quotes" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

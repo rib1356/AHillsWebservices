@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HillsStock1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CustomerInformation">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CustomerTel" Type="nvarchar" MaxLength="15" />
+          <Property Name="CustomerAddress" Type="nvarchar(max)" />
+          <Property Name="CustomerEmail" Type="nvarchar" MaxLength="75" />
+          <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PlantsForQuote">
+          <Key>
+            <PropertyRef Name="PlantsForQuoteId" />
+          </Key>
+          <Property Name="PlantsForQuoteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlantName" Type="varchar(max)" />
+          <Property Name="FormSize" Type="varchar(max)" />
+          <Property Name="Comment" Type="varchar(max)" />
+          <Property Name="Price" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="QuoteId" Type="int" />
+        </EntityType>
+        <EntityType Name="Quotes">
+          <Key>
+            <PropertyRef Name="QuoteId" />
+          </Key>
+          <Property Name="QuoteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="QuoteDate" Type="date" />
+          <Property Name="SiteReference" Type="nvarchar(max)" />
+          <Property Name="QuotePrice" Type="int" />
+          <Property Name="QuoteExpiryDate" Type="date" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PlantsForQuote_Quotes">
+          <End Role="Quotes" Type="Self.Quotes" Multiplicity="0..1" />
+          <End Role="PlantsForQuote" Type="Self.PlantsForQuote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quotes">
+              <PropertyRef Name="QuoteId" />
+            </Principal>
+            <Dependent Role="PlantsForQuote">
+              <PropertyRef Name="QuoteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HillsStock1ModelStoreContainer">
+          <EntitySet Name="CustomerInformation" EntityType="Self.CustomerInformation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantsForQuote" EntityType="Self.PlantsForQuote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Quotes" EntityType="Self.Quotes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PlantsForQuote_Quotes" Association="Self.FK_PlantsForQuote_Quotes">
+            <End Role="Quotes" EntitySet="Quotes" />
+            <End Role="PlantsForQuote" EntitySet="PlantsForQuote" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HillsStock1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HillsStock1Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CustomerInformations" EntityType="HillsStock1Model.CustomerInformation" />
+          <EntitySet Name="PlantsForQuotes" EntityType="HillsStock1Model.PlantsForQuote" />
+          <EntitySet Name="Quotes" EntityType="HillsStock1Model.Quote" />
+          <AssociationSet Name="FK_PlantsForQuote_Quotes" Association="HillsStock1Model.FK_PlantsForQuote_Quotes">
+            <End Role="Quote" EntitySet="Quotes" />
+            <End Role="PlantsForQuote" EntitySet="PlantsForQuotes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CustomerInformation">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerTel" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerEmail" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PlantsForQuote">
+          <Key>
+            <PropertyRef Name="PlantsForQuoteId" />
+          </Key>
+          <Property Name="PlantsForQuoteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlantName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="FormSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="QuoteId" Type="Int32" />
+          <NavigationProperty Name="Quote" Relationship="HillsStock1Model.FK_PlantsForQuote_Quotes" FromRole="PlantsForQuote" ToRole="Quote" />
+        </EntityType>
+        <EntityType Name="Quote">
+          <Key>
+            <PropertyRef Name="QuoteId" />
+          </Key>
+          <Property Name="QuoteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="QuoteDate" Type="DateTime" Precision="0" />
+          <Property Name="SiteReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="QuotePrice" Type="Int32" />
+          <Property Name="QuoteExpiryDate" Type="DateTime" Precision="0" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PlantsForQuotes" Relationship="HillsStock1Model.FK_PlantsForQuote_Quotes" FromRole="Quote" ToRole="PlantsForQuote" />
+        </EntityType>
+        <Association Name="FK_PlantsForQuote_Quotes">
+          <End Type="HillsStock1Model.Quote" Role="Quote" Multiplicity="0..1" />
+          <End Type="HillsStock1Model.PlantsForQuote" Role="PlantsForQuote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quote">
+              <PropertyRef Name="QuoteId" />
+            </Principal>
+            <Dependent Role="PlantsForQuote">
+              <PropertyRef Name="QuoteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HillsStock1ModelStoreContainer" CdmEntityContainer="HillsStock1Entities">
+          <EntitySetMapping Name="CustomerInformations">
+            <EntityTypeMapping TypeName="HillsStock1Model.CustomerInformation">
+              <MappingFragment StoreEntitySet="CustomerInformation">
+                <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+                <ScalarProperty Name="CustomerTel" ColumnName="CustomerTel" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlantsForQuotes">
+            <EntityTypeMapping TypeName="HillsStock1Model.PlantsForQuote">
+              <MappingFragment StoreEntitySet="PlantsForQuote">
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="FormSize" ColumnName="FormSize" />
+                <ScalarProperty Name="PlantName" ColumnName="PlantName" />
+                <ScalarProperty Name="PlantsForQuoteId" ColumnName="PlantsForQuoteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Quotes">
+            <EntityTypeMapping TypeName="HillsStock1Model.Quote">
+              <MappingFragment StoreEntitySet="Quotes">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="QuoteExpiryDate" ColumnName="QuoteExpiryDate" />
+                <ScalarProperty Name="QuotePrice" ColumnName="QuotePrice" />
+                <ScalarProperty Name="SiteReference" ColumnName="SiteReference" />
+                <ScalarProperty Name="QuoteDate" ColumnName="QuoteDate" />
+                <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
