@@ -20,7 +20,8 @@ namespace quoteService.Models
         public string Comment { get; set; }
         public Nullable<int> Price { get; set; }
         public Nullable<int> Quantity { get; set; }
-        public Nullable<int> QuoteId { get; set; }
+        public int QuoteId { get; set; }
+        public bool Active { get; set; }
     
         public virtual Quote Quote { get; set; }
     }

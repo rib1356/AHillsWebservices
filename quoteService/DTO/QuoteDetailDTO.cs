@@ -10,6 +10,7 @@ namespace quoteService.DTO
         public int QuoteId { get; set; }
         public string CustomerRef { get; set; }
         public int TotalPrice { get; set; }
+        public string SiteRef { get; set; }
         public IEnumerable<QuoteDetailDTO> QuoteDetails { get; set; }
     }
 
@@ -27,11 +28,12 @@ namespace quoteService.DTO
 
     public class QuoteDetailDTO
     {
-        //public int PlantsForQuoteId { get; set; }
+        public int PlantForQuoteId { get; set; }
         public string PlantName { get; set; }
         public string FormSize { get; set; }
         public string Comment { get; set; }
         public int Price { get; set; }
         public int Quantity { get; set; }
+        public bool Active { get; set; }
     }
 }

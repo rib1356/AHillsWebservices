@@ -21,7 +21,7 @@ namespace BatchModel
         public string Location { get; set; }
         public int Quantity { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
-        public string Image { get; set; }
-        public Nullable<bool> Active { get; set; }
+        public Nullable<bool> ImageExists { get; set; }
+        public bool Active { get; set; }
     }
 }

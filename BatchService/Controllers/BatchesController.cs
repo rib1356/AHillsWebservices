@@ -37,7 +37,7 @@ namespace BatchService.Controllers
             return Ok(batch);
         }
 
-        // PUT: api/Batches/5
+        // PUT: api/Batches/id
         [ResponseType(typeof(void))]
         public IHttpActionResult PutBatch(int id, Batch batch)
         {
@@ -75,11 +75,11 @@ namespace BatchService.Controllers
             {
                 b.WholesalePrice = batch.WholesalePrice;
             }
-            if (batch.Image != null)
+            if (batch.ImageExists != null)
             {
-                b.Image = batch.Image;
+                b.ImageExists = batch.ImageExists;
             }
-            if (batch.Active != null)
+            if (batch.Active != null) //What to do about this
             {
                 b.Active = batch.Active;
             }

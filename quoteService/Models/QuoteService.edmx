@@ -26,7 +26,8 @@
           <Property Name="Comment" Type="varchar(max)" />
           <Property Name="Price" Type="int" />
           <Property Name="Quantity" Type="int" />
-          <Property Name="QuoteId" Type="int" />
+          <Property Name="QuoteId" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Quotes">
           <Key>
@@ -41,7 +42,7 @@
           <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_PlantsForQuote_Quotes">
-          <End Role="Quotes" Type="Self.Quotes" Multiplicity="0..1" />
+          <End Role="Quotes" Type="Self.Quotes" Multiplicity="1" />
           <End Role="PlantsForQuote" Type="Self.PlantsForQuote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Quotes">
@@ -95,8 +96,9 @@
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Price" Type="Int32" />
           <Property Name="Quantity" Type="Int32" />
-          <Property Name="QuoteId" Type="Int32" />
+          <Property Name="QuoteId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Quote" Relationship="HillsStock1Model.FK_PlantsForQuote_Quotes" FromRole="PlantsForQuote" ToRole="Quote" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Quote">
           <Key>
@@ -112,7 +114,7 @@
           <NavigationProperty Name="PlantsForQuotes" Relationship="HillsStock1Model.FK_PlantsForQuote_Quotes" FromRole="Quote" ToRole="PlantsForQuote" />
         </EntityType>
         <Association Name="FK_PlantsForQuote_Quotes">
-          <End Type="HillsStock1Model.Quote" Role="Quote" Multiplicity="0..1" />
+          <End Type="HillsStock1Model.Quote" Role="Quote" Multiplicity="1" />
           <End Type="HillsStock1Model.PlantsForQuote" Role="PlantsForQuote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Quote">
@@ -144,6 +146,7 @@
           <EntitySetMapping Name="PlantsForQuotes">
             <EntityTypeMapping TypeName="HillsStock1Model.PlantsForQuote">
               <MappingFragment StoreEntitySet="PlantsForQuote">
+                <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
@@ -167,7 +170,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
