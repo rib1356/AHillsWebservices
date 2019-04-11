@@ -16,7 +16,6 @@ namespace quoteService.DTO
 
     public class NewQuoteDTO
     {
-       
         public string CustomerRef { get; set; }
         public int TotalPrice { get; set; }
         public string Date { get; set; }

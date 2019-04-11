@@ -18,6 +18,8 @@ namespace BatchService.Controllers
     {
         private HillsStockEntities db = new HillsStockEntities();
 
+
+       
         // GET: api/Batches
         public IQueryable<Batch> GetBatches()
         {
@@ -110,6 +112,48 @@ namespace BatchService.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Route("Batches/edit")]
+        // PUT: api/Batches/edit
+        [ResponseType(typeof(void))]
+        public HttpResponseMessage PutBatchPrices(HttpRequestMessage request, IEnumerable<Models.BatchPriceDTO> BatchPrices)
+        {
+            if (!ModelState.IsValid)
+            {
+                return request.CreateResponse(HttpStatusCode.BadRequest, BatchPrices);
+            }
+
+            foreach (var batchPrice in BatchPrices) //Loop through the array of objects that hold BatchId, Price
+            {
+                var batchToChange = db.Batches.SingleOrDefault(b => b.Id == batchPrice.BatchId); //Get the batch by ID
+                if (batchToChange == null)
+                {
+                    return request.CreateResponse(HttpStatusCode.NotFound, BatchPrices); //If its not null
+                }
+
+                batchToChange.WholesalePrice = batchPrice.Price; //Change the batchPrice to the one that is coming in
+
+                db.Entry(batchToChange).State = EntityState.Modified; //Update the model
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var batchPrice in BatchPrices) //Loop through and to check if the batches exist
+                {
+                    if (!BatchExists(batchPrice.BatchId))
+                    {
+                        return request.CreateResponse(HttpStatusCode.NotFound, BatchPrices);
+                    }
+                }
+
+                throw;
+            }
+            return request.CreateResponse(HttpStatusCode.OK, BatchPrices);
         }
 
         // POST: api/Batches

@@ -21,6 +21,7 @@ namespace quoteService.Controllers
 
         private HillsStock1Entities db = new HillsStock1Entities();
 
+        #region getMethods
         // Will be used to display all of the quotes that are currently in the system.
         // GET: api/quote/all
         [Route("all")]
@@ -93,6 +94,8 @@ namespace quoteService.Controllers
         //    return "value";
         //}
 
+        #endregion getMethods
+
         // POST: api/quote
         [ResponseType(typeof(NewQuoteDTO))]
         public HttpResponseMessage Post(HttpRequestMessage request, [FromBody]NewQuoteDTO quote)
@@ -132,11 +135,13 @@ namespace quoteService.Controllers
                     db.PlantsForQuotes.Add(thisPlant);
                 }
                 db.SaveChanges();
-                return request.CreateResponse(HttpStatusCode.OK, quote);
+
+               
+                return request.CreateResponse(HttpStatusCode.OK, quoteId);
             }
             catch(Exception ex)
             {
-                return request.CreateResponse(HttpStatusCode.BadRequest, quote);
+                return request.CreateResponse(HttpStatusCode.BadRequest, ex);
             }
         }
 
@@ -174,27 +179,36 @@ namespace quoteService.Controllers
             
             foreach (var plant in quote.QuoteDetails) //Loop through the array of plants that come with the quote
             {
-                //Get a reference of the current plant that needs to be edited
-                var plantToChange = db.PlantsForQuotes.SingleOrDefault(p =>p.PlantsForQuoteId == plant.PlantForQuoteId);
-                if (plantToChange == null)
+                #region TestId if id greater than 0 edit plant otherwise add plant to database
+                if (plant.PlantForQuoteId > 0) //Check the incoming batches, if the PlantForQuoteId = -1, it means that it is a new plant on the quote
                 {
-                    return request.CreateResponse(HttpStatusCode.NotFound, quote);
-                }
-                if(plant.Comment != null)
+                    //Get a reference of the current plant that needs to be edited
+                    var plantToChange = db.PlantsForQuotes.SingleOrDefault(p => p.PlantsForQuoteId == plant.PlantForQuoteId);
+                    if (plantToChange == null)
+                    {
+                        return request.CreateResponse(HttpStatusCode.NotFound, quote);
+                    }
+                    if (plant.Comment != null)
+                    {
+                        plantToChange.Comment = plant.Comment;
+                    }
+                    if (plant.Price != 0)
+                    {
+                        plantToChange.Price = plant.Price;
+                    }
+                    if (plant.Quantity != 0)
+                    {
+                        plantToChange.Quantity = plant.Quantity;
+                    }
+                    //Change the active flag because unless deleted on client side, it will be true
+                    plantToChange.Active = plant.Active;
+                } else
                 {
-                    plantToChange.Comment = plant.Comment;
+                    addPlant(q, plant);
                 }
-                if(plant.Price != 0)
-                {
-                    plantToChange.Price = plant.Price;
-                }
-                if(plant.Quantity != 0)
-                {
-                    plantToChange.Quantity = plant.Quantity;
-                }
-                //Change the active flag because unless deleted on client side, it will be true
-                plantToChange.Active = plant.Active;
-                
+
+                #endregion //end if 
+
             }
 
             db.Entry(q).State = EntityState.Modified;
@@ -216,6 +230,19 @@ namespace quoteService.Controllers
             }
 
             return request.CreateResponse(HttpStatusCode.OK, quote);
+        }
+
+        private void addPlant(Quote q, QuoteDetailDTO plant)
+        {
+            var thisPlant = new PlantsForQuote();
+            thisPlant.Comment = plant.Comment;
+            thisPlant.FormSize = plant.FormSize;
+            thisPlant.PlantName = plant.PlantName;
+            thisPlant.Price = plant.Price;
+            thisPlant.Quantity = plant.Quantity;
+            thisPlant.Active = plant.Active;
+            thisPlant.QuoteId = q.QuoteId;
+            db.PlantsForQuotes.Add(thisPlant);
         }
 
 
