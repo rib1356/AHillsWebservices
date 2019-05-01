@@ -10,6 +10,7 @@ namespace ImportService.Controllers
     {
         public ActionResult Index()
         {
+            var fred = 0;
             return View();
         }
 
