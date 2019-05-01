@@ -41,11 +41,11 @@ namespace BatchService.Controllers
 
         // PUT: api/Batches/id
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutBatch(int id, Batch batch)
+        public HttpResponseMessage PutBatch(HttpRequestMessage request, int id, Batch batch)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return request.CreateResponse(HttpStatusCode.BadRequest, batch);
             }
 
             // get the object out of the db
@@ -88,7 +88,7 @@ namespace BatchService.Controllers
 
             if (id != batch.Id)
             {
-                return BadRequest();
+                return request.CreateResponse(HttpStatusCode.BadRequest, batch);
             }
 
             db.Entry(b).State = EntityState.Modified;
@@ -103,7 +103,7 @@ namespace BatchService.Controllers
             {
                 if (!BatchExists(id))
                 {
-                    return NotFound();
+                    return request.CreateResponse(HttpStatusCode.NotFound, batch);
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace BatchService.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return request.CreateResponse(HttpStatusCode.OK, batch);
         }
 
         [Route("Batches/edit")]
