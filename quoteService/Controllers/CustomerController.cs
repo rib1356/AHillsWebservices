@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Description;
 using quoteService.DTO;
 using quoteService.Models;
 
@@ -29,6 +30,7 @@ namespace quoteService.Controllers
                 CustomerTel = item.CustomerTel,
                 CustomerAddress = item.CustomerAddress,
                 CustomerEmail = item.CustomerEmail,
+                SageCustomer = item.SageCustomer,
             }).AsEnumerable();
             return dto;
         }
@@ -46,6 +48,7 @@ namespace quoteService.Controllers
                 CustomerTel = justOne.CustomerTel,
                 CustomerAddress = justOne.CustomerAddress,
                 CustomerEmail = justOne.CustomerEmail,
+                SageCustomer = justOne.SageCustomer,
             };
             return dto;
         }
@@ -57,8 +60,31 @@ namespace quoteService.Controllers
         }
 
         // POST: api/Customer
-        public void Post([FromBody]string value)
+        [ResponseType(typeof(CustomerDTO))]
+        public HttpResponseMessage PostCustomer(HttpRequestMessage request, CustomerDTO customer)
         {
+            if (!ModelState.IsValid)
+            {
+                return request.CreateResponse(HttpStatusCode.BadRequest, customer);
+            }
+            try
+            {
+                var newCust = new CustomerInformation();
+                newCust.CustomerReference = customer.CustomerReference;
+                newCust.CustomerName = customer.CustomerName;
+                newCust.CustomerTel = customer.CustomerTel;
+                newCust.CustomerAddress = customer.CustomerAddress;
+                newCust.CustomerEmail = customer.CustomerEmail;
+
+                db.CustomerInformations.Add(newCust);
+                db.SaveChanges();
+      
+                return request.CreateResponse(HttpStatusCode.OK, customer);
+            }
+            catch (Exception ex)
+            {
+                return request.CreateResponse(HttpStatusCode.BadRequest, ex);
+            }
         }
 
         // PUT: api/Customer/5

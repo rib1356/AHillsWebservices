@@ -13,6 +13,8 @@ namespace quoteService.DTO
         public string ExpiryDate { get; set; }
         public string SiteRef { get; set; }
         public int TotalPrice { get; set; }
+        public bool SalesOrder { get; set; }
+        public bool Retail { get; set; }
         public bool Active { get; set; }
     }
 }

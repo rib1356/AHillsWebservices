@@ -15,6 +15,7 @@
           <Property Name="CustomerAddress" Type="nvarchar(max)" />
           <Property Name="CustomerEmail" Type="nvarchar" MaxLength="75" />
           <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" />
+          <Property Name="SageCustomer" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -40,6 +41,8 @@
           <Property Name="QuotePrice" Type="int" />
           <Property Name="QuoteExpiryDate" Type="date" />
           <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="SalesOrder" Type="bit" Nullable="false" />
+          <Property Name="Retail" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_PlantsForQuote_Quotes">
           <End Role="Quotes" Type="Self.Quotes" Multiplicity="1" />
@@ -85,6 +88,7 @@
           <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CustomerEmail" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
           <Property Name="CustomerReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SageCustomer" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -112,6 +116,8 @@
           <Property Name="QuoteExpiryDate" Type="DateTime" Precision="0" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="PlantsForQuotes" Relationship="HillsStock1Model.FK_PlantsForQuote_Quotes" FromRole="Quote" ToRole="PlantsForQuote" />
+          <Property Name="SalesOrder" Type="Boolean" Nullable="false" />
+          <Property Name="Retail" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_PlantsForQuote_Quotes">
           <End Type="HillsStock1Model.Quote" Role="Quote" Multiplicity="1" />
@@ -134,6 +140,7 @@
           <EntitySetMapping Name="CustomerInformations">
             <EntityTypeMapping TypeName="HillsStock1Model.CustomerInformation">
               <MappingFragment StoreEntitySet="CustomerInformation">
+                <ScalarProperty Name="SageCustomer" ColumnName="SageCustomer" />
                 <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
                 <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
                 <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
@@ -160,6 +167,8 @@
           <EntitySetMapping Name="Quotes">
             <EntityTypeMapping TypeName="HillsStock1Model.Quote">
               <MappingFragment StoreEntitySet="Quotes">
+                <ScalarProperty Name="Retail" ColumnName="Retail" />
+                <ScalarProperty Name="SalesOrder" ColumnName="SalesOrder" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="QuoteExpiryDate" ColumnName="QuoteExpiryDate" />
                 <ScalarProperty Name="QuotePrice" ColumnName="QuotePrice" />

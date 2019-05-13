@@ -21,6 +21,8 @@ namespace quoteService.DTO
         public string Date { get; set; }
         public string ExpiryDate { get; set; }
         public string SiteRef { get; set; }
+        public bool SalesOrder { get; set; }
+        public bool Retail { get; set; }
         public bool Active { get; set; }
         public IEnumerable<QuoteDetailDTO> QuoteDetails { get; set; }
     }
