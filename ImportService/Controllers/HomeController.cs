@@ -10,8 +10,24 @@ namespace ImportService.Controllers
     {
         public ActionResult Index()
         {
-            var fred = 0;
+            
             return View();
+        }
+
+        public ActionResult GetIn()
+        {
+            var un = Request.Form["un"];
+            var pw = Request.Form["pw"];
+            if (un == "503141" && pw == "827191")
+            {
+                Session["admin"] = true;
+                return RedirectToAction("Index", "Upload");
+            }
+            else
+            {
+                Session["admin"] = false;
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         public ActionResult About()
