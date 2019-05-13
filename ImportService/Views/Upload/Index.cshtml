@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = " Batch UpLoad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="alert-danger">Warning !!! This will delete all existing data in the system</h2>
+
+<p>Do you want to do this instead</p>
+<li>@Html.ActionLink("List PB Stock", "Index", "Pannebakkers")</li>
+
+
+<hr />
+@using (Html.BeginForm("GetFile", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="form-group">
+        <input type="file" id="file" name="file" />
+    </div>
+
+    <div class="form-group">
+        <input type="submit" name="btnUpload" value="Upload" />
+    </div>
+}
+
