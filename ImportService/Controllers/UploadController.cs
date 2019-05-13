@@ -1,6 +1,7 @@
 ﻿
 
 using ImportService.Models;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -85,29 +86,101 @@ namespace ImportService.Controllers
             OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
 
            // var allrunners = db.runners.Where(r => r.Active == true).ToList();
-
+            
             for (int row = workSheet.Dimension.Start.Row;
                      row <= workSheet.Dimension.End.Row;
                      row++)
             {
-                //AddtoDb
+                Pannebakker obj = new Pannebakker();
+                obj.Sku = GetPBSKU(workSheet, row);
+                obj.FormSizeCode = GetPBFSCOde(workSheet, row);
+                obj.Name = GetName(workSheet, row);
+                obj.FormSize = GetFSDecription(workSheet, row);
+                obj.Price = GetPrice(workSheet, row);
+                db.Pannebakkers.Add(obj);
+            }
+            try
+            {
+                db.SaveChanges();
+                ViewBag.Title = "done";
+                return RedirectToAction("Index");
+
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Title = ex.InnerException.Message;
+                return RedirectToAction("UpLoad");
             }
 
-            ViewBag.Title = "Home Page";
-
-            return View();
         }
 
-        private static string GetFieldX(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        // ABEGOUCH
+        private static string GetPBSKU(ExcelWorksheet workSheet, int row)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null)
             {
-                return workSheet.Cells[row, workSheet.Dimension.Start.Column].Value.ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value).ToString();
             }
             else
             {
                 return null;
             }
         }
+
+        // 2C2
+        private static string GetPBFSCOde(ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // Abelia 'Edward Goucher'
+        private static string GetName(ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // 2 Ltr pot
+        private static string GetFSDecription(ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // 3.23
+        private static decimal GetPrice(ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value != null)
+            {
+                var data = workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value;
+                return Convert.ToDecimal(data);
+            }
+            else
+            {
+                return 0.0m;
+            }
+        }
+
+
+
     }
 }
