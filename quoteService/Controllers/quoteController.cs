@@ -36,6 +36,8 @@ namespace quoteService.Controllers
                 ExpiryDate = item.QuoteExpiryDate.ToString(),
                 SiteRef = item.SiteReference,
                 TotalPrice = item.QuotePrice ?? 0,
+                SalesOrder = item.SalesOrder,
+                Retail = item.Retail,
                 Active = item.Active,
         }).AsEnumerable();
             return dto;
@@ -115,6 +117,8 @@ namespace quoteService.Controllers
                 thisQuote.QuoteExpiryDate = DateTime.ParseExact(quote.ExpiryDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 thisQuote.SiteReference = quote.SiteRef;
                 thisQuote.QuotePrice = quote.TotalPrice;
+                thisQuote.SalesOrder = quote.SalesOrder;
+                thisQuote.Retail = quote.Retail;
 
                 db.Quotes.Add(thisQuote);
                 db.SaveChanges();
@@ -286,7 +290,50 @@ namespace quoteService.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return StatusCode(HttpStatusCode.OK);
+        }
+
+        // PUT: api/quote/salesOrder?={id}
+        [Route("salesOrder")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutSOQuote(int id, QuoteDTO quote)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // get the object out of the db
+            var q = db.Quotes.Find(id);
+
+            if (id != quote.QuoteId)
+            {
+                return BadRequest();
+            }
+
+            //Set the current value of active to be false
+            q.SalesOrder = quote.SalesOrder;
+
+            db.Entry(q).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!QuoteExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.OK);
         }
 
         // DELETE: api/quote/5
