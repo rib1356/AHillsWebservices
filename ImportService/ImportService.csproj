@@ -241,6 +241,7 @@
     <Content Include="Views\Pannebakkers\Edit.cshtml" />
     <Content Include="Views\Pannebakkers\Index.cshtml" />
     <Content Include="Views\Upload\Index.cshtml" />
+    <Content Include="Views\Upload\shit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

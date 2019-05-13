@@ -108,11 +108,13 @@ namespace ImportService.Controllers
             }
             catch(Exception ex)
             {
-                ViewBag.Title = ex.InnerException.Message;
-                return RedirectToAction("UpLoad");
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
             }
 
         }
+
+        
 
         // ABEGOUCH
         private static string GetPBSKU(ExcelWorksheet workSheet, int row)
