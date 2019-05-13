@@ -56,15 +56,24 @@ namespace ImportService.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (file != null && file.ContentLength > 0)
+
+            try
             {
-                // extract only the filename
-                var fileName = Path.GetFileName(file.FileName);
-                string name = System.IO.Path.GetFileName(fileName);
-                // store the file inside ~/App_Data/uploads folder
-                var path = Path.Combine(Server.MapPath("~/App_Data/"), name);
-                file.SaveAs(path);
-                TempData["path"] = name;
+                if (file != null && file.ContentLength > 0)
+                {
+                    // extract only the filename
+                    var fileName = Path.GetFileName(file.FileName);
+                    string name = System.IO.Path.GetFileName(fileName);
+                    // store the file inside ~/App_Data/uploads folder
+                    var path = Path.Combine(Server.MapPath("~/App_Data/"), name);
+                    file.SaveAs(path);
+                    TempData["path"] = name;
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
             }
 
             ViewBag.Title = "Home Page";
@@ -76,7 +85,7 @@ namespace ImportService.Controllers
         public ActionResult UpLoad()
         {
 
-
+            try { 
             var fred = TempData["path"].ToString();
             //var filesData = Directory.GetFiles(@fred);
             string path = Server.MapPath("~/App_Data/" + fred);
@@ -99,6 +108,15 @@ namespace ImportService.Controllers
                 obj.Price = GetPrice(workSheet, row);
                 db.Pannebakkers.Add(obj);
             }
+
+            }
+            catch(Exception ex)
+            {
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
+            }
+
+
             try
             {
                 db.SaveChanges();
@@ -108,11 +126,13 @@ namespace ImportService.Controllers
             }
             catch(Exception ex)
             {
-                ViewBag.Title = ex.InnerException.Message;
-                return RedirectToAction("UpLoad");
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
             }
 
         }
+
+        
 
         // ABEGOUCH
         private static string GetPBSKU(ExcelWorksheet workSheet, int row)
