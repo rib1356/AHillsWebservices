@@ -196,10 +196,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\FormSizesController.cs" />
+    <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PlantController.cs" />
     <Compile Include="Controllers\PlantNamesController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\GroupDTO.cs" />
     <Compile Include="DTO\PlantNameDTO.cs" />
     <Compile Include="DTO\FormSizeDTO.cs" />
     <Compile Include="Global.asax.cs">
