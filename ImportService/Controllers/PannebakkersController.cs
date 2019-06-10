@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using ImportService.DTO;
 using ImportService.Models;
 
 namespace ImportService.Controllers
@@ -15,9 +16,31 @@ namespace ImportService.Controllers
         private HillsStockImportEntities db = new HillsStockImportEntities();
 
         // GET: Pannebakkers
+        //public ActionResult Index()
+        //{
+        //    return View(db.Pannebakkers.ToList());
+        //}
+
         public ActionResult Index()
         {
-            return View(db.Pannebakkers.ToList());
+            var PBbatches = new List<DTO.PbDTO>().AsEnumerable();
+            // dear service can i have the batches please
+            PBbatches = ServiceLayer.PbService.GetPbItems();
+            // transform the services into a viewModel
+            IEnumerable<DTO.PbVM> VM = buildVM(PBbatches);
+
+            return View(VM);
+        }
+
+        private IEnumerable<PbVM> buildVM(IEnumerable<PbDTO> pBbatches)
+        {
+            return pBbatches.Select(b => new DTO.PbVM
+            {
+                Sku = b.Sku,
+                Name = b.Name,
+                FormSizeCode = b.FormSizeCode,
+                Price = b.Price
+            }).AsEnumerable();
         }
 
         // GET: Pannebakkers/Details/5
