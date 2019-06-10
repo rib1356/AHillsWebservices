@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using BatchModel;
+using BatchService.Models;
 
 namespace BatchService.Controllers
 {
@@ -19,8 +20,26 @@ namespace BatchService.Controllers
         private HillsStockEntities db = new HillsStockEntities();
 
 
-       
+        [Route("api/Batches/All")]
         // GET: api/Batches
+        /// Send a collection of active BatchItemDTO's 
+        /// Currently purchase Price does not exist in domain
+        public IQueryable<BatchItemDTO> GetAllBatches()
+        {
+            var all = db.Batches.Where(b => b.Active == true);
+            var result = all.Select(item => new BatchItemDTO
+            {
+                Sku = item.Sku,
+                  Name = item.Name,
+                   FormSize = item.FormSize,
+                    PurchasePrice = -1,
+                        WholesalePrice = item.WholesalePrice,
+                     
+            });
+            return result;
+        }
+
+
         public IQueryable<Batch> GetBatches()
         {
             return db.Batches;

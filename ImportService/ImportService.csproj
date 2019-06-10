@@ -158,7 +158,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\PannebakkersController.cs" />
+    <Compile Include="Controllers\readBatchController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
+    <Compile Include="DTO\Batch.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -246,6 +248,7 @@
     <Content Include="Views\Pannebakkers\Index.cshtml" />
     <Content Include="Views\Upload\Index.cshtml" />
     <Content Include="Views\Upload\shit.cshtml" />
+    <Content Include="Views\readBatch\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

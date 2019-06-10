@@ -10,4 +10,14 @@ namespace BatchService.Models
         public int BatchId { get; set; }
         public int Price { get; set; }
     }
+
+    public class BatchItemDTO
+    {
+        public string Sku { get; set; }
+        public string Name { get; set; }
+        public string FormSize { get; set; }
+        public Nullable<int> WholesalePrice { get; set; }
+        public Nullable<int> PurchasePrice { get; set; }
+
+    }
 }

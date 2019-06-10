@@ -100,13 +100,16 @@ namespace ImportService.Controllers
                      row <= workSheet.Dimension.End.Row;
                      row++)
             {
-                Pannebakker obj = new Pannebakker();
-                obj.Sku = GetPBSKU(workSheet, row);
-                obj.FormSizeCode = GetPBFSCOde(workSheet, row);
-                obj.Name = GetName(workSheet, row);
-                obj.FormSize = GetFSDecription(workSheet, row);
-                obj.Price = GetPrice(workSheet, row);
-                db.Pannebakkers.Add(obj);
+                    if (HasData(workSheet, row))
+                    {
+                        Pannebakker obj = new Pannebakker();
+                        obj.Sku = GetPBSKU(workSheet, row);
+                        obj.FormSizeCode = GetPBFSCOde(workSheet, row);
+                        obj.Name = GetName(workSheet, row);
+                        obj.FormSize = GetFSDecription(workSheet, row);
+                        obj.Price = GetPrice(workSheet, row);
+                        db.Pannebakkers.Add(obj);
+                    }
             }
 
             }
@@ -132,7 +135,17 @@ namespace ImportService.Controllers
 
         }
 
-        
+        private static bool HasData(ExcelWorksheet workSheet, int row)
+        {
+            if ((workSheet.Cells[row, workSheet.Dimension.Start.Column + 0].Value != null) && (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         // ABEGOUCH
         private static string GetPBSKU(ExcelWorksheet workSheet, int row)
