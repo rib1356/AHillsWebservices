@@ -183,6 +183,7 @@
       <DependentUpon>PBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceLayer\BatchService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Here.txt" />

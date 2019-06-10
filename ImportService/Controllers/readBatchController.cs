@@ -15,10 +15,8 @@ namespace ImportService.Controllers
         {
             // empty batches object to fill soon
             var batches = new List<DTO.BatchDTO>().AsEnumerable();
-            // build a client to chat to the web service
-            HttpClient client = ApiClient();
             // dear service can i have the batches please
-            batches = GetBatches(batches, client);
+            batches = ServiceLayer.BatchService.GetBatches();
             // transform the services into a viewModel
             IEnumerable<DTO.BatchVM> VM = buildVM(batches);
 
@@ -27,26 +25,7 @@ namespace ImportService.Controllers
 
         }
 
-        /// <summary>
-        /// ASk our Client for the batches please
-        /// </summary>
-        /// <param name="batches"></param>
-        /// <param name="client"></param>
-        /// <returns>IEnumerable<DTO.BatchDTO></returns>
-        private static IEnumerable<DTO.BatchDTO> GetBatches(IEnumerable<DTO.BatchDTO> batches, HttpClient client)
-        {
-            HttpResponseMessage response = client.GetAsync("api/Batches/All").Result;
-            if (response.IsSuccessStatusCode)
-            {
-                batches = response.Content.ReadAsAsync<IEnumerable<DTO.BatchDTO>>().Result;
-            }
-            else
-            {
-                Debug.WriteLine("Index received a bad response from the web service.");
-            }
-
-            return batches;
-        }
+     
 
 
         /// <summary>
@@ -67,16 +46,6 @@ namespace ImportService.Controllers
         }
 
 
-        /// <summary>
-        /// WE need to modify the System URi to use the deployed service
-        /// </summary>
-        /// <returns></returns>
-        private static HttpClient ApiClient()
-        {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("http://localhost:52009/");
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-            return client;
-        }
+ 
     }
 }
