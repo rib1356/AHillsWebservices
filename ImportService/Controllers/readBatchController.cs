@@ -37,6 +37,11 @@ namespace ImportService.Controllers
 
         }
 
+
+        /// <summary>
+        /// WE need to modify the System URi to use the deployed service
+        /// </summary>
+        /// <returns></returns>
         private static HttpClient ApiClient()
         {
             HttpClient client = new HttpClient();
