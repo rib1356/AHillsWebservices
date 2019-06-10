@@ -5,8 +5,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="8d219955a9b34412876af1b05e0149bc" Name="Diagram1">
-        <EntityTypeShape EntityType="HillsStock1Model.FormSize" Width="1.5" PointX="3" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="HillsStock1Model.Group" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="HillsStock1Model.FormSize" Width="1.5" PointX="4" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="HillsStock1Model.Group" Width="1.5" PointX="4.375" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="HillsStock1Model.PlantGroup" Width="1.5" PointX="6" PointY="3" IsExpanded="true" />
         <EntityTypeShape EntityType="HillsStock1Model.PlantName" Width="1.5" PointX="8.75" PointY="3" IsExpanded="true" />
         <AssociationConnector Association="HillsStock1Model.FK_FormSizes_Groups" ManuallyRouted="false" />
