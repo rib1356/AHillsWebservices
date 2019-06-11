@@ -1,5 +1,6 @@
 ﻿
 
+using EntityFramework.BulkInsert.Extensions;
 using ImportService.Models;
 using OfficeOpenXml;
 using System;
@@ -84,7 +85,7 @@ namespace ImportService.Controllers
 
         public ActionResult UpLoad()
         {
-
+            List<Pannebakker> records = new List<Pannebakker>();
             try { 
             var fred = TempData["path"].ToString();
             //var filesData = Directory.GetFiles(@fred);
@@ -93,10 +94,10 @@ namespace ImportService.Controllers
             var package = new OfficeOpenXml.ExcelPackage(new FileInfo(path));
 
             OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
-
-           // var allrunners = db.runners.Where(r => r.Active == true).ToList();
-            
-            for (int row = workSheet.Dimension.Start.Row;
+                
+                // var allrunners = db.runners.Where(r => r.Active == true).ToList();
+                //db.Configuration.AutoDetectChangesEnabled = false;
+                for (int row = workSheet.Dimension.Start.Row;
                      row <= workSheet.Dimension.End.Row;
                      row++)
             {
@@ -108,7 +109,8 @@ namespace ImportService.Controllers
                         obj.Name = GetName(workSheet, row);
                         obj.FormSize = GetFSDecription(workSheet, row);
                         obj.Price = GetPrice(workSheet, row);
-                        db.Pannebakkers.Add(obj);
+                        records.Add(obj);
+                    
                     }
             }
 
@@ -122,8 +124,9 @@ namespace ImportService.Controllers
 
             try
             {
-                db.SaveChanges();
-                
+                db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
+                db.BulkInsert<Pannebakker>(records);
+
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");
