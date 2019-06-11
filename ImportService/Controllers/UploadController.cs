@@ -123,8 +123,11 @@ namespace ImportService.Controllers
             try
             {
                 db.SaveChanges();
+                
                 ViewBag.Title = "done";
-                return RedirectToAction("Index");
+                Response.Write("<script>console.log('Data has been saved to db');</script>");
+                return View("uploadDone");
+                //return RedirectToAction("Index");
 
             }
             catch(Exception ex)

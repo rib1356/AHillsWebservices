@@ -260,6 +260,7 @@
     <Content Include="Views\Upload\shit.cshtml" />
     <Content Include="Views\readBatch\Index.cshtml" />
     <Content Include="Views\Pannebakkers\Index.cshtml" />
+    <Content Include="Views\Upload\uploadDone.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
