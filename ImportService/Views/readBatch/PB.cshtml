@@ -1,0 +1,60 @@
+﻿@model ImportService.DTO.BatchPBVM
+
+@{
+    ViewBag.Title = "PB";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>For Batch  Item</h2>
+<ul>
+    <li>@Model.BatchItem.Sku</li>
+    <li>@Model.BatchItem.Name</li>
+    <li>@Model.BatchItem.FormSize</li>
+    <li> @{
+        var p = Model.BatchItem.WholesalePrice;
+        decimal d = (decimal)p / 100m;
+        @d
+            } </li>
+</ul>
+
+
+<h2>We have found the following PB Items</h2>
+<table class="table">
+    <tr>
+    
+        <th>
+            SKU
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            FSC
+        </th>
+        <th>
+            Price
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.PbList) {
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Sku)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FormSizeCode)
+        </td>
+        <td>
+           
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+ 
+    </tr>
+}
+
+</table>

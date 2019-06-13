@@ -46,9 +46,8 @@
             @Html.DisplayFor(modelItem => item.WholesalePrice)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("PB", "PB", new { id=item.BatchId }) |
+         
         </td>
     </tr>
 }

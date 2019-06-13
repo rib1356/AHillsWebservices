@@ -16,9 +16,28 @@ namespace ImportService.ServiceLayer
         private static HttpClient ApiClient()
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
+            // http://localhost:52009/
+            client.BaseAddress = new System.Uri("http://localhost:52009/");
+           // client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
+        }
+
+        // http://localhost:52009/api/Batches/All/3
+        public static DTO.BatchDTO GetBatchItem(int id)
+        {
+            HttpClient client = ApiClient();
+            var request = "api/Batches/All/" + id.ToString();
+            HttpResponseMessage response = client.GetAsync(request).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadAsAsync<DTO.BatchDTO>().Result;
+            }
+            else
+            {
+                Debug.WriteLine("Index received a bad response from the web service.");
+                return null;
+            }
         }
 
 
@@ -45,6 +64,8 @@ namespace ImportService.ServiceLayer
 
         }
 
-    
+        
+
+
     }
 }

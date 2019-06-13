@@ -34,5 +34,24 @@ namespace ImportService.Controllers
             return result;
         }
 
+
+
+        [Route("api/Pb/All/{id}")]
+        public IQueryable<DTO.PbDTO> GetBatchPbItems(int id)
+        {
+            var all = db.Pannebakkers.Where(p => p.BatchId == id);
+            var result = all.Select(item => new DTO.PbDTO
+            {
+                Sku = item.Sku,
+                Name = item.Name,
+                FormSize = item.FormSize,
+                FormSizeCode = item.FormSizeCode,
+                Price = item.Price
+
+            });
+            var fred = result.ToList();
+            return result;
+        }
+
     }
 }
