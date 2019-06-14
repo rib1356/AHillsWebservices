@@ -117,8 +117,8 @@ namespace ImportService.Controllers
             }
             catch(Exception ex)
             {
-                ViewBag.Error = ex.InnerException.Message;
-                return View("shit");
+                //ViewBag.Error = ex.InnerException.Message;
+                return View("version");
             }
 
 
