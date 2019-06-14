@@ -16,7 +16,7 @@ namespace ImportService.ServiceLayer
         private static HttpClient ApiClient()
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
+            client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }
@@ -31,7 +31,7 @@ namespace ImportService.ServiceLayer
         public static IEnumerable<DTO.BatchDTO> GetBatches()
         {
             HttpClient client = ApiClient();
-            HttpResponseMessage response = client.GetAsync("api/Batches/All").Result;
+            HttpResponseMessage response = client.GetAsync("/api/Batches/All").Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadAsAsync<IEnumerable<DTO.BatchDTO>>().Result;

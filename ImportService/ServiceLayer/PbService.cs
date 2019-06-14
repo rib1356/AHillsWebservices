@@ -16,7 +16,7 @@ namespace ImportService.ServiceLayer
         private static HttpClient ApiClient()
         {
             HttpClient client = new HttpClient();
-            client.BaseAddress = new System.Uri("http://pannebakkerupload.azurewebsites.net/");
+            client.BaseAddress = new System.Uri("http://pannebakkerupload.azurewebsites.net");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }
@@ -31,7 +31,7 @@ namespace ImportService.ServiceLayer
         public static IEnumerable<DTO.PbDTO> GetPbItems()
         {
             HttpClient client = ApiClient();
-            HttpResponseMessage response = client.GetAsync("api/Pb/All").Result;
+            HttpResponseMessage response = client.GetAsync("/api/Pb/All").Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadAsAsync<IEnumerable<DTO.PbDTO>>().Result;
