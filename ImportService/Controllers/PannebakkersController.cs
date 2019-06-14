@@ -36,6 +36,8 @@ namespace ImportService.Controllers
         {
             return pBbatches.Select(b => new DTO.PbVM
             {
+                PbId = b.PbId,
+                BatchId = b.BatchId,
                 Sku = b.Sku,
                 Name = b.Name,
                 FormSizeCode = b.FormSizeCode,

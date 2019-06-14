@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImportService.DTO;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +26,33 @@ namespace ImportService.Controllers
 
         }
 
-     
+
+        public ActionResult PB(int? id)
+        {
+            // empty batches object to fill soon
+            var pb = new List<DTO.PbDTO>().AsEnumerable();
+            var batchItem = ServiceLayer.BatchService.GetBatchItem((int)id);
+            // dear service can i have the batches please
+            pb = ServiceLayer.PbService.GetPbBatchItems((int)id);
+            // transform the services into a viewModel
+            BatchPBVM VM = new BatchPBVM();
+            IEnumerable<DTO.PbVM> List = PbVM.buildVM(pb);
+            VM.BatchItem = new BatchVM
+            {
+                BatchId = batchItem.Id,
+                FormSize = batchItem.FormSize,
+                Name = batchItem.Name,
+                Quantity = batchItem.Quantity,
+                Sku = batchItem.Sku,
+                WholesalePrice = batchItem.WholesalePrice
+            };
+            VM.PbList = List;
+            return View(VM);
+
+
+        }
+
+
 
 
         /// <summary>
@@ -37,6 +64,7 @@ namespace ImportService.Controllers
         {
             return batches.Select(b => new DTO.BatchVM
             {
+                BatchId = b.Id,
                 Sku = b.Sku,
                 Name = b.Name,
                 FormSize = b.FormSize,

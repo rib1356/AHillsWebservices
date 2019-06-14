@@ -8,6 +8,8 @@ namespace ImportService.DTO
 {
     public class PbDTO
     {
+        public int PbId { get; set; }
+        public int BatchId { get; set; }
         public string Sku { get; set; }
         public string FormSizeCode { get; set; }
         public string Name { get; set; }
@@ -16,8 +18,12 @@ namespace ImportService.DTO
 
     }
 
+   
+
     public class PbVM
     {
+        public int PbId { get; set; }
+        public int BatchId { get; set; }
         [Display(Name = "SKU")]
         public string Sku { get; set; }
         [Display(Name = "Name")]
@@ -26,6 +32,19 @@ namespace ImportService.DTO
         public string FormSizeCode { get; set; }
         [Display(Name = "Price")]
         public decimal Price { get; set; }
+
+        public static  IEnumerable<PbVM> buildVM(IEnumerable<PbDTO> pBbatches)
+        {
+            return pBbatches.Select(b => new DTO.PbVM
+            {
+                PbId = b.PbId,
+                BatchId = b.BatchId,
+                Sku = b.Sku,
+                Name = b.Name,
+                FormSizeCode = b.FormSizeCode,
+                Price = b.Price
+            }).AsEnumerable();
+        }
 
     }
 }

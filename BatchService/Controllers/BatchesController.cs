@@ -29,14 +29,42 @@ namespace BatchService.Controllers
             var all = db.Batches.Where(b => b.Active == true);
             var result = all.Select(item => new BatchItemDTO
             {
+                Id = item.Id,
                 Sku = item.Sku,
                   Name = item.Name,
                    FormSize = item.FormSize,
                     PurchasePrice = -1,
                         WholesalePrice = item.WholesalePrice,
+                         
                      
             });
             return result;
+        }
+
+        [Route("api/Batches/All/{id}")]
+        // GET: api/Batches
+        /// Send a collection of active BatchItemDTO's 
+        /// Currently purchase Price does not exist in domain
+        public BatchItemDTO GetBatchDTO(int id)
+        {
+            Batch batch = db.Batches.Find(id);
+            if (batch == null)
+            {
+                return null;
+            }
+            else
+            {
+                return new BatchItemDTO
+                {
+                    Id = batch.Id,
+                    Sku = batch.Sku,
+                    Name = batch.Name,
+                    FormSize = batch.FormSize,
+                    PurchasePrice = -1,
+                    WholesalePrice = batch.WholesalePrice
+                };
+            }
+
         }
 
 

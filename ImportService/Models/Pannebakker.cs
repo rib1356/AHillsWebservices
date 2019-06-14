@@ -21,5 +21,6 @@ namespace ImportService.Models
         public string FormSize { get; set; }
         public decimal Price { get; set; }
         public Nullable<bool> RootBall { get; set; }
+        public Nullable<int> BatchId { get; set; }
     }
 }
