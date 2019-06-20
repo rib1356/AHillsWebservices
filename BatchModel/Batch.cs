@@ -23,5 +23,8 @@ namespace BatchModel
         public Nullable<int> WholesalePrice { get; set; }
         public Nullable<bool> ImageExists { get; set; }
         public bool Active { get; set; }
+        public Nullable<int> GrowingQuantity { get; set; }
+        public Nullable<int> AllocatedQuantity { get; set; }
+        public Nullable<System.DateTime> DateStamp { get; set; }
     }
 }
