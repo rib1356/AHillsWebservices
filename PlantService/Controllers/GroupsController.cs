@@ -45,43 +45,72 @@ namespace PlantService.Controllers
             return Ok(group);
         }
 
-        // PUT: api/Groups/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutGroup(int id, Group group)
+
+        //[ResponseType(typeof(void))]
+        //public IHttpActionResult PutGroup(int id, Group group)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    if (id != group.GroupId)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    db.Entry(group).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!GroupExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return StatusCode(HttpStatusCode.NoContent);
+        //}
+
+        // POST: api/Groups
+        [Route("api/Groups/edit")]
+        [ResponseType(typeof(NewPlantDTO))]
+        public HttpResponseMessage PostNewPlantGroups(HttpRequestMessage request, [FromBody]EditPlantDTO editPlant)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return request.CreateResponse(HttpStatusCode.BadRequest, editPlant);
             }
-
-            if (id != group.GroupId)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(group).State = EntityState.Modified;
 
             try
             {
+                var plantId = editPlant.PlantId;
+                foreach (var group in editPlant.GroupDetails)
+                {
+                    var thisPlantGroup = new PlantGroup();
+                    thisPlantGroup.PlantId = plantId;
+                    thisPlantGroup.GroupId = group.GroupId;
+                    db.PlantGroups.Add(thisPlantGroup);
+                }
                 db.SaveChanges();
+                return request.CreateResponse(HttpStatusCode.OK, editPlant);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!GroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return request.CreateResponse(HttpStatusCode.BadRequest, ex);
             }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/Groups
-         [ResponseType(typeof(NewPlantDTO))]
+        [ResponseType(typeof(NewPlantDTO))]
         public HttpResponseMessage PostPlant(HttpRequestMessage request, [FromBody]NewPlantDTO newPlant)
         {
             if (!ModelState.IsValid)

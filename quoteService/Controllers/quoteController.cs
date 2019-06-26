@@ -27,7 +27,9 @@ namespace quoteService.Controllers
         [Route("all")]
         public IEnumerable<QuoteDTO> GetAllQuotes()
         {
-            
+            //get customer reference related to quote
+            //Create customerInfo DTO
+            //Pass that DTO through this one to be accessed as an object
             var dto = db.Quotes.Select(item => new DTO.QuoteDTO
             {
                 QuoteId = item.QuoteId,

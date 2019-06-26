@@ -7,6 +7,7 @@ namespace PlantService.DTO
 {
     public class PlantNameDTO
     {
+        public int plantId { get; set; }
         public string plantName { get; set; }
         public string Sku { get; set; }
     

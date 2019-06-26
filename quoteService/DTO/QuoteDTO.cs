@@ -17,4 +17,11 @@ namespace quoteService.DTO
         public bool Retail { get; set; }
         public bool Active { get; set; }
     }
+
+    //public class CustomerDTO
+    //{
+    //    public string CustomerName { get; set; }
+    //    public string CustomerAddress { get; set; }
+
+    //}
 }
