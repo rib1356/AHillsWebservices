@@ -27,22 +27,64 @@ namespace quoteService.Controllers
         [Route("all")]
         public IEnumerable<QuoteDTO> GetAllQuotes()
         {
+
+            List<QuoteDTO> DTO = new List<QuoteDTO>();
+            var customers = db.CustomerInformations.ToList();
+
+
+            var quotes = db.Quotes.ToList();
+
+            foreach( Quote item in quotes)
+            {
+                var thisC = getCustomer(customers, item);
+                var Thisdto = new DTO.QuoteDTO
+                {
+                    QuoteId = item.QuoteId,
+                    CustomerRef = item.CustomerReference,
+                    CustomerAddress = thisC.CustomerAddress,
+                    CustomerName = thisC.CustomerName,
+                    Date = item.QuoteDate.ToString(),
+                    ExpiryDate = item.QuoteExpiryDate.ToString(),
+                    SiteRef = item.SiteReference,
+                    TotalPrice = item.QuotePrice ?? 0,
+                    SalesOrder = item.SalesOrder,
+                    Retail = item.Retail,
+                    Active = item.Active,
+                };
+                DTO.Add(Thisdto);
+            }
+
             //get customer reference related to quote
             //Create customerInfo DTO
             //Pass that DTO through this one to be accessed as an object
-            var dto = db.Quotes.Select(item => new DTO.QuoteDTO
+            //    IEnumerable<QuoteDTO> dto = db.Quotes.Select(item => new DTO.QuoteDTO
+            //    {
+            //        QuoteId = item.QuoteId,
+            //        CustomerRef = getCustomer(customers,item),
+            //        Date = item.QuoteDate.ToString(),
+            //        ExpiryDate = item.QuoteExpiryDate.ToString(),
+            //        SiteRef = item.SiteReference,
+            //        TotalPrice = item.QuotePrice ?? 0,
+            //        SalesOrder = item.SalesOrder,
+            //        Retail = item.Retail,
+            //        Active = item.Active,
+            //}).AsEnumerable();
+
+            return DTO;
+        }
+
+        private CustomerInformation getCustomer(IEnumerable<CustomerInformation> customers, Quote item)
+        {
+
+            var cs = customers.FirstOrDefault(c => c.CustomerReference == item.CustomerReference);
+           if (cs != null)
+           {
+               return  cs;
+            }
+           else
             {
-                QuoteId = item.QuoteId,
-                CustomerRef = item.CustomerReference,
-                Date = item.QuoteDate.ToString(),
-                ExpiryDate = item.QuoteExpiryDate.ToString(),
-                SiteRef = item.SiteReference,
-                TotalPrice = item.QuotePrice ?? 0,
-                SalesOrder = item.SalesOrder,
-                Retail = item.Retail,
-                Active = item.Active,
-        }).AsEnumerable();
-            return dto;
+                return null;
+            }
         }
 
         [Route("customer")]
