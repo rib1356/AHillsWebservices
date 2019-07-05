@@ -28,8 +28,10 @@ namespace ImportService.Controllers
             PBbatches = ServiceLayer.PbService.GetPbItems();
             // transform the services into a viewModel
             IEnumerable<DTO.PbVM> VM = buildVM(PBbatches);
+            List<DTO.PbVM> outVM = VM.OrderBy(item => item.Sku).ToList();
 
-            return View(VM);
+
+            return View(outVM);
         }
 
         private IEnumerable<PbVM> buildVM(IEnumerable<PbDTO> pBbatches)

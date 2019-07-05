@@ -1,4 +1,5 @@
-﻿using ImportService.Models;
+﻿using ImportRep;
+using ImportService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,24 @@ namespace ImportService.Controllers
     [EnableCors("*", "*", "*")]
     public class PbServiceController : ApiController
     {
-        private HillsStockImportEntities db = new HillsStockImportEntities();
+       // private HillsStockImportEntities db = new HillsStockImportEntities();
+
+        private IImportRepository db;
+
+        public PbServiceController()
+        {
+            this.db = new ImportRepository(new ImportModel.ImportEntities());
+        }
+
+
 
         [Route("api/Pb/All")]
         // GET: api/Batches
         /// Send a collection of active BatchItemDTO's 
         /// Currently purchase Price does not exist in domain
-        public IQueryable<DTO.PbDTO> GetAllPbItems()
+        public IEnumerable<DTO.PbDTO> GetAllPbItems()
         {
-            var all = db.Pannebakkers;
+            var all = db.GetPannebakkers();
             var result = all.Select(item => new DTO.PbDTO
             {
                 Sku = item.Sku,
@@ -37,9 +47,9 @@ namespace ImportService.Controllers
 
 
         [Route("api/Pb/All/{id}")]
-        public IQueryable<DTO.PbDTO> GetBatchPbItems(int id)
+        public IEnumerable<DTO.PbDTO> GetBatchPbItems(int id)
         {
-            var all = db.Pannebakkers.Where(p => p.BatchId == id);
+            var all = db.GetPannebakkers().Where(p => p.BatchId == id);
             var result = all.Select(item => new DTO.PbDTO
             {
                 Sku = item.Sku,
