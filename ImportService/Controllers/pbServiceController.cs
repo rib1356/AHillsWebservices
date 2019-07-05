@@ -27,7 +27,7 @@ namespace ImportService.Controllers
                 Name = item.Name,
                 FormSize = item.FormSize,
                 FormSizeCode = item.FormSizeCode,
-                 Price = item.Price
+                Price = item.Price
 
             });
             var fred = result.ToList();

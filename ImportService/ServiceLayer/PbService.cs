@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
+using ImportService.Models;
 
 namespace ImportService.ServiceLayer
 {
@@ -65,6 +66,19 @@ namespace ImportService.ServiceLayer
 
         }
 
-
+        public static IEnumerable<Pannebakker> GetPbRawItems()
+        {
+            HttpClient client = ApiClient();
+            HttpResponseMessage response = client.GetAsync("api/Pb/All").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadAsAsync<IEnumerable<ImportService.Models.Pannebakker>>().Result;
+            }
+            else
+            {
+                Debug.WriteLine("Index received a bad response from the web service.");
+                return null;
+            }
+        }
     }
 }
