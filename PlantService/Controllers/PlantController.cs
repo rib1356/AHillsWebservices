@@ -30,6 +30,7 @@ namespace PlantService.Controllers
 
             var dto = db.PlantNames.Select(item => new DTO.PlantNameDTO
             {
+                plantId = item.PlantId,
                 plantName = item.Name,
                 Sku = item.Sku
             }).AsEnumerable();

@@ -9,6 +9,8 @@ namespace quoteService.DTO
     {
         public int QuoteId { get; set; }
         public string CustomerRef { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
         public string Date { get; set; }
         public string ExpiryDate { get; set; }
         public string SiteRef { get; set; }
@@ -17,4 +19,11 @@ namespace quoteService.DTO
         public bool Retail { get; set; }
         public bool Active { get; set; }
     }
+
+    //public class CustomerDTO
+    //{
+    //    public string CustomerName { get; set; }
+    //    public string CustomerAddress { get; set; }
+
+    //}
 }

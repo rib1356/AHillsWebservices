@@ -18,8 +18,8 @@ namespace ImportService.ServiceLayer
         {
             HttpClient client = new HttpClient();
             // http://localhost:60158/
-           // client.BaseAddress = new System.Uri("http://pannebakkerupload.azurewebsites.net/");
-            client.BaseAddress = new System.Uri("http://localhost:60158/");
+            client.BaseAddress = new System.Uri("http://pannebakkerupload.azurewebsites.net/");
+            //client.BaseAddress = new System.Uri("http://localhost:60158/");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }

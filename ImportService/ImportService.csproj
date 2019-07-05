@@ -276,6 +276,7 @@
     <Content Include="Views\Pannebakkers\Index.cshtml" />
     <Content Include="Views\Upload\uploadDone.cshtml" />
     <Content Include="Views\readBatch\PB.cshtml" />
+    <Content Include="Views\Upload\version.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImportModel\ImportModel.csproj">

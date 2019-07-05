@@ -128,6 +128,18 @@ namespace BatchService.Controllers
             {
                 b.ImageExists = batch.ImageExists;
             }
+            if (batch.GrowingQuantity != null)
+            {
+                b.GrowingQuantity = batch.GrowingQuantity;
+            }
+            if (batch.AllocatedQuantity != null)
+            {
+                b.AllocatedQuantity = batch.AllocatedQuantity;
+            }
+            if(batch.DateStamp != null)
+            {
+                b.DateStamp = batch.DateStamp;
+            } 
             if (batch.Active != null) //What to do about this
             {
                 b.Active = batch.Active;
