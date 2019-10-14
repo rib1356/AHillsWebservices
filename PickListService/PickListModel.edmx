@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HillsStock1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Picklist">
+          <Key>
+            <PropertyRef Name="PicklistId" />
+          </Key>
+          <Property Name="PicklistId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuoteId" Type="int" Nullable="false" />
+          <Property Name="DispatchDate" Type="date" Nullable="false" />
+          <Property Name="DeliveryAddress" Type="nvarchar(max)" />
+          <Property Name="DeliveryNeeded" Type="bit" Nullable="false" />
+          <Property Name="IsPicked" Type="bit" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="IsPacked" Type="bit" Nullable="false" />
+          <Property Name="IsDelivered" Type="bit" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="EstimatedDelivery" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PlantsForPicklist">
+          <Key>
+            <PropertyRef Name="PlantForPickListId" />
+          </Key>
+          <Property Name="PlantForPickListId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PicklistId" Type="int" Nullable="false" />
+          <Property Name="PlantForQuoteId" Type="int" Nullable="false" />
+          <Property Name="PlantName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FormSize" Type="nvarchar(max)" />
+          <Property Name="QuantityToPick" Type="int" Nullable="false" />
+          <Property Name="SubbedFor" Type="nvarchar(max)" />
+          <Property Name="DispatchLocation" Type="nvarchar(max)" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="isSubbed" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PlantsForPicklist_Picklist">
+          <End Role="Picklist" Type="Self.Picklist" Multiplicity="1" />
+          <End Role="PlantsForPicklist" Type="Self.PlantsForPicklist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Picklist">
+              <PropertyRef Name="PicklistId" />
+            </Principal>
+            <Dependent Role="PlantsForPicklist">
+              <PropertyRef Name="PicklistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HillsStock1ModelStoreContainer">
+          <EntitySet Name="Picklist" EntityType="Self.Picklist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantsForPicklist" EntityType="Self.PlantsForPicklist" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PlantsForPicklist_Picklist" Association="Self.FK_PlantsForPicklist_Picklist">
+            <End Role="Picklist" EntitySet="Picklist" />
+            <End Role="PlantsForPicklist" EntitySet="PlantsForPicklist" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HillsStock1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HillsStock1Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PlantsForPicklists" EntityType="HillsStock1Model.PlantsForPicklist" />
+          <EntitySet Name="Picklists" EntityType="HillsStock1Model.Picklist" />
+          <AssociationSet Name="FK_PlantsForPicklist_Picklist" Association="HillsStock1Model.FK_PlantsForPicklist_Picklist">
+            <End Role="Picklist" EntitySet="Picklists" />
+            <End Role="PlantsForPicklist" EntitySet="PlantsForPicklists" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PlantsForPicklist">
+          <Key>
+            <PropertyRef Name="PlantForPickListId" />
+          </Key>
+          <Property Name="PlantForPickListId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PicklistId" Type="Int32" Nullable="false" />
+          <Property Name="PlantForQuoteId" Type="Int32" Nullable="false" />
+          <Property Name="PlantName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="QuantityToPick" Type="Int32" Nullable="false" />
+          <Property Name="SubbedFor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DispatchLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="isSubbed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Picklist" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="PlantsForPicklist" ToRole="Picklist" />
+        </EntityType>
+        <EntityType Name="Picklist">
+          <Key>
+            <PropertyRef Name="PicklistId" />
+          </Key>
+          <Property Name="PicklistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuoteId" Type="Int32" Nullable="false" />
+          <Property Name="DispatchDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeliveryAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryNeeded" Type="Boolean" Nullable="false" />
+          <Property Name="IsPicked" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="IsPacked" Type="Boolean" Nullable="false" />
+          <Property Name="IsDelivered" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PlantsForPicklists" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="Picklist" ToRole="PlantsForPicklist" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EstimatedDelivery" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PlantsForPicklist_Picklist">
+          <End Type="HillsStock1Model.Picklist" Role="Picklist" Multiplicity="1" />
+          <End Type="HillsStock1Model.PlantsForPicklist" Role="PlantsForPicklist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Picklist">
+              <PropertyRef Name="PicklistId" />
+            </Principal>
+            <Dependent Role="PlantsForPicklist">
+              <PropertyRef Name="PicklistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HillsStock1ModelStoreContainer" CdmEntityContainer="HillsStock1Entities">
+          <EntitySetMapping Name="PlantsForPicklists">
+            <EntityTypeMapping TypeName="HillsStock1Model.PlantsForPicklist">
+              <MappingFragment StoreEntitySet="PlantsForPicklist">
+                <ScalarProperty Name="isSubbed" ColumnName="isSubbed" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="DispatchLocation" ColumnName="DispatchLocation" />
+                <ScalarProperty Name="SubbedFor" ColumnName="SubbedFor" />
+                <ScalarProperty Name="QuantityToPick" ColumnName="QuantityToPick" />
+                <ScalarProperty Name="FormSize" ColumnName="FormSize" />
+                <ScalarProperty Name="PlantName" ColumnName="PlantName" />
+                <ScalarProperty Name="PlantForQuoteId" ColumnName="PlantForQuoteId" />
+                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
+                <ScalarProperty Name="PlantForPickListId" ColumnName="PlantForPickListId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Picklists">
+            <EntityTypeMapping TypeName="HillsStock1Model.Picklist">
+              <MappingFragment StoreEntitySet="Picklist">
+                <ScalarProperty Name="EstimatedDelivery" ColumnName="EstimatedDelivery" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsDelivered" ColumnName="IsDelivered" />
+                <ScalarProperty Name="IsPacked" ColumnName="IsPacked" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IsPicked" ColumnName="IsPicked" />
+                <ScalarProperty Name="DeliveryNeeded" ColumnName="DeliveryNeeded" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
+                <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
