@@ -27,6 +27,5 @@ namespace BatchModel
         public Nullable<int> AllocatedQuantity { get; set; }
         public Nullable<System.DateTime> DateStamp { get; set; }
         public Nullable<decimal> BuyPrice { get; set; }
-        public string Comment { get; set; }
     }
 }

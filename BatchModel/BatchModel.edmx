@@ -22,7 +22,6 @@
           <Property Name="AllocatedQuantity" Type="int" />
           <Property Name="DateStamp" Type="date" />
           <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Comment" Type="nvarchar(max)" />
         </EntityType>
         <EntityContainer Name="HillsStockModelStoreContainer">
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
@@ -51,7 +50,6 @@
           <Property Name="AllocatedQuantity" Type="Int32" />
           <Property Name="DateStamp" Type="DateTime" Precision="0" />
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -62,7 +60,6 @@
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="HillsStockModel.Batch">
               <MappingFragment StoreEntitySet="Batch">
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="BuyPrice" ColumnName="BuyPrice" />
                 <ScalarProperty Name="DateStamp" ColumnName="DateStamp" />
                 <ScalarProperty Name="AllocatedQuantity" ColumnName="AllocatedQuantity" />
