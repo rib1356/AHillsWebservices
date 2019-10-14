@@ -67,7 +67,6 @@ namespace BatchService.Controllers
 
         }
 
-
         public IQueryable<Batch> GetBatches()
         {
             return db.Batches;
@@ -116,7 +115,7 @@ namespace BatchService.Controllers
             {
                 b.Location = batch.Location;
             }
-            if ( batch.Quantity != 0) //Check this if errors
+            if ( batch.Quantity >= 0) //Check this if errors
             {
                 b.Quantity = batch.Quantity;
             }
@@ -139,7 +138,11 @@ namespace BatchService.Controllers
             if(batch.DateStamp != null)
             {
                 b.DateStamp = batch.DateStamp;
-            } 
+            }
+            if (batch.Comment != null)
+            {
+                b.Comment = batch.Comment;
+            }
             if (batch.Active != null) //What to do about this
             {
                 b.Active = batch.Active;
