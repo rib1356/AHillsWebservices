@@ -23,7 +23,6 @@ namespace ImportService.DTO
         public IEnumerable<PbVM> PbList {get;set;}
     }
 
-
     public class BatchVM
     {
         public int BatchId { get; set; }

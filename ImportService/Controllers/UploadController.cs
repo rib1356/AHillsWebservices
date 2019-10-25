@@ -1,12 +1,17 @@
 ﻿
 
 using EntityFramework.BulkInsert.Extensions;
+using ImportRep;
 using ImportService.Models;
 using OfficeOpenXml;
+using SqlBulkTools;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,9 +19,14 @@ namespace ImportService.Controllers
 {
     public class UploadController : Controller
     {
-        // GET: Upload
+        private IImportRepository db;
 
-        private HillsStockImportEntities db = new HillsStockImportEntities();
+        public UploadController()
+        {
+            this.db = new ImportRepository(new ImportModel.ImportEntities());
+        }
+
+        // private HillsStockImportEntities db = new HillsStockImportEntities();
         public ActionResult Index()
         {
             try
@@ -85,37 +95,19 @@ namespace ImportService.Controllers
 
         public ActionResult UpLoad()
         {
-            List<Pannebakker> records = new List<Pannebakker>();
-            try { 
-            var fred = TempData["path"].ToString();
-            //var filesData = Directory.GetFiles(@fred);
-            string path = Server.MapPath("~/App_Data/" + fred);
-            //string path = Server.MapPath(fred.ToString());
-            var package = new OfficeOpenXml.ExcelPackage(new FileInfo(path));
+            List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            List<ImportModel.Pannebakker> existingRecords = new List<ImportModel.Pannebakker>();
+            List<ImportModel.rawImport> newRecords = new List<ImportModel.rawImport>();
 
-            OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
-                
-                // var allrunners = db.runners.Where(r => r.Active == true).ToList();
-                //db.Configuration.AutoDetectChangesEnabled = false;
-                for (int row = workSheet.Dimension.Start.Row;
-                     row <= workSheet.Dimension.End.Row;
-                     row++)
+            try
             {
-                    if (HasData(workSheet, row))
-                    {
-                        Pannebakker obj = new Pannebakker();
-                        obj.Sku = GetPBSKU(workSheet, row);
-                        obj.FormSizeCode = GetPBFSCOde(workSheet, row);
-                        obj.Name = GetName(workSheet, row);
-                        obj.FormSize = GetFSDecription(workSheet, row);
-                        obj.Price = GetPrice(workSheet, row);
-                        records.Add(obj);
-                    
-                    }
-            }
+                recordsIn = ReadInputFile();
+               // existingRecords = db.GetPannebakkers().ToList();
+               // newRecords = recordsIn.Union(existingRecords).ToList();
+               // newRecords = existingRecords.Union(recordsIn, new DTO.PbComparer()).ToList();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //ViewBag.Error = ex.InnerException.Message;
                 return View("version");
@@ -124,22 +116,147 @@ namespace ImportService.Controllers
 
             try
             {
-                db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
-                db.BulkInsert<Pannebakker>(records);
+                // db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
+                db.EmptyImport();
 
+                // db.BulkInsert<Pannebakker>(newRecords);
+                db.BulkInsert(recordsIn);
+                db.RemoveDuplicates();
+                //AddBatch(records);
+                db.MergeImport();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");
                 //return RedirectToAction("Index");
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.Error = ex.InnerException.Message;
                 return View("shit");
             }
 
         }
+
+        private List<ImportModel.rawImport>  ReadInputFile()
+        {
+            List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            var fred = TempData["path"].ToString();
+            //var filesData = Directory.GetFiles(@fred);
+            string path = Server.MapPath("~/App_Data/" + fred);
+            //string path = Server.MapPath(fred.ToString());
+            var package = new OfficeOpenXml.ExcelPackage(new FileInfo(path));
+
+            OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+
+
+            for (int row = workSheet.Dimension.Start.Row;
+                 row <= workSheet.Dimension.End.Row;
+                 row++)
+            {
+                if (HasData(workSheet, row))
+                {
+                    ImportModel.rawImport obj = new ImportModel.rawImport();
+                    obj.Sku = GetPBSKU(workSheet, row);
+                    obj.FormSizeCode = GetPBFSCOde(workSheet, row);
+                    obj.Name = GetName(workSheet, row);
+                    obj.FormSize = GetFSDecription(workSheet, row);
+                    obj.Price = GetPrice(workSheet, row);
+                    recordsIn.Add(obj);
+
+                }
+            }
+            return recordsIn;
+        }
+
+        //private static string AddBatch(List<Pannebakker> records)
+        //{
+        //    var bulk = new BulkOperations();
+        //    // books = GetBooks();
+        //    try
+        //    {
+        //        using (TransactionScope trans = new TransactionScope())
+        //        {
+        //            var constr = "data source = hills-server.database.windows.net; initial catalog = HillsStock1; persist security info = False; user id = rib1356; password = A - Hills - Stock; MultipleActiveResultSets = False; TrustServerCertificate = False";
+        //            using (SqlConnection conn = new SqlConnection(constr))
+        //            {
+        //                bulk.Setup<Pannebakker>()
+        //                    .ForCollection(records)
+        //                    .WithTable("Pannebakker")
+        //                    .AddAllColumns()
+        //                    .BulkInsert()
+        //                    .SetIdentityColumn(x => x.Id, SqlBulkTools.Enumeration.ColumnDirectionType.InputOutput)
+        //                    .Commit(conn);
+        //            }
+
+        //            trans.Complete();
+        //            return "Well Done";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw; 
+        //    }
+        //}
+
+
+        //public ActionResult OldUpLoad()
+        //{
+        //    List<Pannebakker> records = new List<Pannebakker>();
+        //    try { 
+        //    var fred = TempData["path"].ToString();
+        //    //var filesData = Directory.GetFiles(@fred);
+        //    string path = Server.MapPath("~/App_Data/" + fred);
+        //    //string path = Server.MapPath(fred.ToString());
+        //    var package = new OfficeOpenXml.ExcelPackage(new FileInfo(path));
+
+        //    OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+
+        //        // var allrunners = db.runners.Where(r => r.Active == true).ToList();
+        //        //db.Configuration.AutoDetectChangesEnabled = false;
+        //        for (int row = workSheet.Dimension.Start.Row;
+        //             row <= workSheet.Dimension.End.Row;
+        //             row++)
+        //    {
+        //            if (HasData(workSheet, row))
+        //            {
+        //                Pannebakker obj = new Pannebakker();
+        //                obj.Sku = GetPBSKU(workSheet, row);
+        //                obj.FormSizeCode = GetPBFSCOde(workSheet, row);
+        //                obj.Name = GetName(workSheet, row);
+        //                obj.FormSize = GetFSDecription(workSheet, row);
+        //                obj.Price = GetPrice(workSheet, row);
+        //                records.Add(obj);
+
+        //            }
+        //    }
+
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        ViewBag.Error = ex.InnerException.Message;
+        //        return View("shit");
+        //    }
+
+
+        //    try
+        //    {
+        //        db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
+        //        db.BulkInsert<Pannebakker>(records);
+
+        //        ViewBag.Title = "done";
+        //        Response.Write("<script>console.log('Data has been saved to db');</script>");
+        //        return View("uploadDone");
+        //        //return RedirectToAction("Index");
+
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        ViewBag.Error = ex.InnerException.Message;
+        //        return View("shit");
+        //    }
+
+        //}
 
         private static bool HasData(ExcelWorksheet workSheet, int row)
         {
