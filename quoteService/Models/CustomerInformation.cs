@@ -21,5 +21,6 @@ namespace quoteService.Models
         public string CustomerEmail { get; set; }
         public string CustomerReference { get; set; }
         public bool SageCustomer { get; set; }
+        public string CustomerTel2 { get; set; }
     }
 }

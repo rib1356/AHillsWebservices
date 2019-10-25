@@ -5,17 +5,69 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="HillsStock1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sku" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FormSize" Type="nvarchar" MaxLength="255" />
+          <Property Name="Location" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="WholesalePrice" Type="int" />
+          <Property Name="ImageExists" Type="bit" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="GrowingQuantity" Type="int" />
+          <Property Name="AllocatedQuantity" Type="int" />
+          <Property Name="DateStamp" Type="date" />
+          <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="CustomerInformation">
           <Key>
             <PropertyRef Name="CustomerId" />
           </Key>
           <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CustomerName" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="CustomerTel" Type="nvarchar" MaxLength="15" />
+          <Property Name="CustomerTel" Type="nvarchar" MaxLength="20" />
           <Property Name="CustomerAddress" Type="nvarchar(max)" />
           <Property Name="CustomerEmail" Type="nvarchar" MaxLength="75" />
-          <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="SageCustomer" Type="bit" Nullable="false" />
+          <Property Name="CustomerTel2" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Picklist">
+          <Key>
+            <PropertyRef Name="PicklistId" />
+          </Key>
+          <Property Name="PicklistId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuoteId" Type="int" Nullable="false" />
+          <Property Name="DispatchDate" Type="date" Nullable="false" />
+          <Property Name="DeliveryAddress" Type="nvarchar(max)" />
+          <Property Name="DeliveryNeeded" Type="bit" Nullable="false" />
+          <Property Name="IsPicked" Type="bit" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="IsPacked" Type="bit" Nullable="false" />
+          <Property Name="IsDelivered" Type="bit" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="EstimatedDelivery" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PlantsForPicklist">
+          <Key>
+            <PropertyRef Name="PlantForPickListId" />
+          </Key>
+          <Property Name="PlantForPickListId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PicklistId" Type="int" Nullable="false" />
+          <Property Name="PlantForQuoteId" Type="int" Nullable="false" />
+          <Property Name="PlantName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FormSize" Type="nvarchar(max)" />
+          <Property Name="QuantityToPick" Type="int" Nullable="false" />
+          <Property Name="SubbedFor" Type="nvarchar(max)" />
+          <Property Name="DispatchLocation" Type="nvarchar(max)" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="isSubbed" Type="bit" Nullable="false" />
+          <Property Name="BatchId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -44,6 +96,18 @@
           <Property Name="SalesOrder" Type="bit" Nullable="false" />
           <Property Name="Retail" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_PlantsForPicklist_Picklist">
+          <End Role="Picklist" Type="Self.Picklist" Multiplicity="1" />
+          <End Role="PlantsForPicklist" Type="Self.PlantsForPicklist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Picklist">
+              <PropertyRef Name="PicklistId" />
+            </Principal>
+            <Dependent Role="PlantsForPicklist">
+              <PropertyRef Name="PicklistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlantsForQuote_Quotes">
           <End Role="Quotes" Type="Self.Quotes" Multiplicity="1" />
           <End Role="PlantsForQuote" Type="Self.PlantsForQuote" Multiplicity="*" />
@@ -57,9 +121,16 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="HillsStock1ModelStoreContainer">
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomerInformation" EntityType="Self.CustomerInformation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Picklist" EntityType="Self.Picklist" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantsForPicklist" EntityType="Self.PlantsForPicklist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlantsForQuote" EntityType="Self.PlantsForQuote" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Quotes" EntityType="Self.Quotes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PlantsForPicklist_Picklist" Association="Self.FK_PlantsForPicklist_Picklist">
+            <End Role="Picklist" EntitySet="Picklist" />
+            <End Role="PlantsForPicklist" EntitySet="PlantsForPicklist" />
+          </AssociationSet>
           <AssociationSet Name="FK_PlantsForQuote_Quotes" Association="Self.FK_PlantsForQuote_Quotes">
             <End Role="Quotes" EntitySet="Quotes" />
             <End Role="PlantsForQuote" EntitySet="PlantsForQuote" />
@@ -77,6 +148,13 @@
             <End Role="Quote" EntitySet="Quotes" />
             <End Role="PlantsForQuote" EntitySet="PlantsForQuotes" />
           </AssociationSet>
+          <EntitySet Name="Picklists" EntityType="HillsStock1Model.Picklist" />
+          <EntitySet Name="PlantsForPicklists" EntityType="HillsStock1Model.PlantsForPicklist" />
+          <AssociationSet Name="FK_PlantsForPicklist_Picklist" Association="HillsStock1Model.FK_PlantsForPicklist_Picklist">
+            <End Role="Picklist" EntitySet="Picklists" />
+            <End Role="PlantsForPicklist" EntitySet="PlantsForPicklists" />
+          </AssociationSet>
+          <EntitySet Name="Batches" EntityType="HillsStock1Model.Batch" />
         </EntityContainer>
         <EntityType Name="CustomerInformation">
           <Key>
@@ -84,11 +162,12 @@
           </Key>
           <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerTel" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerTel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CustomerEmail" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SageCustomer" Type="Boolean" Nullable="false" />
+          <Property Name="CustomerTel2" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -131,6 +210,71 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Picklist">
+          <Key>
+            <PropertyRef Name="PicklistId" />
+          </Key>
+          <Property Name="PicklistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuoteId" Type="Int32" Nullable="false" />
+          <Property Name="DispatchDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeliveryAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryNeeded" Type="Boolean" Nullable="false" />
+          <Property Name="IsPicked" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="IsPacked" Type="Boolean" Nullable="false" />
+          <Property Name="IsDelivered" Type="Boolean" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EstimatedDelivery" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PlantsForPicklists" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="Picklist" ToRole="PlantsForPicklist" />
+        </EntityType>
+        <EntityType Name="PlantsForPicklist">
+          <Key>
+            <PropertyRef Name="PlantForPickListId" />
+          </Key>
+          <Property Name="PlantForPickListId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PicklistId" Type="Int32" Nullable="false" />
+          <Property Name="PlantForQuoteId" Type="Int32" Nullable="false" />
+          <Property Name="PlantName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="QuantityToPick" Type="Int32" Nullable="false" />
+          <Property Name="SubbedFor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DispatchLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="isSubbed" Type="Boolean" Nullable="false" />
+          <Property Name="BatchId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Picklist" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="PlantsForPicklist" ToRole="Picklist" />
+        </EntityType>
+        <Association Name="FK_PlantsForPicklist_Picklist">
+          <End Type="HillsStock1Model.Picklist" Role="Picklist" Multiplicity="1" />
+          <End Type="HillsStock1Model.PlantsForPicklist" Role="PlantsForPicklist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Picklist">
+              <PropertyRef Name="PicklistId" />
+            </Principal>
+            <Dependent Role="PlantsForPicklist">
+              <PropertyRef Name="PicklistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sku" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FormSize" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="WholesalePrice" Type="Int32" />
+          <Property Name="ImageExists" Type="Boolean" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="GrowingQuantity" Type="Int32" />
+          <Property Name="AllocatedQuantity" Type="Int32" />
+          <Property Name="DateStamp" Type="DateTime" Precision="0" />
+          <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -140,6 +284,7 @@
           <EntitySetMapping Name="CustomerInformations">
             <EntityTypeMapping TypeName="HillsStock1Model.CustomerInformation">
               <MappingFragment StoreEntitySet="CustomerInformation">
+                <ScalarProperty Name="CustomerTel2" ColumnName="CustomerTel2" />
                 <ScalarProperty Name="SageCustomer" ColumnName="SageCustomer" />
                 <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
                 <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
@@ -176,6 +321,60 @@
                 <ScalarProperty Name="QuoteDate" ColumnName="QuoteDate" />
                 <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
                 <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Picklists">
+            <EntityTypeMapping TypeName="HillsStock1Model.Picklist">
+              <MappingFragment StoreEntitySet="Picklist">
+                <ScalarProperty Name="EstimatedDelivery" ColumnName="EstimatedDelivery" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsDelivered" ColumnName="IsDelivered" />
+                <ScalarProperty Name="IsPacked" ColumnName="IsPacked" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IsPicked" ColumnName="IsPicked" />
+                <ScalarProperty Name="DeliveryNeeded" ColumnName="DeliveryNeeded" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
+                <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlantsForPicklists">
+            <EntityTypeMapping TypeName="HillsStock1Model.PlantsForPicklist">
+              <MappingFragment StoreEntitySet="PlantsForPicklist">
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="isSubbed" ColumnName="isSubbed" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="DispatchLocation" ColumnName="DispatchLocation" />
+                <ScalarProperty Name="SubbedFor" ColumnName="SubbedFor" />
+                <ScalarProperty Name="QuantityToPick" ColumnName="QuantityToPick" />
+                <ScalarProperty Name="FormSize" ColumnName="FormSize" />
+                <ScalarProperty Name="PlantName" ColumnName="PlantName" />
+                <ScalarProperty Name="PlantForQuoteId" ColumnName="PlantForQuoteId" />
+                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
+                <ScalarProperty Name="PlantForPickListId" ColumnName="PlantForPickListId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="HillsStock1Model.Batch">
+              <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="BuyPrice" ColumnName="BuyPrice" />
+                <ScalarProperty Name="DateStamp" ColumnName="DateStamp" />
+                <ScalarProperty Name="AllocatedQuantity" ColumnName="AllocatedQuantity" />
+                <ScalarProperty Name="GrowingQuantity" ColumnName="GrowingQuantity" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ImageExists" ColumnName="ImageExists" />
+                <ScalarProperty Name="WholesalePrice" ColumnName="WholesalePrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="FormSize" ColumnName="FormSize" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sku" ColumnName="Sku" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

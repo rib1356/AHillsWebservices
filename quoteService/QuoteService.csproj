@@ -197,15 +197,26 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PickListController.cs" />
     <Compile Include="Controllers\quoteController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\CustomerDTO.cs" />
+    <Compile Include="DTO\PickListDTO.cs" />
     <Compile Include="DTO\QuoteDTO.cs" />
     <Compile Include="DTO\QuoteDetailDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Batch.cs">
+      <DependentUpon>QuoteService.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CustomerInformation.cs">
+      <DependentUpon>QuoteService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Picklist.cs">
+      <DependentUpon>QuoteService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PlantsForPicklist.cs">
       <DependentUpon>QuoteService.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PlantsForQuote.cs">
