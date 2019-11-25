@@ -25,9 +25,9 @@ namespace quoteService.Models
         public System.DateTime DispatchDate { get; set; }
         public string DeliveryAddress { get; set; }
         public bool DeliveryNeeded { get; set; }
-        public bool IsPicked { get; set; }
+        public bool IsAllocated { get; set; }
         public bool Active { get; set; }
-        public bool IsPacked { get; set; }
+        public bool IsPicked { get; set; }
         public bool IsDelivered { get; set; }
         public string Comment { get; set; }
         public bool EstimatedDelivery { get; set; }

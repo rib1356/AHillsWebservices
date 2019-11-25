@@ -43,6 +43,8 @@ namespace quoteService.Controllers
                     CustomerRef = item.CustomerReference,
                     CustomerAddress = thisC.CustomerAddress,
                     CustomerName = thisC.CustomerName,
+                    CustomerTel = thisC.CustomerTel == "" ? null : thisC.CustomerTel,
+                    CustomerTel2 = thisC.CustomerTel2 == "" ? null : thisC.CustomerTel2,
                     Date = item.QuoteDate.ToString(),
                     ExpiryDate = item.QuoteExpiryDate.ToString(),
                     SiteRef = item.SiteReference,

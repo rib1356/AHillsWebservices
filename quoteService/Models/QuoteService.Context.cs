@@ -28,8 +28,8 @@ namespace quoteService.Models
         public virtual DbSet<CustomerInformation> CustomerInformations { get; set; }
         public virtual DbSet<PlantsForQuote> PlantsForQuotes { get; set; }
         public virtual DbSet<Quote> Quotes { get; set; }
-        public virtual DbSet<Picklist> Picklists { get; set; }
         public virtual DbSet<PlantsForPicklist> PlantsForPicklists { get; set; }
         public virtual DbSet<Batch> Batches { get; set; }
+        public virtual DbSet<Picklist> Picklists { get; set; }
     }
 }

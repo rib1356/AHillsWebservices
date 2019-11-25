@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using quoteService.DTO;
 using quoteService.Models;
 using QuoteService.DTO;
 
@@ -34,11 +35,12 @@ namespace QuoteService.Controllers
                 DeliveryNeeded = item.DeliveryNeeded,
                 CustomerName = db.CustomerInformations.FirstOrDefault(x => x.CustomerReference == db.Quotes.FirstOrDefault(z => z.QuoteId == item.QuoteId).CustomerReference).CustomerName ?? "No Customer Name",
                 IsPicked = item.IsPicked,
-                IsPacked = item.IsPacked,
+                IsAllocated = item.IsAllocated,
                 IsDelivered = item.IsDelivered,
                 Comment = item.Comment,
                 EstimatedDelivery = item.EstimatedDelivery, //Boolean because its either Estimated Or Exact Delivery Date
                 PickListItemQty = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.QuantityToPick),
+                TotalAmountPicked = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.QuantityPicked),
                 Active = item.Active,
             }).AsEnumerable();
 
@@ -75,6 +77,7 @@ namespace QuoteService.Controllers
                 PlantName = item.PlantName,
                 FormSize = item.FormSize,
                 QuantityToPick = item.QuantityToPick,
+                QuantityPicked = item.QuantityPicked,
                 SubbedFor = item.SubbedFor,
                 IsSubbed = item.isSubbed,
                 DispatchLocation = item.DispatchLocation,
@@ -89,17 +92,72 @@ namespace QuoteService.Controllers
                 DispatchDate = justOne.DispatchDate.ToString(),
                 DeliveryAddress = justOne.DeliveryAddress,
                 DeliveryNeeded = justOne.DeliveryNeeded,
+                CustomerRef = db.CustomerInformations.FirstOrDefault(x => x.CustomerReference == db.Quotes.FirstOrDefault(z => z.QuoteId == justOne.QuoteId).CustomerReference).CustomerReference ?? "No Customer Ref",
+                CustomerTel = db.CustomerInformations.FirstOrDefault(x => x.CustomerReference == db.Quotes.FirstOrDefault(z => z.QuoteId == justOne.QuoteId).CustomerReference).CustomerTel ?? "No Customer Tel",
                 IsPicked = justOne.IsPicked,
-                IsPacked = justOne.IsPacked,
+                IsAllocated = justOne.IsAllocated,
                 IsDelivered = justOne.IsDelivered,
                 Active = justOne.Active,
                 Comment = justOne.Comment,
                 EstimatedDelivery = justOne.EstimatedDelivery, //Boolean because its either Estimated Or Exact Delivery Date
                 PickListItemQty = db.PlantsForPicklists.Where(x => x.PicklistId == justOne.PicklistId).Sum(x => x.QuantityToPick),
+                TotalAmountPicked = db.PlantsForPicklists.Where(x => x.PicklistId == justOne.PicklistId).Sum(x => x.QuantityPicked),
                 PickListPlants = plantsForPicklist,
             };
 
             return dto;
+        }
+
+        public class PlantsToReturn
+        {
+            public int PlantForQuoteId { get; set; }
+            public string PlantName { get; set; }
+            public string FormSize { get; set; }
+            public int AmountNeeded { get; set; }
+            public string Location { get; set; }
+            public bool Active { get; set; }
+        }
+
+
+        // GET: api/picklist/plantsNeeded?id={id} <---Pass in the quoteId here?
+        [Route("plantsNeeded")]
+        public List<PlantsToReturn> GetRemainingQuotePlants(int id)
+        {
+            var plantsOnQuote = db.PlantsForQuotes.Where(x => x.QuoteId == id);
+            List<PlantsToReturn> plantsReturn = new List<PlantsToReturn>();
+
+            foreach(var plant in plantsOnQuote)
+            {
+                int plantOnPicklistQty;
+                //var exists = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == plant.PlantsForQuoteId).FirstOrDefault();
+                var exists = db.PlantsForPicklists.Any(x => x.PlantForQuoteId == plant.PlantsForQuoteId);
+                if (exists == true)
+                {
+                    plantOnPicklistQty = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == plant.PlantsForQuoteId).Sum(x => x.QuantityToPick);
+                } else
+                {
+                    plantOnPicklistQty = 0;
+                }
+
+                if (plant.Quantity > plantOnPicklistQty && plant.Active == true)
+                {
+                        plantsReturn.Add(new PlantsToReturn()
+                        {
+                            PlantForQuoteId = plant.PlantsForQuoteId,
+                            PlantName = plant.PlantName,
+                            FormSize = plant.FormSize,
+                            AmountNeeded = (plant.Quantity - plantOnPicklistQty) ?? 0,
+                            //Add in location and other stuff here
+                            
+                            Active = plant.Active,
+                        });
+                } else
+                {
+                    //do nothing
+                }
+            }
+
+            return plantsReturn;
         }
 
         // POST: api/PickList
@@ -120,8 +178,8 @@ namespace QuoteService.Controllers
                     DeliveryAddress = picklist.DeliveryAddress,
                     DeliveryNeeded = picklist.DeliveryNeeded,
                     IsPicked = picklist.IsPicked,
-                    IsPacked = picklist.IsPacked,
-                    IsDelivered = picklist.IsPacked,
+                    IsAllocated = picklist.IsAllocated,
+                    IsDelivered = picklist.IsDelivered,
                     Comment = picklist.Comment,
                     EstimatedDelivery = picklist.EstimatedDelivery,
                     Active = true  //Default to true as initial save
@@ -146,6 +204,7 @@ namespace QuoteService.Controllers
                         SubbedFor = plant.SubbedFor,
                         isSubbed = plant.IsSubbed,
                         DispatchLocation = plant.DispatchLocation,
+                        QuantityPicked = 0, //Can I just default this to 0 because none will have been picked on creation??
                         Active = true
                     };
                     db.PlantsForPicklists.Add(thisPlant);

@@ -46,9 +46,9 @@
           <Property Name="DispatchDate" Type="date" Nullable="false" />
           <Property Name="DeliveryAddress" Type="nvarchar(max)" />
           <Property Name="DeliveryNeeded" Type="bit" Nullable="false" />
-          <Property Name="IsPicked" Type="bit" Nullable="false" />
+          <Property Name="IsAllocated" Type="bit" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
-          <Property Name="IsPacked" Type="bit" Nullable="false" />
+          <Property Name="IsPicked" Type="bit" Nullable="false" />
           <Property Name="IsDelivered" Type="bit" Nullable="false" />
           <Property Name="Comment" Type="nvarchar(max)" />
           <Property Name="EstimatedDelivery" Type="bit" Nullable="false" />
@@ -68,6 +68,7 @@
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="isSubbed" Type="bit" Nullable="false" />
           <Property Name="BatchId" Type="int" Nullable="false" />
+          <Property Name="QuantityPicked" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -148,13 +149,13 @@
             <End Role="Quote" EntitySet="Quotes" />
             <End Role="PlantsForQuote" EntitySet="PlantsForQuotes" />
           </AssociationSet>
-          <EntitySet Name="Picklists" EntityType="HillsStock1Model.Picklist" />
           <EntitySet Name="PlantsForPicklists" EntityType="HillsStock1Model.PlantsForPicklist" />
+          <EntitySet Name="Batches" EntityType="HillsStock1Model.Batch" />
+          <EntitySet Name="Picklists" EntityType="HillsStock1Model.Picklist" />
           <AssociationSet Name="FK_PlantsForPicklist_Picklist" Association="HillsStock1Model.FK_PlantsForPicklist_Picklist">
             <End Role="Picklist" EntitySet="Picklists" />
             <End Role="PlantsForPicklist" EntitySet="PlantsForPicklists" />
           </AssociationSet>
-          <EntitySet Name="Batches" EntityType="HillsStock1Model.Batch" />
         </EntityContainer>
         <EntityType Name="CustomerInformation">
           <Key>
@@ -210,23 +211,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Picklist">
-          <Key>
-            <PropertyRef Name="PicklistId" />
-          </Key>
-          <Property Name="PicklistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuoteId" Type="Int32" Nullable="false" />
-          <Property Name="DispatchDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="DeliveryAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryNeeded" Type="Boolean" Nullable="false" />
-          <Property Name="IsPicked" Type="Boolean" Nullable="false" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-          <Property Name="IsPacked" Type="Boolean" Nullable="false" />
-          <Property Name="IsDelivered" Type="Boolean" Nullable="false" />
-          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="EstimatedDelivery" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="PlantsForPicklists" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="Picklist" ToRole="PlantsForPicklist" />
-        </EntityType>
         <EntityType Name="PlantsForPicklist">
           <Key>
             <PropertyRef Name="PlantForPickListId" />
@@ -242,20 +226,9 @@
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <Property Name="isSubbed" Type="Boolean" Nullable="false" />
           <Property Name="BatchId" Type="Int32" Nullable="false" />
+          <Property Name="QuantityPicked" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Picklist" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="PlantsForPicklist" ToRole="Picklist" />
         </EntityType>
-        <Association Name="FK_PlantsForPicklist_Picklist">
-          <End Type="HillsStock1Model.Picklist" Role="Picklist" Multiplicity="1" />
-          <End Type="HillsStock1Model.PlantsForPicklist" Role="PlantsForPicklist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Picklist">
-              <PropertyRef Name="PicklistId" />
-            </Principal>
-            <Dependent Role="PlantsForPicklist">
-              <PropertyRef Name="PicklistId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="Id" />
@@ -275,6 +248,35 @@
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Picklist">
+          <Key>
+            <PropertyRef Name="PicklistId" />
+          </Key>
+          <Property Name="PicklistId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuoteId" Type="Int32" Nullable="false" />
+          <Property Name="DispatchDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DeliveryAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryNeeded" Type="Boolean" Nullable="false" />
+          <Property Name="IsAllocated" Type="Boolean" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="IsPicked" Type="Boolean" Nullable="false" />
+          <Property Name="IsDelivered" Type="Boolean" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EstimatedDelivery" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PlantsForPicklists" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="Picklist" ToRole="PlantsForPicklist" />
+        </EntityType>
+        <Association Name="FK_PlantsForPicklist_Picklist">
+          <End Type="HillsStock1Model.Picklist" Role="Picklist" Multiplicity="1" />
+          <End Type="HillsStock1Model.PlantsForPicklist" Role="PlantsForPicklist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Picklist">
+              <PropertyRef Name="PicklistId" />
+            </Principal>
+            <Dependent Role="PlantsForPicklist">
+              <PropertyRef Name="PicklistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -324,26 +326,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Picklists">
-            <EntityTypeMapping TypeName="HillsStock1Model.Picklist">
-              <MappingFragment StoreEntitySet="Picklist">
-                <ScalarProperty Name="EstimatedDelivery" ColumnName="EstimatedDelivery" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="IsDelivered" ColumnName="IsDelivered" />
-                <ScalarProperty Name="IsPacked" ColumnName="IsPacked" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="IsPicked" ColumnName="IsPicked" />
-                <ScalarProperty Name="DeliveryNeeded" ColumnName="DeliveryNeeded" />
-                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
-                <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
-                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
-                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PlantsForPicklists">
             <EntityTypeMapping TypeName="HillsStock1Model.PlantsForPicklist">
               <MappingFragment StoreEntitySet="PlantsForPicklist">
+                <ScalarProperty Name="QuantityPicked" ColumnName="QuantityPicked" />
                 <ScalarProperty Name="BatchId" ColumnName="BatchId" />
                 <ScalarProperty Name="isSubbed" ColumnName="isSubbed" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
@@ -375,6 +361,23 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Picklists">
+            <EntityTypeMapping TypeName="HillsStock1Model.Picklist">
+              <MappingFragment StoreEntitySet="Picklist">
+                <ScalarProperty Name="EstimatedDelivery" ColumnName="EstimatedDelivery" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsDelivered" ColumnName="IsDelivered" />
+                <ScalarProperty Name="IsPicked" ColumnName="IsPicked" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IsAllocated" ColumnName="IsAllocated" />
+                <ScalarProperty Name="DeliveryNeeded" ColumnName="DeliveryNeeded" />
+                <ScalarProperty Name="DeliveryAddress" ColumnName="DeliveryAddress" />
+                <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
+                <ScalarProperty Name="QuoteId" ColumnName="QuoteId" />
+                <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -11,6 +11,8 @@ namespace quoteService.DTO
         public string CustomerRef { get; set; }
         public string CustomerName { get; set; }
         public string CustomerAddress { get; set; }
+        public string CustomerTel { get; set; }
+        public string CustomerTel2 { get; set; }
         public string Date { get; set; }
         public string ExpiryDate { get; set; }
         public string SiteRef { get; set; }

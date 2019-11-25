@@ -9,10 +9,10 @@
         <EntityTypeShape EntityType="HillsStock1Model.PlantsForQuote" Width="1.5" PointX="6.625" PointY="1" />
         <EntityTypeShape EntityType="HillsStock1Model.Quote" Width="1.5" PointX="4.375" PointY="1" />
         <AssociationConnector Association="HillsStock1Model.FK_PlantsForQuote_Quotes" />
-        <EntityTypeShape EntityType="HillsStock1Model.Picklist" Width="1.5" PointX="0.75" PointY="5" />
         <EntityTypeShape EntityType="HillsStock1Model.PlantsForPicklist" Width="1.5" PointX="3" PointY="5" />
-        <AssociationConnector Association="HillsStock1Model.FK_PlantsForPicklist_Picklist" />
         <EntityTypeShape EntityType="HillsStock1Model.Batch" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="HillsStock1Model.Picklist" Width="1.5" PointX="0.75" PointY="5.125" />
+        <AssociationConnector Association="HillsStock1Model.FK_PlantsForPicklist_Picklist" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
