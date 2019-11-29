@@ -57,6 +57,7 @@ namespace QuoteService.DTO
         public string SubbedFor { get; set; }
         public bool IsSubbed { get; set; }
         public string DispatchLocation { get; set; }
+        public int CurrentQuantityPicked { get; set; }
         public bool Active { get; set; }
     }
 

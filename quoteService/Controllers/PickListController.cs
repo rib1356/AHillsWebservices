@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
@@ -78,6 +79,7 @@ namespace QuoteService.Controllers
                 FormSize = item.FormSize,
                 QuantityToPick = item.QuantityToPick,
                 QuantityPicked = item.QuantityPicked,
+                CurrentQuantityPicked = item.CurrentQuantityPicked,
                 SubbedFor = item.SubbedFor,
                 IsSubbed = item.isSubbed,
                 DispatchLocation = item.DispatchLocation,
@@ -205,6 +207,7 @@ namespace QuoteService.Controllers
                         isSubbed = plant.IsSubbed,
                         DispatchLocation = plant.DispatchLocation,
                         QuantityPicked = 0, //Can I just default this to 0 because none will have been picked on creation??
+                        CurrentQuantityPicked = 0,
                         Active = true
                     };
                     db.PlantsForPicklists.Add(thisPlant);
@@ -269,5 +272,75 @@ namespace QuoteService.Controllers
         {
             return db.Picklists.Count(e => e.PicklistId == id) > 0;
         }
+
+        // PUT: api/picklist/pickItems?={id}
+        [Route("pickItems")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutPickItems(HttpRequestMessage request, SelectedPickListDTO picklistItems)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!PickListExists(picklistItems.PicklistId))
+            {
+                return NotFound();
+            }
+            
+            var currentPicklist = db.Picklists.Where(x => x.PicklistId == picklistItems.PicklistId).FirstOrDefault();
+            //Will always default to true, meaning that all the plants on the picklist have been picked
+            //If not it will be set to false in foreach statement if a plant has only been partially picked
+            bool pickedState = true; 
+            foreach (var item in picklistItems.PickListPlants)
+            {
+                //Saving the amount that has been picked to each plant on the current picklist
+                var plantToChange = db.PlantsForPicklists.Where(x => x.PlantForPickListId == item.PlantForPicklistId).FirstOrDefault();
+                if(plantToChange != null)
+                {
+                    //int dbQuantityPicked = plantToChange.QuantityPicked
+                    //int calcQuantityPicked = plantToChange.QuantityPicked += item.QuantityPicked;
+                    plantToChange.QuantityPicked += item.QuantityPicked; //Need to change this so it doesnt add
+                    plantToChange.CurrentQuantityPicked = item.QuantityPicked;
+                    if(plantToChange.QuantityPicked < plantToChange.QuantityToPick)
+                    {
+                        pickedState = false;
+                    }
+                } else
+                {
+                    return StatusCode(HttpStatusCode.BadRequest);
+                }
+
+                db.Entry(plantToChange).State = EntityState.Modified;
+            }
+            currentPicklist.IsAllocated = false;
+            currentPicklist.IsPicked = pickedState;
+
+            db.Entry(currentPicklist).State = EntityState.Modified;
+            
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PickListExists(picklistItems.PicklistId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.OK);
+        }
+
+        //private bool PickListItemExists(int id)
+        //{
+        //    return db.Picklists.Count(e => e.PicklistId == id) > 0;
+        //}
     }
 }
