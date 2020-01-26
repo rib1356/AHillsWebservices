@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using ImportModel;
 using ImportService.Models;
+using PagedList;
 
 namespace ImportService.Controllers
 {
@@ -16,27 +17,57 @@ namespace ImportService.Controllers
         private ImportEntities db = new ImportEntities();
 
         // GET: PlantNames
-        public ActionResult Index(string sortOrder)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
 
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name" : "";
-            ViewBag.SkuSortParm = sortOrder == "sku" ? "sku" : "sku";
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "nameD" : "";
+            ViewBag.SkuSortParm = sortOrder == "sku" ? "skuD" : "sku";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
             List<PlantName> vm = new List<PlantName>();
             var allPlantNames = db.PlantNames;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                vm = allPlantNames.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
+                                       || s.Sku.ToUpper().Contains(searchString.ToUpper())).ToList();
+            }
+            else
+            {
+                vm = allPlantNames.ToList();
+            }
+
             switch (sortOrder)
             {
+                case "nameD":
+                    vm = vm.OrderByDescending(s => s.Name).ToList();
+                    break;
                 case "name":
-                    vm = allPlantNames.OrderByDescending(s => s.Name).ToList();
+                    vm = vm.OrderBy(s => s.Name).ToList();
                     break;
                 case "sku":
-                    vm = allPlantNames.OrderBy(s => s.Sku).ToList();
+                    vm = vm.OrderBy(s => s.Sku).ToList();
+                    break;
+                case "skuD":
+                    vm = vm.OrderByDescending(s => s.Sku).ToList();
                     break;
                 default:
-                    vm = allPlantNames.OrderBy(s => s.Sku).ToList();
+                    vm = vm.OrderBy(s => s.Name).ToList();
                     break;
             }
 
-            return View(vm);
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+            return View(vm.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: PlantNames/Details/5
@@ -97,7 +128,7 @@ namespace ImportService.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Sku,Name")] PlantName plantName)
+        public ActionResult Edit([Bind(Include = "PlantId,Sku,Name")] PlantName plantName)
         {
             if (ModelState.IsValid)
             {
