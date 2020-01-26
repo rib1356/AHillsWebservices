@@ -18,6 +18,14 @@
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
         </EntityType>
+        <EntityType Name="PlantNames">
+          <Key>
+            <PropertyRef Name="PlantId" />
+          </Key>
+          <Property Name="PlantId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sku" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="rawImport">
           <Key>
             <PropertyRef Name="Id" />
@@ -36,6 +44,7 @@
         <Function Name="sp_removepannebakkerduplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="HillsImportModelStoreContainer">
           <EntitySet Name="Pannebakker" EntityType="Self.Pannebakker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantNames" EntityType="Self.PlantNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="rawImport" EntityType="Self.rawImport" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -74,7 +83,16 @@
           <FunctionImport Name="sp_importmerge" />
           <FunctionImport Name="sp_removeimportduplicates" />
           <FunctionImport Name="sp_removepannebakkerduplicates" />
+          <EntitySet Name="PlantNames" EntityType="HillsImportModel.PlantName" />
         </EntityContainer>
+        <EntityType Name="PlantName">
+          <Key>
+            <PropertyRef Name="PlantId" />
+          </Key>
+          <Property Name="PlantId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sku" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -112,6 +130,15 @@
           <FunctionImportMapping FunctionImportName="sp_importmerge" FunctionName="HillsImportModel.Store.sp_importmerge" />
           <FunctionImportMapping FunctionImportName="sp_removeimportduplicates" FunctionName="HillsImportModel.Store.sp_removeimportduplicates" />
           <FunctionImportMapping FunctionImportName="sp_removepannebakkerduplicates" FunctionName="HillsImportModel.Store.sp_removepannebakkerduplicates" />
+          <EntitySetMapping Name="PlantNames">
+            <EntityTypeMapping TypeName="HillsImportModel.PlantName">
+              <MappingFragment StoreEntitySet="PlantNames">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sku" ColumnName="Sku" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

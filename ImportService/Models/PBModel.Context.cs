@@ -26,5 +26,7 @@ namespace ImportService.Models
         }
     
         public virtual DbSet<Pannebakker> Pannebakkers { get; set; }
+
+        public System.Data.Entity.DbSet<ImportModel.PlantName> PlantNames { get; set; }
     }
 }

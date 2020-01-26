@@ -178,6 +178,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\PannebakkersController.cs" />
     <Compile Include="Controllers\pbServiceController.cs" />
+    <Compile Include="Controllers\PlantNamesController.cs" />
     <Compile Include="Controllers\readBatchController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="DTO\Batch.cs" />
@@ -277,6 +278,11 @@
     <Content Include="Views\Upload\uploadDone.cshtml" />
     <Content Include="Views\readBatch\PB.cshtml" />
     <Content Include="Views\Upload\version.cshtml" />
+    <Content Include="Views\PlantNames\Create.cshtml" />
+    <Content Include="Views\PlantNames\Delete.cshtml" />
+    <Content Include="Views\PlantNames\Details.cshtml" />
+    <Content Include="Views\PlantNames\Edit.cshtml" />
+    <Content Include="Views\PlantNames\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImportModel\ImportModel.csproj">

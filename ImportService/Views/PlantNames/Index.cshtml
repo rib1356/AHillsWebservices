@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ImportModel.PlantName>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+
+    <tr>
+        <th>
+            @Html.ActionLink("SKU", "Index", new { sortOrder = ViewBag.SkuSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Plant Name", "Index", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+
+
+        <th></th>
+
+
+        @foreach (var item in Model)
+        {
+<tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sku)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PlantId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PlantId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PlantId })
+            </td>
+        </tr>
+    }
+
+</table>
