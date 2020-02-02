@@ -176,8 +176,8 @@ namespace ImportService.Controllers
                 RepDb.MergeImport();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
-                return View("Index");
-                //return RedirectToAction("Index");
+                //return View("Index");
+                return RedirectToAction("Index");
 
             }
             catch (Exception ex)
