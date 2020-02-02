@@ -11,21 +11,20 @@
 
 <h2>Plant Name Management</h2>
 
-
 <table >
     <tr>
         <td>
         @using (Html.BeginForm("Index", "PlantNames", FormMethod.Get))
         {
             <p>
-                Find by name or sku : @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+                Find by name or sku :<br /> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
                 <input type="submit" value="Search" />
             </p>
         }
         </td>
         <td style="padding: 50px">
             <p>
-               @Html.ActionLink("Add Plant Name", "Create")
+               
             </p>
          </td>
     </tr>
@@ -36,15 +35,15 @@
     <tr>
         <th>
             @*@Html.ActionLink("SKU", "Index", new { sortOrder = ViewBag.SkuSortParm })*@
-            @Html.ActionLink("SKU", "Index", new { sortOrder = ViewBag.SkuSortParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("SKU", "Index", new { sortOrder = ViewBag.SkuSortParm, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-primary" })
         </th>
         <th>
             @*@Html.ActionLink("Plant Name", "Index", new { sortOrder = ViewBag.NameSortParm })*@
-            @Html.ActionLink("Plant Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+            @Html.ActionLink("Plant Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter }, new { @class = "btn btn-primary" })
         </th>
 
 
-        <th></th>
+        <th>@Html.ActionLink("Add Plant Name", "Create", null, new { @class = "btn btn-primary" })</th>
 
 
         @foreach (var item in Model)
@@ -58,8 +57,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.PlantId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.PlantId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PlantId })
+                @Html.ActionLink("Delete", "Delete", new { id = item.PlantId }) 
             </td>
         </tr>
     }

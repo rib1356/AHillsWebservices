@@ -5,14 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Add a Plant</h2>
+<h3>Add a Single Plant Name</h3>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>PlantName</h4>
+
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -40,12 +40,14 @@
 }
 
 
-<hr />
+<hr class="border border-primary" />
+<h3>Add a batch of Plant Names</h3>
+
 @using (Html.BeginForm("GetStockFile", "PlantNames", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-
+    <label for="exampleFormControlFile1">Select File to Import</label>
     <div class="form-group">
-        <input type="file" id="file" name="file" />
+        <input type="file" id="file" name="file" class="form-control-file" />
     </div>
 
     <div class="form-group">
@@ -53,6 +55,10 @@
     </div>
 }
 
+
+
+<hr class="border border-primary" />
+
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Name List", "Index", null, new { @class = "btn btn-primary" })
 </div>
