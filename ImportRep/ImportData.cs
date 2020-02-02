@@ -61,7 +61,9 @@ namespace ImportRep
         /// </summary>
         public void MergeImport()
         {
-            context.sp_importmerge();
+            // context.sp_importmerge();
+            context.sp_mergenames();
+
         }
 
 
@@ -92,7 +94,7 @@ namespace ImportRep
         /// </summary>
         public void RemoveDuplicates()
         {
-            context.sp_removeimportduplicates();
+            context.sp_removedupnames();
             //context.sp_removepannebakkerduplicates();
         }
 

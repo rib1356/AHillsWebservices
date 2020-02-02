@@ -45,5 +45,15 @@ namespace ImportModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_removepannebakkerduplicates");
         }
+    
+        public virtual int sp_removedupnames()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_removedupnames");
+        }
+    
+        public virtual int sp_mergenames()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_mergenames");
+        }
     }
 }

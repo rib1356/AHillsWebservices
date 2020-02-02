@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ImportModel;
+using ImportRep;
 using ImportService.Models;
 using PagedList;
 
@@ -15,6 +17,14 @@ namespace ImportService.Controllers
     public class PlantNamesController : Controller
     {
         private ImportEntities db = new ImportEntities();
+
+
+        private IImportRepository RepDb;
+
+        public PlantNamesController()
+        {
+            this.RepDb = new ImportRepository(new ImportModel.ImportEntities());
+        }
 
         // GET: PlantNames
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -90,6 +100,167 @@ namespace ImportService.Controllers
         {
             return View();
         }
+
+        #region fileUpload
+
+        public ActionResult GetStockFile(HttpPostedFileBase file)
+        {
+            //try
+            //{
+            //    var valid = (bool)Session["admin"];
+            //    if (!valid)
+            //    {
+            //        return RedirectToAction("Index", "Home");
+            //    }
+            //}
+            //catch
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
+
+
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    // extract only the filename
+                    var fileName = Path.GetFileName(file.FileName);
+                    string name = System.IO.Path.GetFileName(fileName);
+                    // store the file inside ~/App_Data/uploads folder
+                    var path = Path.Combine(Server.MapPath("~/App_Data/"), name);
+                    file.SaveAs(path);
+                    TempData["path"] = name;
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
+            }
+
+            ViewBag.Title = "Home Page";
+
+            return RedirectToAction("UpLoad");
+        }
+
+        public ActionResult UpLoad()
+        {
+            List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            //List<ImportModel.Pannebakker> existingRecords = new List<ImportModel.Pannebakker>();
+            //List<ImportModel.rawImport> newRecords = new List<ImportModel.rawImport>();
+
+            try
+            {
+                recordsIn = ReadInputFile();
+                // existingRecords = db.GetPannebakkers().ToList();
+                // newRecords = recordsIn.Union(existingRecords).ToList();
+                // newRecords = existingRecords.Union(recordsIn, new DTO.PbComparer()).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                //ViewBag.Error = ex.InnerException.Message;
+                return View("version");
+            }
+
+
+            try
+            {
+                // "TRUNCATE TABLE [rawImport]"]");
+                RepDb.EmptyImport();
+
+                // db.BulkInsert<Pannebakker>(newRecords);
+                RepDb.BulkInsert(recordsIn);
+                RepDb.RemoveDuplicates();
+                //AddBatch(records);
+                RepDb.MergeImport();
+                ViewBag.Title = "done";
+                Response.Write("<script>console.log('Data has been saved to db');</script>");
+                return View("Index");
+                //return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.InnerException.Message;
+                return View("shit");
+            }
+
+        }
+
+
+        private List<ImportModel.rawImport> ReadInputFile()
+        {
+            List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            var fred = TempData["path"].ToString();
+            //var filesData = Directory.GetFiles(@fred);
+            string path = Server.MapPath("~/App_Data/" + fred);
+            //string path = Server.MapPath(fred.ToString());
+            var package = new OfficeOpenXml.ExcelPackage(new FileInfo(path));
+
+            OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
+
+
+            for (int row = workSheet.Dimension.Start.Row;
+                 row <= workSheet.Dimension.End.Row;
+                 row++)
+                    {
+                        if (HasData(workSheet, row))
+                        {
+                            ImportModel.rawImport obj = new ImportModel.rawImport();
+                            obj.Sku = GetPBSKU(workSheet, row);
+                            obj.FormSizeCode = "";
+                            obj.Name = GetName(workSheet, row);
+                            obj.FormSize = "";
+                            obj.Price = 0;
+                            recordsIn.Add(obj);
+
+                        }
+                    }
+            return recordsIn;
+        }
+
+        private static bool HasData(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if ((workSheet.Cells[row, workSheet.Dimension.Start.Column + 0].Value != null) && (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        // ABEGOUCH
+        private static string GetPBSKU(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 0].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 0].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
+        // Abelia 'Edward Goucher'
+        private static string GetName(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        #endregion
 
         // POST: PlantNames/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
