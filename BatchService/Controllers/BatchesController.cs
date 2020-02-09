@@ -68,9 +68,11 @@ namespace BatchService.Controllers
 
         }
 
-        public IQueryable<Batch> GetBatches()
+        //Get: api/batches
+        public List<Batch> GetBatches()
         {
-            return db.Batches;
+            var batches = db.Batches.Where(x => x.Location != "PB").ToList();
+            return batches;
         }
 
         // GET: api/Batches/5
