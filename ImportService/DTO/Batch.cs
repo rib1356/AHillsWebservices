@@ -12,6 +12,7 @@ namespace ImportService.DTO
         public string Sku { get; set; }
         public string Name { get; set; }
         public string FormSize { get; set; }
+        public string Location { get; set; }
         public int Quantity { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
 
@@ -30,8 +31,11 @@ namespace ImportService.DTO
         public string Sku { get; set; }
         [Display(Name = "Name")]
         public string Name { get; set; }
+        [Display(Name = "Location")]
+        public string Location { get; set; }
         [Display(Name = "Form Size")]
         public string FormSize { get; set; }
+        [Display(Name = "Quantity")]
         public int Quantity { get; set; }
         [Display(Name = "Price")]
         public Nullable<int> WholesalePrice { get; set; }

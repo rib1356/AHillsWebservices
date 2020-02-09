@@ -1,4 +1,5 @@
 ﻿using ImportService.DTO;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,19 +13,77 @@ namespace ImportService.Controllers
     public class readBatchController : Controller
     {
         // GET: readBatch
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    // empty batches object to fill soon
+        //    var batches = new List<DTO.BatchDTO>().AsEnumerable();
+        //    // dear service can i have the batches please
+        //    batches = ServiceLayer.BatchService.GetBatches();
+        //    // transform the services into a viewModel
+        //    IEnumerable<DTO.BatchVM> VM = buildVM(batches);
+        //    return View(VM);
+        //}
+
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
+
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "nameD" : "";
+            ViewBag.SkuSortParm = sortOrder == "sku" ? "skuD" : "sku";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+           
             // empty batches object to fill soon
-            var batches = new List<DTO.BatchDTO>().AsEnumerable();
+            var batches = new List<DTO.BatchDTO>();
             // dear service can i have the batches please
-            batches = ServiceLayer.BatchService.GetBatches();
+            batches = ServiceLayer.BatchService.GetBatches().ToList();
             // transform the services into a viewModel
-            IEnumerable<DTO.BatchVM> VM = buildVM(batches);
+            List<DTO.BatchVM> VM = buildVM(batches).ToList();
 
-            return View(VM);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                VM = VM.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
+                                       || s.Sku.ToUpper().Contains(searchString.ToUpper())).ToList();
+            }
+            else
+            {
+                VM = VM.ToList();
+            }
 
+            switch (sortOrder)
+            {
+                case "nameD":
+                    VM = VM.OrderByDescending(s => s.Name).ToList();
+                    break;
+                case "name":
+                    VM = VM.OrderBy(s => s.Name).ToList();
+                    break;
+                case "sku":
+                    VM = VM.OrderBy(s => s.Sku).ToList();
+                    break;
+                case "skuD":
+                    VM = VM.OrderByDescending(s => s.Sku).ToList();
+                    break;
+                default:
+                    VM = VM.OrderBy(s => s.Name).ToList();
+                    break;
+            }
 
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+            return View(VM.ToPagedList(pageNumber, pageSize));
         }
+
+
+
 
 
         public ActionResult PB(int? id)
@@ -69,6 +128,7 @@ namespace ImportService.Controllers
                 Name = b.Name,
                 FormSize = b.FormSize,
                 Quantity = b.Quantity,
+                Location = b.Location,
                 WholesalePrice = b.WholesalePrice
             }).AsEnumerable();
         }

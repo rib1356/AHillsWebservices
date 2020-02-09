@@ -17,6 +17,7 @@ namespace BatchService.Models
         public string Sku { get; set; }
         public string Name { get; set; }
         public string FormSize { get; set; }
+        public string Location { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
         public Nullable<int> PurchasePrice { get; set; }
 

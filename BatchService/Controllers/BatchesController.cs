@@ -32,6 +32,7 @@ namespace BatchService.Controllers
                 Id = item.Id,
                 Sku = item.Sku,
                   Name = item.Name,
+                   Location = item.Location,
                    FormSize = item.FormSize,
                     PurchasePrice = -1,
                         WholesalePrice = item.WholesalePrice,
