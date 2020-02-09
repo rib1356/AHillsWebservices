@@ -7,8 +7,9 @@ using System.Web;
 
 namespace ImportService.ServiceLayer
 {
-    public class BatchService
+    public class PlantNameService
     {
+
         /// <summary>
         /// WE need to modify the System URi to use the deployed service
         /// </summary>
@@ -22,38 +23,19 @@ namespace ImportService.ServiceLayer
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }
-
-        // http://localhost:52009/api/Batches/All/3
-        public static DTO.BatchDTO GetBatchItem(int id)
-        {
-            HttpClient client = ApiClient();
-            var request = "api/Batches/All/" + id.ToString();
-            HttpResponseMessage response = client.GetAsync(request).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                return response.Content.ReadAsAsync<DTO.BatchDTO>().Result;
-            }
-            else
-            {
-                Debug.WriteLine("Index received a bad response from the web service.");
-                return null;
-            }
-        }
-
-
         /// <summary>
         /// Ask our Service for the batches please
         /// </summary>
         /// <param name="batches"></param>
         /// <param name="client"></param>
         /// <returns>IEnumerable<DTO.BatchDTO></returns>
-        public static IEnumerable<DTO.BatchDTO> GetBatches()
+        public static IEnumerable<DTO.PlantNameDTO> GetNames()
         {
             HttpClient client = ApiClient();
-            HttpResponseMessage response = client.GetAsync("api/Batches/All").Result;
+            HttpResponseMessage response = client.GetAsync("api/Plant").Result;
             if (response.IsSuccessStatusCode)
             {
-                return response.Content.ReadAsAsync<IEnumerable<DTO.BatchDTO>>().Result;
+                return response.Content.ReadAsAsync<IEnumerable<DTO.PlantNameDTO>>().Result;
             }
             else
             {
@@ -61,12 +43,6 @@ namespace ImportService.ServiceLayer
                 return null;
             }
         }
-
-
-       
-
-
-
 
     }
 }

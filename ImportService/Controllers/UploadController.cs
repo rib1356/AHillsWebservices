@@ -121,9 +121,12 @@ namespace ImportService.Controllers
 
                 // db.BulkInsert<Pannebakker>(newRecords);
                 db.BulkInsert(recordsIn);
-                db.RemoveDuplicates();
+                
                 //AddBatch(records);
-                db.MergeImport();
+                db.MergeImportToPB();
+                db.RemoveDuplicatePB();
+                db.MergePbToBatch();
+                db.RemoveDuplicateBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");

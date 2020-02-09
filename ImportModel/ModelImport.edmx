@@ -39,8 +39,10 @@
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
         </EntityType>
+        <Function Name="removeBatchDuplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_importmerge" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_mergenames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_MergePBintoBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_removedupnames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_removeimportduplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_removepannebakkerduplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -88,6 +90,8 @@
           <EntitySet Name="PlantNames" EntityType="HillsImportModel.PlantName" />
           <FunctionImport Name="sp_removedupnames" />
           <FunctionImport Name="sp_mergenames" />
+          <FunctionImport Name="sp_MergePBintoBatch" />
+          <FunctionImport Name="removeBatchDuplicates" />
         </EntityContainer>
         <EntityType Name="PlantName">
           <Key>
@@ -145,6 +149,8 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_removedupnames" FunctionName="HillsImportModel.Store.sp_removedupnames" />
           <FunctionImportMapping FunctionImportName="sp_mergenames" FunctionName="HillsImportModel.Store.sp_mergenames" />
+          <FunctionImportMapping FunctionImportName="sp_MergePBintoBatch" FunctionName="HillsImportModel.Store.sp_MergePBintoBatch" />
+          <FunctionImportMapping FunctionImportName="removeBatchDuplicates" FunctionName="HillsImportModel.Store.removeBatchDuplicates" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

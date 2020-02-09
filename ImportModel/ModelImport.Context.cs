@@ -55,5 +55,15 @@ namespace ImportModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_mergenames");
         }
+    
+        public virtual int sp_MergePBintoBatch()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_MergePBintoBatch");
+        }
+    
+        public virtual int removeBatchDuplicates()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("removeBatchDuplicates");
+        }
     }
 }

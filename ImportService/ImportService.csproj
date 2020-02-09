@@ -190,6 +190,7 @@
     <Compile Include="DTO\Batch.cs" />
     <Compile Include="DTO\PbComparer.cs" />
     <Compile Include="DTO\PbDTO.cs" />
+    <Compile Include="DTO\PlantNameDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -214,6 +215,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceLayer\BatchService.cs" />
     <Compile Include="ServiceLayer\PbService.cs" />
+    <Compile Include="ServiceLayer\PlantNameService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Here.txt" />

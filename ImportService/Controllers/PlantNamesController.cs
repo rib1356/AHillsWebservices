@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using ImportModel;
 using ImportRep;
+using ImportService.DTO;
 using ImportService.Models;
 using PagedList;
 
@@ -43,8 +44,10 @@ namespace ImportService.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
+           // List<PlantNameDTO> vm = new List<PlantNameDTO>();
             List<PlantName> vm = new List<PlantName>();
             var allPlantNames = db.PlantNames;
+           // var allPlantNames = ServiceLayer.PlantNameService.GetNames();
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -171,9 +174,9 @@ namespace ImportService.Controllers
 
                 // db.BulkInsert<Pannebakker>(newRecords);
                 RepDb.BulkInsert(recordsIn);
-                RepDb.RemoveDuplicates();
+                RepDb.RemoveDuplicateNames();
                 //AddBatch(records);
-                RepDb.MergeImport();
+                RepDb.MergeImportToNames();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 //return View("Index");
