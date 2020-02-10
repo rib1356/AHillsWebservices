@@ -17,8 +17,8 @@ namespace ImportService.ServiceLayer
         {
             HttpClient client = new HttpClient();
             // http://localhost:52009/
-            client.BaseAddress = new System.Uri("http://localhost:52009/");
-            //client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
+            //client.BaseAddress = new System.Uri("http://localhost:52009/");
+            client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }
