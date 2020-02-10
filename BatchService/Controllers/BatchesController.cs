@@ -71,8 +71,9 @@ namespace BatchService.Controllers
         //Get: api/batches
         public List<Batch> GetBatches()
         {
-            var batches = db.Batches.Where(x => x.Location != "PB").ToList();
-            return batches;
+            //var batches = db.Batches.Where(x => x.Location != "PB").ToList();
+            var testBatches = db.Batches.Take(3000).ToList();
+            return testBatches;
         }
 
         // GET: api/Batches/5
