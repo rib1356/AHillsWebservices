@@ -78,7 +78,10 @@ namespace ImportRep
             context.sp_MergePBintoBatch();
         }
 
-
+        public void RemoveDuplicateImport()
+        {
+            context.sp_removeimportduplicates();
+        }
 
         public void RemoveDuplicateNames()
         {

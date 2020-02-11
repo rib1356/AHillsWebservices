@@ -38,7 +38,7 @@ namespace ImportService.DTO
         [Display(Name = "Quantity")]
         public int Quantity { get; set; }
         [Display(Name = "Price")]
-        public Nullable<int> WholesalePrice { get; set; }
+        public Nullable<decimal> WholesalePrice { get; set; }
 
     }
 }

@@ -26,6 +26,8 @@ namespace ImportRep
 
         void RemoveDuplicatePB();
 
+        void RemoveDuplicateImport();
+
         void RemoveDuplicateBatch();
     }
 }

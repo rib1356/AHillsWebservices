@@ -71,7 +71,13 @@
             @Html.DisplayFor(modelItem => item.Location)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.WholesalePrice)
+
+            &pound;&nbsp;
+            @{
+                var p = item.WholesalePrice;
+                decimal d = (decimal)p / 100m;
+                @d
+            }
             @*@Html.ActionLink("Edit", "Edit", new { id = item.BatchId }) |
         @Html.ActionLink("Delete", "Delete", new { id = item.BatchId })*@
         </td>

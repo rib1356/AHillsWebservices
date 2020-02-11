@@ -121,12 +121,12 @@ namespace ImportService.Controllers
 
                 // db.BulkInsert<Pannebakker>(newRecords);
                 db.BulkInsert(recordsIn);
-                
+                db.RemoveDuplicateImport();
                 //AddBatch(records);
                 db.MergeImportToPB();
                 db.RemoveDuplicatePB();
-                db.MergePbToBatch();
                 db.RemoveDuplicateBatch();
+                db.MergePbToBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");
@@ -159,12 +159,14 @@ namespace ImportService.Controllers
             {
                 if (HasData(workSheet, row))
                 {
+                    decimal price = 0.0m;
                     ImportModel.rawImport obj = new ImportModel.rawImport();
                     obj.Sku = GetPBSKU(workSheet, row);
                     obj.FormSizeCode = GetPBFSCOde(workSheet, row);
                     obj.Name = GetName(workSheet, row);
                     obj.FormSize = GetFSDecription(workSheet, row);
-                    obj.Price = GetPrice(workSheet, row);
+                    price = GetPrice(workSheet, row);
+                    obj.Price = price * 100;
                     recordsIn.Add(obj);
 
                 }
