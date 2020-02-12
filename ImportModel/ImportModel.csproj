@@ -50,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Batch.cs">
+      <DependentUpon>ModelImport.tt</DependentUpon>
+    </Compile>
     <Compile Include="ModelImport.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -83,7 +86,9 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="ModelImport.edmx.diagram">
       <DependentUpon>ModelImport.edmx</DependentUpon>
     </None>

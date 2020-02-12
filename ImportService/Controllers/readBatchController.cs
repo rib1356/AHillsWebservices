@@ -24,7 +24,7 @@ namespace ImportService.Controllers
         //    return View(VM);
         //}
 
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, bool hasPB = false, bool hasLocal = false)
         {
 
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "nameD" : "";
@@ -40,7 +40,7 @@ namespace ImportService.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
-           
+
             // empty batches object to fill soon
             var batches = new List<DTO.BatchDTO>();
             // dear service can i have the batches please
@@ -77,14 +77,36 @@ namespace ImportService.Controllers
                     break;
             }
 
+            VM = LocalOrPb(hasPB, hasLocal, VM);
+
+            // !myString.Equals("-1")
+
             int pageSize = 20;
             int pageNumber = (page ?? 1);
             return View(VM.ToPagedList(pageNumber, pageSize));
         }
 
+        private static List<BatchVM> LocalOrPb(bool hasPB, bool hasLocal, List<BatchVM> VM)
+        {
 
+            if ((hasLocal && hasPB) | (!hasPB && !hasLocal))
+            {
+                return VM;
+            }
+            if (hasPB)
+            {
+                 return VM.Where(f => f.Location.Equals("PB")).ToList();
+            }
 
+            if (hasLocal)
+            {
+                return VM.Where(f => f.Location != "PB").ToList();
+            }
 
+           
+
+            return VM;
+        }
 
         public ActionResult PB(int? id)
         {

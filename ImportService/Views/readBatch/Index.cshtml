@@ -15,10 +15,13 @@
         <td>
             @using (Html.BeginForm("Index", "readBatch", FormMethod.Get))
             {
+                <p>Include PB:  @Html.CheckBox("hasPB", true)</p>
+                <p>Include Local:  @Html.CheckBox("hasLocal", true)</p>
                 <p>
                     Find by name or sku :<br /> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
                     <input type="submit" value="Search" />
                 </p>
+
             }
         </td>
         <td style="padding: 50px">

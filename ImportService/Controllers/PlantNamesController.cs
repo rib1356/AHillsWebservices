@@ -11,6 +11,7 @@ using ImportModel;
 using ImportRep;
 using ImportService.DTO;
 using ImportService.Models;
+using OfficeOpenXml;
 using PagedList;
 
 namespace ImportService.Controllers
@@ -148,13 +149,18 @@ namespace ImportService.Controllers
 
         public ActionResult UpLoad()
         {
+
+            ImportSet importSet = new ImportSet();
             List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            List<ImportModel.Batch> batchIn = new List<ImportModel.Batch>();
             //List<ImportModel.Pannebakker> existingRecords = new List<ImportModel.Pannebakker>();
             //List<ImportModel.rawImport> newRecords = new List<ImportModel.rawImport>();
 
             try
             {
-                recordsIn = ReadInputFile();
+                importSet = ReadInputFile();
+                recordsIn = importSet.rawImport;
+                batchIn = importSet.batchImport;
                 // existingRecords = db.GetPannebakkers().ToList();
                 // newRecords = recordsIn.Union(existingRecords).ToList();
                 // newRecords = existingRecords.Union(recordsIn, new DTO.PbComparer()).ToList();
@@ -174,9 +180,11 @@ namespace ImportService.Controllers
 
                 // db.BulkInsert<Pannebakker>(newRecords);
                 RepDb.BulkInsert(recordsIn);
-                RepDb.RemoveDuplicateNames();
+                RepDb.BulkInsertGMBatch(batchIn);
+               // RepDb.RemoveDuplicateNames();
                 //AddBatch(records);
                 RepDb.MergeImportToNames();
+                RepDb.RemoveDuplicateNames();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 //return View("Index");
@@ -192,9 +200,11 @@ namespace ImportService.Controllers
         }
 
 
-        private List<ImportModel.rawImport> ReadInputFile()
+        private ImportService.DTO.ImportSet ReadInputFile()
         {
+            ImportService.DTO.ImportSet outputSet = new ImportSet();
             List<ImportModel.rawImport> recordsIn = new List<ImportModel.rawImport>();
+            List<ImportModel.Batch> batchIn = new List<ImportModel.Batch>();
             var fred = TempData["path"].ToString();
             //var filesData = Directory.GetFiles(@fred);
             string path = Server.MapPath("~/App_Data/" + fred);
@@ -211,17 +221,34 @@ namespace ImportService.Controllers
                         if (HasData(workSheet, row))
                         {
                             ImportModel.rawImport obj = new ImportModel.rawImport();
+                            ImportModel.Batch batch = new Batch();
                             obj.Sku = GetPBSKU(workSheet, row);
+                            batch.Sku = obj.Sku;
                             obj.FormSizeCode = "";
                             obj.Name = GetName(workSheet, row);
-                            obj.FormSize = "";
-                            obj.Price = 0;
+                            batch.Name = obj.Name;
+                            obj.FormSize =  GetSize(workSheet,row) + " " + GetForm(workSheet,row);
+                            batch.FormSize = obj.FormSize;
+                            var price = GetPrice(workSheet, row);
+                            obj.Price = Convert.ToDecimal(price);
+                            batch.WholesalePrice = System.Convert.ToInt32(obj.Price * 100);
+                            batch.Active = true;
+                            batch.GrowingQuantity = System.Convert.ToInt32(GetStockLevel(workSheet, row));
+                            batch.DateStamp = DateTime.Now;
+                            batch.AllocatedQuantity = 0;
+                            batch.ImageExists = false;
+                            batch.Location = GetLocation(workSheet, row);
                             recordsIn.Add(obj);
+                            batchIn.Add(batch);
 
                         }
                     }
-            return recordsIn;
+            outputSet.rawImport = recordsIn;
+            outputSet.batchImport = batchIn;
+            return outputSet;
         }
+
+     
 
         private static bool HasData(OfficeOpenXml.ExcelWorksheet workSheet, int row)
         {
@@ -262,6 +289,71 @@ namespace ImportService.Controllers
                 return null;
             }
         }
+
+        // Abelia 'Edward Goucher'
+        private static string GetSize(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // Abelia 'Edward Goucher'
+        private static string GetForm(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        // Abelia 'Edward Goucher'
+        private static string GetLocation(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static string GetStockLevel(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static string GetPrice(OfficeOpenXml.ExcelWorksheet workSheet, int row)
+        {
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 6].Value != null)
+            {
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 6].Value).ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
 
         #endregion
 

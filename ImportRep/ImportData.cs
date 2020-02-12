@@ -139,6 +139,14 @@ namespace ImportRep
             
         }
 
+        public void BulkInsertGMBatch(IEnumerable<ImportModel.Batch> newRecords)
+        {
+            //context.BulkInsert<IEnumerable<ImportModel.Batch>(newRecords);
+
+            context.BulkInsert<ImportModel.Batch>(newRecords);
+
+        }
+
 
         public void Save()
         {

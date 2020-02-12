@@ -30,6 +30,7 @@ namespace ImportModel
         public virtual DbSet<Pannebakker> Pannebakkers { get; set; }
         public virtual DbSet<rawImport> rawImports { get; set; }
         public virtual DbSet<PlantName> PlantNames { get; set; }
+        public virtual DbSet<Batch> Batches { get; set; }
     
         public virtual int sp_importmerge()
         {

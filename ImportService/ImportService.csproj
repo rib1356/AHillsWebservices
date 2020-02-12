@@ -188,6 +188,7 @@
     <Compile Include="Controllers\readBatchController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="DTO\Batch.cs" />
+    <Compile Include="DTO\ImportSet.cs" />
     <Compile Include="DTO\PbComparer.cs" />
     <Compile Include="DTO\PbDTO.cs" />
     <Compile Include="DTO\PlantNameDTO.cs" />
