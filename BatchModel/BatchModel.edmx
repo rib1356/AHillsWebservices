@@ -24,8 +24,23 @@
           <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Pannebakker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sku" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FormSizeCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FormSize" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="RootBall" Type="bit" />
+          <Property Name="BatchId" Type="int" />
+          <Property Name="Location" Type="nvarchar(max)" />
+        </EntityType>
         <EntityContainer Name="HillsStockModelStoreContainer">
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pannebakker" EntityType="Self.Pannebakker" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -33,6 +48,7 @@
       <Schema Namespace="HillsStockModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="HillsStockEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Batches" EntityType="HillsStockModel.Batch" />
+          <EntitySet Name="Pannebakkers" EntityType="HillsStockModel.Pannebakker" />
         </EntityContainer>
         <EntityType Name="Batch">
           <Key>
@@ -52,6 +68,20 @@
           <Property Name="DateStamp" Type="DateTime" Precision="0" />
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Pannebakker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sku" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FormSizeCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSize" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="RootBall" Type="Boolean" />
+          <Property Name="BatchId" Type="Int32" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -74,6 +104,21 @@
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="FormSize" ColumnName="FormSize" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sku" ColumnName="Sku" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pannebakkers">
+            <EntityTypeMapping TypeName="HillsStockModel.Pannebakker">
+              <MappingFragment StoreEntitySet="Pannebakker">
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="BatchId" ColumnName="BatchId" />
+                <ScalarProperty Name="RootBall" ColumnName="RootBall" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="FormSize" ColumnName="FormSize" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

@@ -26,5 +26,6 @@ namespace BatchModel
         }
     
         public virtual DbSet<Batch> Batches { get; set; }
+        public virtual DbSet<Pannebakker> Pannebakkers { get; set; }
     }
 }
