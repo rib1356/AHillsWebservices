@@ -147,6 +147,13 @@ namespace ImportService.Controllers
             return RedirectToAction("UpLoad");
         }
 
+        public ActionResult SyncNames()
+        {
+            RepDb.RemoveDuplicateNames();
+            RepDb.MergeImportToNames();
+            return RedirectToAction("Index");
+        }
+
         public ActionResult UpLoad()
         {
 

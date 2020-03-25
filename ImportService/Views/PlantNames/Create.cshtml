@@ -42,6 +42,7 @@
 
 <hr class="border border-primary" />
 <h3>Add a batch of Plant Names</h3>
+<p>This requires an Excel File from GrowMaster</p>
 
 @using (Html.BeginForm("GetStockFile", "PlantNames", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -54,6 +55,14 @@
         <input type="submit" name="btnUpload" value="Upload" />
     </div>
 }
+
+
+<hr class="border border-primary" />
+<h4>This Control Synchnonises the Name list with the Batches</h4>
+<p>Names are never deleted via this process - so we may end up with Names with no Batches</p>
+<div>
+    @Html.ActionLink("Synchronise Name List", "SyncNames", null, new { @class = "btn btn-primary" })
+</div>
 
 
 

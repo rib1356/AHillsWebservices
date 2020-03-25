@@ -36,6 +36,7 @@
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
+          <Property Name="Location" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PlantNames">
           <Key>
@@ -57,8 +58,10 @@
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
+          <Property Name="Location" Type="nvarchar(max)" />
         </EntityType>
         <Function Name="removeBatchDuplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_cleanFormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_importmerge" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_mergenames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_MergePBintoBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -87,6 +90,7 @@
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RootBall" Type="Boolean" />
           <Property Name="BatchId" Type="Int32" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="rawImport">
           <Key>
@@ -100,6 +104,7 @@
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RootBall" Type="Boolean" />
           <Property Name="BatchId" Type="Int32" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="ImportEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Pannebakkers" EntityType="Self.Pannebakker" />
@@ -113,6 +118,7 @@
           <FunctionImport Name="sp_MergePBintoBatch" />
           <FunctionImport Name="removeBatchDuplicates" />
           <EntitySet Name="Batches" EntityType="HillsImportModel.Batch" />
+          <FunctionImport Name="sp_cleanFormSize" />
         </EntityContainer>
         <EntityType Name="PlantName">
           <Key>
@@ -150,6 +156,7 @@
           <EntitySetMapping Name="Pannebakkers">
             <EntityTypeMapping TypeName="HillsImportModel.Pannebakker">
               <MappingFragment StoreEntitySet="Pannebakker">
+                <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
@@ -164,6 +171,7 @@
           <EntitySetMapping Name="rawImports">
             <EntityTypeMapping TypeName="HillsImportModel.rawImport">
               <MappingFragment StoreEntitySet="rawImport">
+                <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
@@ -211,6 +219,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_cleanFormSize" FunctionName="HillsImportModel.Store.sp_cleanFormSize" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

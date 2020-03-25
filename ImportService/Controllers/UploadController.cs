@@ -124,6 +124,7 @@ namespace ImportService.Controllers
                 db.RemoveDuplicateImport();
                 //AddBatch(records);
                 db.MergeImportToPB();
+                db.cleanForms();
                 db.RemoveDuplicatePB();
                 db.RemoveDuplicateBatch();
                 db.MergePbToBatch();
@@ -167,6 +168,7 @@ namespace ImportService.Controllers
                     obj.FormSize = GetFSDecription(workSheet, row);
                     price = GetPrice(workSheet, row);
                     obj.Price = price * 100;
+                    obj.Location = "PB";
                     recordsIn.Add(obj);
 
                 }

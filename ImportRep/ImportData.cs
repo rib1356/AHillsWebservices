@@ -78,6 +78,11 @@ namespace ImportRep
             context.sp_MergePBintoBatch();
         }
 
+        public void cleanForms()
+        {
+            context.sp_cleanFormSize();
+        }
+
         public void RemoveDuplicateImport()
         {
             context.sp_removeimportduplicates();

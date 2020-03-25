@@ -23,6 +23,7 @@ namespace ImportRep
 
         void MergePbToBatch();
 
+        void cleanForms();
 
         void RemoveDuplicateNames();
 

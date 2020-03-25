@@ -66,5 +66,10 @@ namespace ImportModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("removeBatchDuplicates");
         }
+    
+        public virtual int sp_cleanFormSize()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_cleanFormSize");
+        }
     }
 }

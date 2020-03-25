@@ -22,5 +22,6 @@ namespace ImportModel
         public decimal Price { get; set; }
         public Nullable<bool> RootBall { get; set; }
         public Nullable<int> BatchId { get; set; }
+        public string Location { get; set; }
     }
 }
