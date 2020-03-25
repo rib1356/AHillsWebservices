@@ -9,28 +9,49 @@
 }
 
 <h2>Batch Listings</h2>
+@using (Html.BeginForm("Index", "readBatch", FormMethod.Get))
+{
+    <table>
+        <tr>
+            <td>
+                @{
+                    if (Convert.ToBoolean(ViewBag.hasPB) == true)
+                    { <p>Include PB:  @Html.CheckBox("hasPB", true)  </p> }
 
-<table>
-    <tr>
-        <td>
-            @using (Html.BeginForm("Index", "readBatch", FormMethod.Get))
-            {
-                <p>Include PB:  @Html.CheckBox("hasPB", true)</p>
-                <p>Include Local:  @Html.CheckBox("hasLocal", true)</p>
+                if (Convert.ToBoolean(ViewBag.hasPB) == false)
+                { <p>Include PB:  @Html.CheckBox("hasPB", false)  </p> }
+
+            if (Convert.ToBoolean(ViewBag.hasPB) == false)
+            { <p>Include Local:  @Html.CheckBox("hasLocal", false)  </p> }
+
+        if (Convert.ToBoolean(ViewBag.hasPB) == true)
+        { <p>Include Local:  @Html.CheckBox("hasLocal", true)  </p> }
+
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <p>
                     Find by name or sku :<br /> @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-                    <input type="submit" value="Search" />
+                    
                 </p>
 
-            }
-        </td>
-        <td style="padding: 50px">
-            <p>
 
-            </p>
-        </td>
-    </tr>
-</table>
+            </td>
+        
+         
+        <tr>
+            <td >
+                <p>
+                    Filter by Form Size :<br /> @Html.TextBox("FormSearchString", ViewBag.FormCurrentFilter as string)
+                </p>
+            </td>
+        </tr>
+        <tr><td><input type="submit" value="Search" /></td></tr>
+
+    </table>
+}
 
 <table class="table">
 
@@ -60,33 +81,37 @@
 
         @foreach (var item in Model)
         {
-<tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Sku)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FormSize)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Location)
-        </td>
-        <td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sku)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
 
-            &pound;&nbsp;
-            @{
-                var p = item.WholesalePrice;
-                decimal d = (decimal)p / 100m;
-                @d
-            }
-            @*@Html.ActionLink("Edit", "Edit", new { id = item.BatchId }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.BatchId })*@
-        </td>
-    </tr>
+                &pound;&nbsp;
+                @{
+                    if (item.WholesalePrice != null)
+                    {
+                        var p = item.WholesalePrice;
+                        decimal d = (decimal)p / 100m;
+                        @d
+
+                    }
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.BatchId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.BatchId })*@
+
+                }
+            </td>
+        </tr>
     }
-
     </table>
     <br />
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount

@@ -24,11 +24,24 @@ namespace ImportService.Controllers
         //    return View(VM);
         //}
 
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, bool hasPB = false, bool hasLocal = false)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, string FormSearchstring,int? page, bool? hasPB , bool? hasLocal)
         {
 
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "nameD" : "";
             ViewBag.SkuSortParm = sortOrder == "sku" ? "skuD" : "sku";
+            bool hasPB_ = true;
+            bool hasLocal_ = true;
+            if (hasPB == false | hasPB == null)
+            {
+                hasPB_ = false;
+            }
+            if (hasLocal == false | hasLocal == null)
+            {
+                hasLocal_ = false;
+            }
+
+            ViewBag.hasPB = hasPB;
+            ViewBag.hasLocal = hasLocal;
 
             if (searchString != null)
             {
@@ -40,6 +53,7 @@ namespace ImportService.Controllers
             }
 
             ViewBag.CurrentFilter = searchString;
+            ViewBag.FormCurrentFilter = FormSearchstring;
 
             // empty batches object to fill soon
             var batches = new List<DTO.BatchDTO>();
@@ -47,6 +61,8 @@ namespace ImportService.Controllers
             batches = ServiceLayer.BatchService.GetBatches().ToList();
             // transform the services into a viewModel
             List<DTO.BatchVM> VM = buildVM(batches).ToList();
+
+            
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -56,6 +72,25 @@ namespace ImportService.Controllers
             else
             {
                 VM = VM.ToList();
+            }
+
+            if (!String.IsNullOrEmpty(FormSearchstring))
+            {
+                string phrase = FormSearchstring;
+                string[] words = phrase.Split(' ');
+
+                foreach (var word in words)
+                {
+                    var formsize = word;
+                    VM = VM.Where(s => s.FormSize.ToUpper().Contains(formsize.ToUpper())).ToList();
+                }
+
+
+                // s => s.FormSize.ToUpper().Contains(formsize.ToUpper())
+            }
+            else
+            {
+                VM = VM.Where(s => s.FormSize.ToUpper().Contains("RB")).ToList();
             }
 
             switch (sortOrder)
@@ -77,7 +112,7 @@ namespace ImportService.Controllers
                     break;
             }
 
-            VM = LocalOrPb(hasPB, hasLocal, VM);
+            VM = LocalOrPb(hasPB_, hasLocal_, VM);
 
             // !myString.Equals("-1")
 
