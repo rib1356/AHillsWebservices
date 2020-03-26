@@ -1,10 +1,13 @@
-﻿using ImportService.DTO;
+﻿using BatchService.Models;
+using ImportService.DTO;
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -168,7 +171,60 @@ namespace ImportService.Controllers
 
         }
 
+        public async Task<ActionResult> Edit(string id)
+        {
 
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var batch = ServiceLayer.BatchService.GetBatchItem(Convert.ToInt32(id));
+             if (batch == null)
+            {
+                return HttpNotFound();
+            }
+            BatchVM vm = new BatchVM
+            {
+                BatchId = batch.Id,
+                Sku = batch.Sku,
+                Name = batch.Name,
+                FormSize = batch.FormSize,
+                Location = batch.Location,
+                Quantity = batch.Quantity
+
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(BatchVM batch)
+        {
+            if (ModelState.IsValid)
+            {
+                BatchService.Models.BatchLocationDTO batchDTO = new BatchLocationDTO
+                {
+                    BatchId = batch.BatchId,
+                    Location = batch.Location,
+                    Quantity = batch.Quantity
+                };
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("http://localhost:52009");
+                    var response = await client.PutAsJsonAsync("api/Batches/location", batchDTO);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(batch);
+        }
 
 
         /// <summary>

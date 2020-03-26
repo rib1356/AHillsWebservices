@@ -11,6 +11,13 @@ namespace BatchService.Models
         public int Price { get; set; }
     }
 
+    public class BatchLocationDTO
+    {
+        public int BatchId { get; set; }
+        public string Location { get; set; }
+        public int Quantity { get; set; }
+    }
+
     public class BatchItemDTO
     {
         public int Id { get; set; } 
@@ -18,6 +25,7 @@ namespace BatchService.Models
         public string Name { get; set; }
         public string FormSize { get; set; }
         public string Location { get; set; }
+        public int Quantity { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
         public Nullable<int> PurchasePrice { get; set; }
 

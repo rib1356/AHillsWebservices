@@ -27,7 +27,7 @@ namespace ImportService.ServiceLayer
         public static DTO.BatchDTO GetBatchItem(int id)
         {
             HttpClient client = ApiClient();
-            var request = "api/Batches/All/" + id.ToString();
+            var request = "api/Batches/" + id.ToString();
             HttpResponseMessage response = client.GetAsync(request).Result;
             if (response.IsSuccessStatusCode)
             {

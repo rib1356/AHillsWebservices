@@ -62,6 +62,8 @@ namespace BatchService.Controllers
                     Name = batch.Name,
                     FormSize = batch.FormSize,
                     PurchasePrice = -1,
+                     Quantity = batch.Quantity,
+                      Location = batch.Location,
                     WholesalePrice = batch.WholesalePrice
                 };
             }
@@ -180,6 +182,7 @@ namespace BatchService.Controllers
             return request.CreateResponse(HttpStatusCode.OK, batch);
         }
 
+
         [Route("Batches/edit")]
         // PUT: api/Batches/edit
         [ResponseType(typeof(void))]
@@ -220,6 +223,45 @@ namespace BatchService.Controllers
                 throw;
             }
             return request.CreateResponse(HttpStatusCode.OK, BatchPrices);
+        }
+
+
+
+
+        [Route("api/Batches/location")]
+        // PUT: api/Batches/edit
+        [ResponseType(typeof(void))]
+        public HttpResponseMessage PutBatchLocation(HttpRequestMessage request, Models.BatchLocationDTO batch)
+        {
+            if (!ModelState.IsValid)
+            {
+                return request.CreateResponse(HttpStatusCode.BadRequest, batch);
+            }
+
+
+                var batchToChange = db.Batches.SingleOrDefault(b => b.Id == batch.BatchId); //Get the batch by ID
+                if (batchToChange == null)
+                {
+                    return request.CreateResponse(HttpStatusCode.NotFound, batch); //If its not null
+                }
+
+                batchToChange.Quantity = batch.Quantity; //Change the batchQ to the one that is coming in
+                batchToChange.Location = batch.Location; //Change the batchQ to the one that is coming in
+
+            db.Entry(batchToChange).State = EntityState.Modified; //Update the model
+
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+               
+
+                throw;
+            }
+            return request.CreateResponse(HttpStatusCode.OK, batch);
         }
 
         // POST: api/Batches
