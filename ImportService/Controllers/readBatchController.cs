@@ -210,7 +210,7 @@ namespace ImportService.Controllers
                 };
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("http://localhost:52009");
+                    client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
                     var response = await client.PutAsJsonAsync("api/Batches/location", batchDTO);
                     if (response.IsSuccessStatusCode)
                     {
