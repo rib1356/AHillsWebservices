@@ -40,7 +40,6 @@ namespace ImportService.ServiceLayer
             }
         }
 
-
         /// <summary>
         /// Ask our Service for the batches please
         /// </summary>

@@ -263,10 +263,12 @@ namespace BatchService.Controllers
                 if (batch.Quantity > 0)
                 {
                     batchToChange.Quantity = batch.Quantity; //Change the batchQ to the one that is coming in
+                    batchToChange.GrowingQuantity = 0;
                 }
                 else
                 {
-                batchToChange.GrowingQuantity = batch.GrowingQuantity;
+                    batchToChange.GrowingQuantity = batch.GrowingQuantity;
+                    batchToChange.Quantity = 0;
                 }
 
                 db.Entry(batchToChange).State = EntityState.Modified; //Update the model

@@ -15,17 +15,7 @@ namespace ImportService.Controllers
 {
     public class readBatchController : Controller
     {
-        // GET: readBatch
-        //public ActionResult Index()
-        //{
-        //    // empty batches object to fill soon
-        //    var batches = new List<DTO.BatchDTO>().AsEnumerable();
-        //    // dear service can i have the batches please
-        //    batches = ServiceLayer.BatchService.GetBatches();
-        //    // transform the services into a viewModel
-        //    IEnumerable<DTO.BatchVM> VM = buildVM(batches);
-        //    return View(VM);
-        //}
+      
 
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, string FormSearchstring,int? page, bool? hasPB , bool? hasLocal)
         {
