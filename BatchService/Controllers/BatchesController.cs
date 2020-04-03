@@ -55,6 +55,18 @@ namespace BatchService.Controllers
             }
             else
             {
+                /// the db has growing quantity as nullable so we need to check and cast the value;
+                var gq = 0;
+                if (batch.GrowingQuantity.HasValue && batch.GrowingQuantity > 0)
+                {
+                    gq = Convert.ToInt32(batch.GrowingQuantity);
+                }
+                else
+                {
+                    gq = 0;
+                }
+
+                
                 return new BatchItemDTO
                 {
                     Id = batch.Id,
@@ -63,6 +75,7 @@ namespace BatchService.Controllers
                     FormSize = batch.FormSize,
                     PurchasePrice = -1,
                      Quantity = batch.Quantity,
+                      GrowingQuantity = gq,
                       Location = batch.Location,
                     WholesalePrice = batch.WholesalePrice
                 };
@@ -245,10 +258,18 @@ namespace BatchService.Controllers
                     return request.CreateResponse(HttpStatusCode.NotFound, batch); //If its not null
                 }
 
-                batchToChange.Quantity = batch.Quantity; //Change the batchQ to the one that is coming in
+                
                 batchToChange.Location = batch.Location; //Change the batchQ to the one that is coming in
+                if (batch.Quantity > 0)
+                {
+                    batchToChange.Quantity = batch.Quantity; //Change the batchQ to the one that is coming in
+                }
+                else
+                {
+                batchToChange.GrowingQuantity = batch.GrowingQuantity;
+                }
 
-            db.Entry(batchToChange).State = EntityState.Modified; //Update the model
+                db.Entry(batchToChange).State = EntityState.Modified; //Update the model
 
 
             try
@@ -277,6 +298,55 @@ namespace BatchService.Controllers
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = batch.Id }, batch);
+        }
+
+        [HttpPost]
+        [Route("api/Batches/New",Name="stockTakePost")]
+        [ResponseType(typeof(Batch))]
+        public IHttpActionResult PostNewBatch([FromBody]Models.BatchItemDTO batch)
+        {
+            Batch newBatch = new Batch();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existing = db.Batches.Find(batch.Id);
+            if (existing != null)
+            {
+                newBatch.BuyPrice = existing.BuyPrice;
+                newBatch.WholesalePrice = existing.WholesalePrice;
+            }
+            else
+            {
+                newBatch.BuyPrice = 0;
+                newBatch.WholesalePrice = 0;
+            }
+
+            newBatch.Active = true;
+            newBatch.Name = existing.Name;
+            newBatch.AllocatedQuantity = 0;
+            newBatch.DateStamp = DateTime.Now;
+            newBatch.FormSize = batch.FormSize;
+            newBatch.GrowingQuantity = batch.GrowingQuantity;
+            newBatch.ImageExists = false;
+            newBatch.Location = batch.Location;
+            newBatch.FormSize = batch.FormSize;
+            newBatch.Quantity = batch.Quantity;
+            newBatch.Sku = batch.Sku;
+            db.Batches.Add(newBatch);
+            db.SaveChanges();
+
+
+            //var response = Request.CreateResponse(HttpStatusCode.Created);
+
+            //// Generate a link to the new book and set the Location header in the response.
+            string uri = Url.Link("stockTakePost", new { id = newBatch.Id });
+            //response.Headers.Location = new Uri(uri);
+            //return response;
+
+            //  return CreatedAtRoute("DefaultApi", new { id = newBatch.Id }, newBatch);
+            return CreatedAtRoute("stockTakePost", new { id = newBatch.Id }, newBatch);
         }
 
         // DELETE: api/Batches/5

@@ -70,7 +70,7 @@ namespace ImportService.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 VM = VM.Where(s => s.Name.ToUpper().Contains(searchString.ToUpper())
-                                       || s.Sku.ToUpper().Contains(searchString.ToUpper())).ToList();
+                                       || s.Sku.ToUpper().Contains(searchString.ToUpper())).OrderBy(p =>p.Sku).ThenBy(p => p.Name).ThenBy(p => p.FormSize).ToList();
             }
             else
             {
@@ -85,7 +85,7 @@ namespace ImportService.Controllers
                 foreach (var word in words)
                 {
                     var formsize = word;
-                    VM = VM.Where(s => s.FormSize.ToUpper().Contains(formsize.ToUpper())).ToList();
+                    VM = VM.Where(s => s.FormSize.ToUpper().Contains(formsize.ToUpper())).OrderBy(p => p.Name).ToList();
                 }
 
 
@@ -173,54 +173,179 @@ namespace ImportService.Controllers
 
         public async Task<ActionResult> Edit(string id)
         {
-
+            
+            // it is possible i get asked for a null item  
             if (id == null)
             {
+                // if i do then say bugger off
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // so lets get the item we need
             var batch = ServiceLayer.BatchService.GetBatchItem(Convert.ToInt32(id));
-             if (batch == null)
+
+            // this batch does not exists 
+            if (batch == null)
             {
+                // then say so
                 return HttpNotFound();
             }
-            BatchVM vm = new BatchVM
-            {
-                BatchId = batch.Id,
-                Sku = batch.Sku,
-                Name = batch.Name,
-                FormSize = batch.FormSize,
-                Location = batch.Location,
-                Quantity = batch.Quantity
 
-            };
+
+            // lets build a model we can edit
+
+            BatchEditVM vm = new BatchEditVM();
+            vm.BatchId = batch.Id;
+            vm.Sku = batch.Sku;
+            vm.Name = batch.Name;
+            vm.FormSize = batch.FormSize;
+
+            // if it is a PB item the empty the location field as this makes it easier to 
+            // to use in the field - last location is also to help users having to update this field as they move aroud the nursery
+            if (batch.Location == "PB")
+            {
+                // empty location field
+                if (Session["LastLocation"] != null)
+                {
+                    vm.MainLocation = (String)Session["LastLocation"];
+                }
+                else
+                {
+                    vm.MainLocation = "";
+                }
+
+                // PB have no sublocations
+                vm.SubLocation = "";
+                vm.Quantity = 0;
+                vm.wasPB = true;
+                vm.forSale = true;
+            }
+            else
+            {
+                /// so its a local item this snippet splits the database location 'on space' into
+                // main and sub location
+                string fullLocation = batch.Location;
+                string[] parts = fullLocation.Split(' ');
+                vm.MainLocation = parts[0];
+                // it is possible a sub location has not been defined 
+                if (parts.ElementAtOrDefault(1) != null)
+                {
+                    vm.SubLocation = parts[1];
+                }
+                else
+                {
+                    vm.SubLocation = "";
+                }
+                ///////////////////////////////////
+
+                /// Quantity if there is no quntity there should be a growing quantity
+                /// if quantity is valid they are for sale otherwise they are just growing and not yet for sale
+                if (batch.Quantity > 0)
+                {
+                    vm.Quantity = batch.Quantity;
+                    vm.forSale = true;
+                }
+                else
+                {
+                    vm.Quantity = batch.GrowingQuantity;
+                    vm.forSale = false;
+                }
+                vm.wasPB = false;
+            }
+
+
+
+
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(BatchVM batch)
+        public async Task<ActionResult> Edit(BatchEditVM batch)
         {
+           
             if (ModelState.IsValid)
             {
-                BatchService.Models.BatchLocationDTO batchDTO = new BatchLocationDTO
+               
+
+                var mainLocation = batch.MainLocation;
+                var subLocation = batch.SubLocation;
+
+                if (batch.forSale)
                 {
-                    BatchId = batch.BatchId,
-                    Location = batch.Location,
-                    Quantity = batch.Quantity
+
+                }
+
+                /// This starts to build the DTO 
+                /// it collates the Location using a space seperator 
+                /// if its for sale quantity is quantity if not quantity is 0
+                /// if its not for sale growing quantity is quantity if not growing quantity is 0
+                /// so either quantity has a value or growing quantity has a value > 0 never both
+                BatchService.Models.BatchItemDTO batchDTO = new BatchItemDTO
+                {
+                    Id = batch.BatchId,
+                    Sku = batch.Sku,
+                    FormSize = batch.FormSize,
+                    Name = batch.Name,
+                    Location = mainLocation + " " + subLocation,
+                    Quantity = (batch.forSale) ? batch.Quantity : 0,
+                    GrowingQuantity = (!(batch.forSale)) ? batch.Quantity : 0,
                 };
+
+
+                 /// Two possible senarios
+                 /// One the current item is a PB item : we add the new local stock item to the DB 
+                 /// and keep the origional PB un touched
+                 /// Two the current item is Local : we update the existing local stock item
                 using (var client = new HttpClient())
                 {
+
+                    //  https://ahillsbatchservice.azurewebsites.net/
                     client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
-                    var response = await client.PutAsJsonAsync("api/Batches/location", batchDTO);
-                    if (response.IsSuccessStatusCode)
+                    //client.BaseAddress = new Uri("http://localhost:52009/");
+
+                    if (batch.wasPB == true)
                     {
-                        return RedirectToAction("Index");
+                        /// I am a PB so POST and ADD
+                        var response = await client.PostAsJsonAsync("api/Batches/New", batchDTO);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // this ensures the UI presents the last used location
+                            Session["LastLocation"] = mainLocation;
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                        }
+                        ///
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                        /// I am local so PUT and UPDATE
+                        BatchService.Models.BatchLocationDTO updateDTO = new BatchService.Models.BatchLocationDTO();
+                        updateDTO.BatchId = batch.BatchId;
+                        updateDTO.Location = batch.MainLocation + " " + batch.SubLocation;
+
+                        updateDTO.Quantity = (batch.forSale) ? batch.Quantity : 0;
+                        updateDTO.GrowingQuantity = (!(batch.forSale)) ? batch.Quantity : 0;
+
+                        var response = await client.PutAsJsonAsync("api/Batches/location", updateDTO);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // this ensures the UI presents the last used location
+                            Session["LastLocation"] = mainLocation;
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                        }
+                        ///
+                        
                     }
                 }
+                Session["LastLocation"] = mainLocation;
                 return RedirectToAction("Index");
             }
             return View(batch);
