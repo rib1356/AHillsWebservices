@@ -15,11 +15,13 @@ namespace ImportService.Controllers
 {
     public class readBatchController : Controller
     {
+
+
       
 
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, string FormSearchstring,int? page, bool? hasPB , bool? hasLocal)
         {
-
+            ServiceLayer.BatchService.GetLocations();
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "nameD" : "";
             ViewBag.SkuSortParm = sortOrder == "sku" ? "skuD" : "sku";
             bool hasPB_ = true;
@@ -253,18 +255,42 @@ namespace ImportService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BatchEditVM batch)
         {
-           
+            var locations = ServiceLayer.BatchService.GetLocations();
             if (ModelState.IsValid)
             {
                
-
+                
                 var mainLocation = batch.MainLocation;
                 var subLocation = batch.SubLocation;
-
-                if (batch.forSale)
+                var mainexists = locations.Any(l => l.MainLocation == mainLocation);
+                if (mainexists)
                 {
+                    var subexists = locations.Any(l => l.SubLocation == subLocation);
+                    if (subexists)
+                    {
+                        // var subexists = locations.Any(l => l.SubLocation == subLocation);
+                        var sublocations = locations.Where(l => l.MainLocation == mainLocation);
+                        //  var sublocations = ServiceLayer.BatchService.GetSubLocations(mainLocation);
+                        var subvalid = sublocations.Any(l => l.SubLocation == subLocation);
+                        if (!(subvalid))
+                        {
+                            ModelState.AddModelError(string.Empty, "Sub Location Does NOT exist for this Location");
+                            return View(batch);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Sub Location Does NOT exist");
+                        return View(batch);
+                    }
 
                 }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Main Location Does NOT exist");
+                    return View(batch);
+                }
+               
 
                 /// This starts to build the DTO 
                 /// it collates the Location using a space seperator 
@@ -291,8 +317,8 @@ namespace ImportService.Controllers
                 {
 
                     //  https://ahillsbatchservice.azurewebsites.net/
-                    client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
-                    //client.BaseAddress = new Uri("http://localhost:52009/");
+                    //client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
+                    client.BaseAddress = new Uri("http://localhost:52009/");
 
                     if (batch.wasPB == true)
                     {

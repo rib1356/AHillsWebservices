@@ -87,6 +87,7 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
@@ -190,6 +191,7 @@
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="DTO\Batch.cs" />
     <Compile Include="DTO\ImportSet.cs" />
+    <Compile Include="DTO\LocationDTO.cs" />
     <Compile Include="DTO\PbComparer.cs" />
     <Compile Include="DTO\PbDTO.cs" />
     <Compile Include="DTO\PlantNameDTO.cs" />
