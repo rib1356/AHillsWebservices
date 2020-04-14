@@ -316,8 +316,8 @@ namespace ImportService.Controllers
                 {
 
                     //  https://ahillsbatchservice.azurewebsites.net/
-                    //client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
-                    client.BaseAddress = new Uri("http://localhost:52009/");
+                    client.BaseAddress = new Uri("https://ahillsbatchservice.azurewebsites.net/");
+                    //client.BaseAddress = new Uri("http://localhost:52009/");
 
                     if (batch.wasPB == true)
                     {
