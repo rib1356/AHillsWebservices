@@ -20,6 +20,7 @@ namespace ImportModel
         public ImportEntities()
             : base("name=ImportEntities")
         {
+            this.Database.CommandTimeout = 600;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -75,6 +76,11 @@ namespace ImportModel
         public virtual int sp_cleanPB_FormSize()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_cleanPB_FormSize");
+        }
+    
+        public virtual int sp_DeletePBFromBatch()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeletePBFromBatch");
         }
     }
 }

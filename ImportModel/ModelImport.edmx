@@ -63,6 +63,7 @@
         <Function Name="removeBatchDuplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_cleanFormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_cleanPB_FormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_DeletePBFromBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_importmerge" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_mergenames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_MergePBintoBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -121,6 +122,7 @@
           <EntitySet Name="Batches" EntityType="HillsImportModel.Batch" />
           <FunctionImport Name="sp_cleanFormSize" />
           <FunctionImport Name="sp_cleanPB_FormSize" />
+          <FunctionImport Name="sp_DeletePBFromBatch" />
         </EntityContainer>
         <EntityType Name="PlantName">
           <Key>
@@ -223,6 +225,7 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_cleanFormSize" FunctionName="HillsImportModel.Store.sp_cleanFormSize" />
           <FunctionImportMapping FunctionImportName="sp_cleanPB_FormSize" FunctionName="HillsImportModel.Store.sp_cleanPB_FormSize" />
+          <FunctionImportMapping FunctionImportName="sp_DeletePBFromBatch" FunctionName="HillsImportModel.Store.sp_DeletePBFromBatch" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

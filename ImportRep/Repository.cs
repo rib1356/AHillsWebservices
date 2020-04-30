@@ -17,6 +17,8 @@ namespace ImportRep
 
         void BulkInsert(IEnumerable<ImportModel.rawImport> newRecords);
 
+        void BulkInsertPBintoBatch(IEnumerable<ImportModel.Batch> newRecords);
+
         void MergeImportToNames();
 
         void MergeImportToPB();
@@ -34,5 +36,7 @@ namespace ImportRep
         void RemoveDuplicateImport();
 
         void RemoveDuplicateBatch();
+
+        void RemovePBFromBatch();
     }
 }

@@ -29,8 +29,6 @@ namespace ImportRep
         }
 
 
-
-      
         public void MergeImportToNames()
         {
             context.sp_mergenames();
@@ -128,7 +126,10 @@ namespace ImportRep
             context.sp_removepannebakkerduplicates();
         }
 
-
+        public void RemovePBFromBatch()
+        {
+            context.sp_DeletePBFromBatch();
+        }
 
         public void RemoveDuplicateBatch()
         {
@@ -147,6 +148,12 @@ namespace ImportRep
         {
             context.BulkInsert<ImportModel.rawImport>(newRecords);
             
+        }
+
+        public void BulkInsertPBintoBatch(IEnumerable<ImportModel.Batch> newRecords)
+        {
+            context.BulkInsert<ImportModel.Batch>(newRecords);
+
         }
 
         public void BulkInsertGMBatch(IEnumerable<ImportModel.Batch> newRecords)

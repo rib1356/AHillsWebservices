@@ -18,6 +18,8 @@ namespace BatchModel
         public HillsStockEntities()
             : base("name=HillsStockEntities")
         {
+
+            this.Database.CommandTimeout = 600;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

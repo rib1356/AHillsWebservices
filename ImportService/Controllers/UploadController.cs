@@ -129,7 +129,27 @@ namespace ImportService.Controllers
                 db.cleanForms();
                 db.RemoveDuplicatePB();
                 db.RemoveDuplicateBatch();
-                db.MergePbToBatch();
+                db.RemovePBFromBatch();
+                var allPB = db.GetPannebakkers();
+                IEnumerable<ImportModel.Batch> newBatches = allPB.Select(batch => new ImportModel.Batch
+                {
+                    Active = true,
+                    AllocatedQuantity = 0,
+                    BuyPrice = (batch.Price / 0.55m),
+                    Comment = "",
+                    FormSize = batch.FormSize,
+                    ImageExists = false,
+                    GrowingQuantity = 0,
+                    Location = "PB",
+                    Name = batch.Name,
+                    Sku = batch.Sku,
+                    Quantity = 5000,
+                    WholesalePrice = 0,
+                    DateStamp = DateTime.Now,
+
+                });
+                db.BulkInsertPBintoBatch(newBatches);
+               // db.MergePbToBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");
