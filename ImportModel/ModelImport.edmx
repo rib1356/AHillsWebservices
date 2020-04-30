@@ -62,6 +62,7 @@
         </EntityType>
         <Function Name="removeBatchDuplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_cleanFormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_cleanPB_FormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_importmerge" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_mergenames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_MergePBintoBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -119,6 +120,7 @@
           <FunctionImport Name="removeBatchDuplicates" />
           <EntitySet Name="Batches" EntityType="HillsImportModel.Batch" />
           <FunctionImport Name="sp_cleanFormSize" />
+          <FunctionImport Name="sp_cleanPB_FormSize" />
         </EntityContainer>
         <EntityType Name="PlantName">
           <Key>
@@ -220,6 +222,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="sp_cleanFormSize" FunctionName="HillsImportModel.Store.sp_cleanFormSize" />
+          <FunctionImportMapping FunctionImportName="sp_cleanPB_FormSize" FunctionName="HillsImportModel.Store.sp_cleanPB_FormSize" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

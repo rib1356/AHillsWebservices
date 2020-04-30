@@ -71,5 +71,10 @@ namespace ImportModel
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_cleanFormSize");
         }
+    
+        public virtual int sp_cleanPB_FormSize()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_cleanPB_FormSize");
+        }
     }
 }

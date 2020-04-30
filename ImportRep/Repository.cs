@@ -25,6 +25,8 @@ namespace ImportRep
 
         void cleanForms();
 
+        void cleanPBForms();
+
         void RemoveDuplicateNames();
 
         void RemoveDuplicatePB();
