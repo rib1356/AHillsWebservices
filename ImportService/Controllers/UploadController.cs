@@ -125,6 +125,7 @@ namespace ImportService.Controllers
                 db.RemoveDuplicateImport();
                 //AddBatch(records);
                 db.MergeImportToPB();
+                db.cleanPBForms();
                 db.cleanForms();
                 db.RemoveDuplicatePB();
                 db.RemoveDuplicateBatch();
