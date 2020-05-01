@@ -82,10 +82,10 @@ namespace ImportService.Controllers
 
                 // s => s.FormSize.ToUpper().Contains(formsize.ToUpper())
             }
-            else
-            {
-                VM = VM.Where(s => s.FormSize.ToUpper().Contains("RB")).ToList();
-            }
+            //else
+            //{
+            //    VM = VM.Where(s => s.FormSize.ToUpper().Contains("RB")).ToList();
+            //}
 
             switch (sortOrder)
             {
