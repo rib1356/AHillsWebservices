@@ -19,7 +19,7 @@ namespace BatchService.Controllers
     {
         private HillsStockEntities db = new HillsStockEntities();
 
-
+        //A test comment1
         [Route("api/Batches/All")]
         // GET: api/Batches
         /// Send a collection of active BatchItemDTO's 
