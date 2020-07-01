@@ -13,6 +13,7 @@ namespace LocationService.Controllers
             ViewBag.Title = "Home Page";
 
             return View();
+            //changing another thing here
         }
     }
 }
