@@ -81,6 +81,36 @@
         </div>
     </div>
 
+    <hr />
+    <h3>Debug Pricing</h3>
+    <div class="form-group">
+        @Html.LabelFor(model => model.formType, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.formType, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PriceRule, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.PriceRule, new { htmlAttributes = new { @class = "form-control" } })
+
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.maxPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.maxPrice, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.minPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.minPrice, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+
 
 
     <div class="form-group">

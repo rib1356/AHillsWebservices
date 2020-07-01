@@ -61,7 +61,15 @@ namespace ImportService.DTO
         public bool wasPB { get; set; }
         [Display(Name = "Select if for Sale")]
         public bool forSale { get; set; }
-       
+        [Display(Name = "Form Type")]
+        public string formType { get; set; }
+        [Display(Name = "Price Rule")]
+        public string PriceRule { get; set; }
+        [Display(Name = "Max Unit Price")]
+        public decimal maxPrice { get; set; }
+        [Display(Name = "Min Unit Price")]
+        public decimal minPrice { get; set; }
+
 
     }
 

@@ -1,5 +1,6 @@
 ﻿using BatchService.Models;
 using ImportService.DTO;
+using ImportService.ServiceLayer;
 using PagedList;
 using System;
 using System.Collections.Generic;
@@ -190,6 +191,26 @@ namespace ImportService.Controllers
             vm.Sku = batch.Sku;
             vm.Name = batch.Name;
             vm.FormSize = batch.FormSize;
+
+
+            /// get price data
+            PriceItemDTO price = PriceService.GetPUnitPrice(vm.FormSize);
+
+            if (price != null)
+            {
+                vm.formType = price.PlantType.ToString();
+                vm.PriceRule = price.Description;
+                vm.maxPrice = (Decimal)price.MaxUnitValue;
+                vm.minPrice = (Decimal)price.MinUnitValue;
+
+              }
+            else
+            {
+                vm.formType = "Dont Know";
+                vm.PriceRule = "No Price Band";
+                vm.maxPrice = 0;
+                vm.minPrice = 0;
+            }
 
             // if it is a PB item the empty the location field as this makes it easier to 
             // to use in the field - last location is also to help users having to update this field as they move aroud the nursery
