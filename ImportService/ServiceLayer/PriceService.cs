@@ -32,7 +32,7 @@ namespace ImportService.ServiceLayer
     public class PriceService
     {
         /// <summary>
-        /// WE need to modify the System URi to use the deployed service
+        /// WE need to modify the System URi to use the deployed services
         /// </summary>
         /// <returns></returns>
         private static HttpClient ApiClient()
