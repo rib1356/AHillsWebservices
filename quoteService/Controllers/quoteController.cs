@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Drawing.Design;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -31,12 +32,25 @@ namespace quoteService.Controllers
             List<QuoteDTO> DTO = new List<QuoteDTO>();
             var customers = db.CustomerInformations.ToList();
 
-
             var quotes = db.Quotes.ToList();
 
-            foreach( Quote item in quotes)
+            foreach(Quote item in quotes)
             {
                 var thisC = getCustomer(customers, item);
+
+                var totalPicklistQuantity = 0;
+
+                var picklistExists = db.Picklists.Any(x => x.QuoteId == item.QuoteId);
+                if (picklistExists)
+                {
+                    var picklists = db.Picklists.Where(x => x.QuoteId == item.QuoteId);
+                    foreach(var picklist in picklists) 
+                    {
+                        var toAdd = db.PlantsForPicklists.Where(y => y.PicklistId == picklist.PicklistId).Sum(y => y.QuantityToPick);
+                        totalPicklistQuantity += toAdd;
+                    }
+                }
+
                 var Thisdto = new DTO.QuoteDTO
                 {
                     QuoteId = item.QuoteId,
@@ -52,6 +66,8 @@ namespace quoteService.Controllers
                     SalesOrder = item.SalesOrder,
                     Retail = item.Retail,
                     Active = item.Active,
+                    TotalQuoteQuantity = db.PlantsForQuotes.Where(x => x.QuoteId == item.QuoteId).Sum(x => x.Quantity) ?? 0,
+                    TotalPicklistQuantity = totalPicklistQuantity,
                 };
                 DTO.Add(Thisdto);
             }

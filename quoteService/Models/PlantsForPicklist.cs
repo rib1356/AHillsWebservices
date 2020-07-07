@@ -20,13 +20,12 @@ namespace quoteService.Models
         public string PlantName { get; set; }
         public string FormSize { get; set; }
         public int QuantityToPick { get; set; }
-        public string SubbedFor { get; set; }
+        public string OriginalItem { get; set; }
         public string DispatchLocation { get; set; }
         public bool Active { get; set; }
-        public bool isSubbed { get; set; }
+        public bool IsSubbed { get; set; }
         public int BatchId { get; set; }
         public int QuantityPicked { get; set; }
-        public int CurrentQuantityPicked { get; set; }
     
         public virtual Picklist Picklist { get; set; }
     }

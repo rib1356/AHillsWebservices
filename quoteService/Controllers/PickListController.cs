@@ -66,22 +66,20 @@ namespace QuoteService.Controllers
         [Route("detail")]
         public SelectedPickListDTO GetPickListById(int id)
         {
-            var justOne = db.Picklists.SingleOrDefault(q => q.PicklistId == id);
+            var justOne = db.Picklists.FirstOrDefault(q => q.PicklistId == id);
 
             var plantsForPicklist = justOne.PlantsForPicklists.Select(item => new PickListDetailDTO
             {
-                PlantForPicklistId = item.PlantForPickListId, 
+                PlantForPicklistId = item.PlantForPickListId,
                 PicklistId = item.PlantForPickListId,
                 PlantForQuoteId = item.PlantForQuoteId,
                 BatchId = item.BatchId,
-                BatchLocation = db.Batches.Any(x => x.Id == item.BatchId && x.Active == true) ? db.Batches.SingleOrDefault(x => x.Id == item.BatchId).Location : "No Location", 
+                BatchLocation = db.Batches.Any(x => x.Id == item.BatchId && x.Active == true) ? db.Batches.SingleOrDefault(x => x.Id == item.BatchId).Location : "No Location",
                 PlantName = item.PlantName,
                 FormSize = item.FormSize,
                 QuantityToPick = item.QuantityToPick,
                 QuantityPicked = item.QuantityPicked,
-                CurrentQuantityPicked = item.CurrentQuantityPicked,
-                SubbedFor = item.SubbedFor,
-                IsSubbed = item.isSubbed,
+                IsSubbed = item.IsSubbed,
                 DispatchLocation = item.DispatchLocation,
                 Active = item.Active,
             });
@@ -120,7 +118,6 @@ namespace QuoteService.Controllers
             public bool Active { get; set; }
         }
 
-
         // GET: api/picklist/plantsNeeded?id={id} <---Pass in the quoteId here?
         [Route("plantsNeeded")]
         public List<PlantsToReturn> GetRemainingQuotePlants(int id)
@@ -128,7 +125,7 @@ namespace QuoteService.Controllers
             var plantsOnQuote = db.PlantsForQuotes.Where(x => x.QuoteId == id);
             List<PlantsToReturn> plantsReturn = new List<PlantsToReturn>();
 
-            foreach(var plant in plantsOnQuote)
+            foreach (var plant in plantsOnQuote)
             {
                 int plantOnPicklistQty;
                 //var exists = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == plant.PlantsForQuoteId).FirstOrDefault();
@@ -136,24 +133,26 @@ namespace QuoteService.Controllers
                 if (exists == true)
                 {
                     plantOnPicklistQty = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == plant.PlantsForQuoteId).Sum(x => x.QuantityToPick);
-                } else
+                }
+                else
                 {
                     plantOnPicklistQty = 0;
                 }
 
                 if (plant.Quantity > plantOnPicklistQty && plant.Active == true)
                 {
-                        plantsReturn.Add(new PlantsToReturn()
-                        {
-                            PlantForQuoteId = plant.PlantsForQuoteId,
-                            PlantName = plant.PlantName,
-                            FormSize = plant.FormSize,
-                            AmountNeeded = (plant.Quantity - plantOnPicklistQty) ?? 0,
-                            //Add in location and other stuff here
-                            
-                            Active = plant.Active,
-                        });
-                } else
+                    plantsReturn.Add(new PlantsToReturn()
+                    {
+                        PlantForQuoteId = plant.PlantsForQuoteId,
+                        PlantName = plant.PlantName,
+                        FormSize = plant.FormSize,
+                        AmountNeeded = (plant.Quantity - plantOnPicklistQty) ?? 0,
+                        //Add in location and other stuff here
+
+                        Active = plant.Active,
+                    });
+                }
+                else
                 {
                     //do nothing
                 }
@@ -162,9 +161,43 @@ namespace QuoteService.Controllers
             return plantsReturn;
         }
 
+        // GET: api/picklist/plantsAlreadyOnPicklist?id={id} <---Pass in the quoteId here
+        [Route("plantsAlreadyOnPicklist")]
+        public List<PlantsOnSalesOrder> GetPlantsThatExistOnPicklists(int id)
+        {
+            var quote = db.Quotes.FirstOrDefault(q => q.QuoteId == id);
+
+            var plantsFromQuote = quote.PlantsForQuotes.Select(item => new PlantsOnSalesOrder //Get all the plants that are currently for that sales order
+            {
+                PlantForQuoteId = item.PlantsForQuoteId,
+                Quantity = item.Quantity ?? 0,
+                PlantName = item.PlantName,
+                FormSize = item.FormSize,
+                Comment = item.Comment,
+                Price = item.Price ?? 0,
+                QuantityPicked = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == item.PlantsForQuoteId).Sum(x => x.QuantityToPick),
+                Active = item.Active,
+            }).ToList();
+
+            return plantsFromQuote;
+        }
+
+
+        public class PlantsOnSalesOrder
+        {
+            public int PlantForQuoteId { get; set; }
+            public string PlantName { get; set; }
+            public string FormSize { get; set; }
+            public string Comment { get; set; }
+            public int Price { get; set; }
+            public int Quantity { get; set; }
+            public int QuantityPicked { get; set; }
+            public bool Active { get; set; }
+        }
+
         // POST: api/PickList
         [ResponseType(typeof(SelectedPickListDTO))]
-        public HttpResponseMessage Post(HttpRequestMessage request, [FromBody]SelectedPickListDTO picklist)
+        public HttpResponseMessage Post(HttpRequestMessage request, [FromBody] SelectedPickListDTO picklist)
         {
             if (!ModelState.IsValid)
             {
@@ -203,11 +236,9 @@ namespace QuoteService.Controllers
                         PlantName = plant.PlantName,
                         FormSize = plant.FormSize,
                         QuantityToPick = plant.QuantityToPick,
-                        SubbedFor = plant.SubbedFor,
-                        isSubbed = plant.IsSubbed,
+                        IsSubbed = plant.IsSubbed,
                         DispatchLocation = plant.DispatchLocation,
-                        QuantityPicked = 0, //Can I just default this to 0 because none will have been picked on creation??
-                        CurrentQuantityPicked = 0,
+                        QuantityPicked = 0, //Default this to 0 because none will have been picked on creation??
                         Active = true
                     };
                     db.PlantsForPicklists.Add(thisPlant);
@@ -223,10 +254,6 @@ namespace QuoteService.Controllers
             }
         }
 
-        // PUT: api/PickList/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
 
         // PUT: api/picklist/delete?={id}
         [Route("delete")]
@@ -287,26 +314,27 @@ namespace QuoteService.Controllers
             {
                 return NotFound();
             }
-            
+
             var currentPicklist = db.Picklists.Where(x => x.PicklistId == picklistItems.PicklistId).FirstOrDefault();
             //Will always default to true, meaning that all the plants on the picklist have been picked
             //If not it will be set to false in foreach statement if a plant has only been partially picked
-            bool pickedState = true; 
+            bool pickedState = true;
             foreach (var item in picklistItems.PickListPlants)
             {
                 //Saving the amount that has been picked to each plant on the current picklist
                 var plantToChange = db.PlantsForPicklists.Where(x => x.PlantForPickListId == item.PlantForPicklistId).FirstOrDefault();
-                if(plantToChange != null)
+                if (plantToChange != null)
                 {
                     //int dbQuantityPicked = plantToChange.QuantityPicked
                     //int calcQuantityPicked = plantToChange.QuantityPicked += item.QuantityPicked;
                     plantToChange.QuantityPicked += item.QuantityPicked; //Need to change this so it doesnt add
-                    plantToChange.CurrentQuantityPicked = item.QuantityPicked;
-                    if(plantToChange.QuantityPicked < plantToChange.QuantityToPick)
+                    //plantToChange.CurrentQuantityPicked = item.QuantityPicked;
+                    if (plantToChange.QuantityPicked < plantToChange.QuantityToPick)
                     {
                         pickedState = false;
                     }
-                } else
+                }
+                else
                 {
                     return StatusCode(HttpStatusCode.BadRequest);
                 }
@@ -317,7 +345,7 @@ namespace QuoteService.Controllers
             currentPicklist.IsPicked = pickedState;
 
             db.Entry(currentPicklist).State = EntityState.Modified;
-            
+
 
             try
             {
@@ -344,3 +372,5 @@ namespace QuoteService.Controllers
         //}
     }
 }
+
+

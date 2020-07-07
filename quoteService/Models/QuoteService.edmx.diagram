@@ -11,7 +11,7 @@
         <AssociationConnector Association="HillsStock1Model.FK_PlantsForQuote_Quotes" />
         <EntityTypeShape EntityType="HillsStock1Model.Batch" Width="1.5" PointX="5.375" PointY="4.75" />
         <EntityTypeShape EntityType="HillsStock1Model.Picklist" Width="1.5" PointX="0.75" PointY="5.125" />
-        <EntityTypeShape EntityType="HillsStock1Model.PlantsForPicklist" Width="1.5" PointX="3" PointY="4.875" />
+        <EntityTypeShape EntityType="HillsStock1Model.PlantsForPicklist" Width="1.5" PointX="3" PointY="5" />
         <AssociationConnector Association="HillsStock1Model.FK_PlantsForPicklist_Picklist" />
       </Diagram>
     </edmx:Diagrams>
