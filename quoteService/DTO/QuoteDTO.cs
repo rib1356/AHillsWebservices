@@ -20,6 +20,8 @@ namespace quoteService.DTO
         public bool SalesOrder { get; set; }
         public bool Retail { get; set; }
         public bool Active { get; set; }
+        public int? TotalQuoteQuantity { get; set; }
+        public int? TotalPicklistQuantity { get; set; }
     }
 
     //public class CustomerDTO

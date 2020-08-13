@@ -63,13 +63,12 @@
           <Property Name="PlantName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="FormSize" Type="nvarchar(max)" />
           <Property Name="QuantityToPick" Type="int" Nullable="false" />
-          <Property Name="SubbedFor" Type="nvarchar(max)" />
+          <Property Name="OriginalItem" Type="nvarchar(max)" />
           <Property Name="DispatchLocation" Type="nvarchar(max)" />
           <Property Name="Active" Type="bit" Nullable="false" />
-          <Property Name="isSubbed" Type="bit" Nullable="false" />
+          <Property Name="IsSubbed" Type="bit" Nullable="false" />
           <Property Name="BatchId" Type="int" Nullable="false" />
           <Property Name="QuantityPicked" Type="int" Nullable="false" />
-          <Property Name="CurrentQuantityPicked" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -258,13 +257,12 @@
           <Property Name="PlantName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FormSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="QuantityToPick" Type="Int32" Nullable="false" />
-          <Property Name="SubbedFor" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OriginalItem" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DispatchLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
-          <Property Name="isSubbed" Type="Boolean" Nullable="false" />
+          <Property Name="IsSubbed" Type="Boolean" Nullable="false" />
           <Property Name="BatchId" Type="Int32" Nullable="false" />
           <Property Name="QuantityPicked" Type="Int32" Nullable="false" />
-          <Property Name="CurrentQuantityPicked" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Picklist" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="PlantsForPicklist" ToRole="Picklist" />
         </EntityType>
         <Association Name="FK_PlantsForPicklist_Picklist">
@@ -368,13 +366,12 @@
           <EntitySetMapping Name="PlantsForPicklists">
             <EntityTypeMapping TypeName="HillsStock1Model.PlantsForPicklist">
               <MappingFragment StoreEntitySet="PlantsForPicklist">
-                <ScalarProperty Name="CurrentQuantityPicked" ColumnName="CurrentQuantityPicked" />
                 <ScalarProperty Name="QuantityPicked" ColumnName="QuantityPicked" />
                 <ScalarProperty Name="BatchId" ColumnName="BatchId" />
-                <ScalarProperty Name="isSubbed" ColumnName="isSubbed" />
+                <ScalarProperty Name="IsSubbed" ColumnName="IsSubbed" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="DispatchLocation" ColumnName="DispatchLocation" />
-                <ScalarProperty Name="SubbedFor" ColumnName="SubbedFor" />
+                <ScalarProperty Name="OriginalItem" ColumnName="OriginalItem" />
                 <ScalarProperty Name="QuantityToPick" ColumnName="QuantityToPick" />
                 <ScalarProperty Name="FormSize" ColumnName="FormSize" />
                 <ScalarProperty Name="PlantName" ColumnName="PlantName" />
