@@ -229,6 +229,7 @@
     <Compile Include="ServiceLayer\PbService.cs" />
     <Compile Include="ServiceLayer\PlantNameService.cs" />
     <Compile Include="ServiceLayer\PriceService.cs" />
+    <Compile Include="ServiceLayer\PriceServiceModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Here.txt" />
@@ -260,6 +261,8 @@
     <Content Include="Models\PBModel.edmx.diagram">
       <DependentUpon>PBModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\PannebakkerUpload - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\PannebakkerUpload - ReadOnly - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\PannebakkerUpload - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -1,0 +1,87 @@
+﻿<h1>Batch Data</h1>
+<p>&nbsp;</p>
+
+
+<ejs-grid id="Grid" dataSource="@ViewBag.datasource"  rowSelected="rowSelected" height="272" is-responsive="true" allowPaging="true" allowResizing="true" allowSorting="true" allowReordering="true" allowGrouping="true" toolbar="@(new List<string>() { "Search","PdfExport"})" allowFiltering="true" allowSelection="true" allowPdfExport="true" toolbarClick="toolbarClick" detailTemplate="#detailtemplate">
+    <e-grid-pagesettings pageSize="12" />
+    <e-grid-filterSettings type="Menu"></e-grid-filterSettings>
+
+    <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
+    <e-grid-columns>
+        <e-grid-column field="Id" headerText="Id" isPrimaryKey="true" isIdentity="true" visible="false"></e-grid-column>
+        <e-grid-column field="Sku" headerText="Sku"></e-grid-column>
+        <e-grid-column field="Name" headerText="Name"></e-grid-column>
+        <e-grid-column field="FormSize" headerText="FormSize"></e-grid-column>
+        @*<e-grid-column field="Location"  headerText="Location" visible="false"></e-grid-column>
+            <e-grid-column field="Quantity"  headerText="Quantity" visible="false"></e-grid-column>
+            <e-grid-column field="WholesalePrice"  headerText="WholesalePrice" visible="false"></e-grid-column>
+            <e-grid-column field="GrowingQuantity"  headerText="GrowingQuantity"></e-grid-column>
+            <e-grid-column field="AllocatedQuantity"  headerText="AllocatedQuantity" visible="false"></e-grid-column>
+            <e-grid-column field="DateStamp"  headerText="DateStamp" visible="false"></e-grid-column>
+            <e-grid-column field="BuyPrice"  headerText="BuyPrice" visible="false"></e-grid-column>
+            <e-grid-column field="Comment"  headerText="Comment" visible="false"></e-grid-column>*@
+    </e-grid-columns>
+</ejs-grid>
+
+
+<script>
+
+    function rowSelected(args) {
+        var selectedrowindex = this.getSelectedRowIndexes();  // get the selected row indexes.
+        alert(selectedrowindex); // to alert the selected row indexes.
+        var selectedrecords = this.getSelectedRecords();  // get the selected records.      
+    }
+</script>
+
+
+<script type="text/x-template" id="detailtemplate">
+    <table class="detailtable" width="100%">
+        <colgroup>
+            <col width="35%" />
+            <col width="35%" />
+            <col width="30%" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <td>
+                    <span style="font-weight: 500;">SKU: </span> ${Sku}
+                </td>
+                <td>
+                    <span style="font-weight: 500;">Name: </span> ${Name}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: 500;">FormSize: </span> ${FormSize}
+                </td>
+                <td>
+                    <span style="font-weight: 500;">Location: </span> ${Location}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: 500;">Quantity: </span> ${Quantity}
+                </td>
+                <td>
+                    <span style="font-weight: 500;">WholesalePrice: </span> ${WholesalePrice}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span style="font-weight: 500;">GrowingQuantity </span> ${GrowingQuantity}
+                </td>
+                <td>
+                    <span style="font-weight: 500;">BuyPrice: </span> ${BuyPrice}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</script>
+
+<script>
+    function toolbarClick(args) {
+        if (args.item.id === this.element.id + '_pdfexport') {
+            this.pdfExport();
+        }
+    }
+</script>

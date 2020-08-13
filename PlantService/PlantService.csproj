@@ -287,6 +287,7 @@
       <DependentUpon>PlantService.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\AHillsPlantService - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\PriceService - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

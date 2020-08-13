@@ -15,6 +15,7 @@ using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using NLog;
+using ImportService.ServiceLayer;
 
 namespace ImportService.Controllers
 {
@@ -117,39 +118,79 @@ namespace ImportService.Controllers
 
             try
             {
+                ///// empty the import tables
                 // db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
                 db.EmptyImport();
 
+                /// insert into raw import and remove any duplicates just in case
                 // db.BulkInsert<Pannebakker>(newRecords);
                 db.BulkInsert(recordsIn);
                 db.RemoveDuplicateImport();
+
+                // merge import into PB and clean form sizes
                 //AddBatch(records);
                 db.MergeImportToPB();
                 db.cleanPBForms();
                 db.cleanForms();
                 db.RemoveDuplicatePB();
+                // so PB table sould now be solid and ready
+                
+                
+                // remove any duplicates from PB and Batch
+                // may not be needed but just in case
                 db.RemoveDuplicateBatch();
+                // clean all old PB's from batch as we are going to provide a new lot.
+                // worried about this moving frowards if quotes use batch ids from PB's i am removing
                 db.RemovePBFromBatch();
-                var allPB = db.GetPannebakkers();
-                IEnumerable<ImportModel.Batch> newBatches = allPB.Select(batch => new ImportModel.Batch
-                {
-                    Active = true,
-                    AllocatedQuantity = 0,
-                    BuyPrice = (batch.Price / 0.55m),
-                    Comment = "",
-                    FormSize = batch.FormSize,
-                    ImageExists = false,
-                    GrowingQuantity = 0,
-                    Location = "PB",
-                    Name = batch.Name,
-                    Sku = batch.Sku,
-                    Quantity = 5000,
-                    WholesalePrice = 0,
-                    DateStamp = DateTime.Now,
 
-                });
+
+                var allPB = db.GetPannebakkers().ToList();
+
+
+                List<ImportModel.Batch> newBatches = new List<ImportModel.Batch>();
+                foreach(var b in allPB)
+                {
+                    ImportModel.Batch newB = new ImportModel.Batch();
+                    decimal price = CalCapPrice(b);
+                    newB.Active = true;
+                    newB.AllocatedQuantity = 0;
+                    newB.BuyPrice = b.Price;
+                    newB.FormSize = b.FormSize;
+                    newB.ImageExists = false;
+                    newB.GrowingQuantity = 0;
+                    newB.Location = "PB";
+                    newB.Name = b.Name;
+                    newB.Sku = b.Sku;
+                    newB.Quantity = 5000;
+                    newB.WholesalePrice = Convert.ToInt32(price);
+                    newB.DateStamp = DateTime.Now;
+                    if (price != b.Price)
+                    {
+                        newB.Comment = "Price Modified from " + b.Price + " to " + newB.WholesalePrice;
+                    }
+                    newBatches.Add(newB);
+                }
+
+
+                //IEnumerable<ImportModel.Batch> newBatches = allPB.Select(batch => new ImportModel.Batch
+                //{
+                //    Active = true,
+                //    AllocatedQuantity = 0,
+                //    BuyPrice = CalCapPrice(batch),
+                //    Comment = "",
+                //    FormSize = batch.FormSize,
+                //    ImageExists = false,
+                //    GrowingQuantity = 0,
+                //    Location = "PB",
+                //    Name = batch.Name,
+                //    Sku = batch.Sku,
+                //    Quantity = 5000,
+                //    WholesalePrice = 0,
+                //    DateStamp = DateTime.Now,
+
+                //});
                 db.BulkInsertPBintoBatch(newBatches);
-               // db.MergePbToBatch();
+                // db.MergePbToBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");
@@ -162,6 +203,30 @@ namespace ImportService.Controllers
                 return View("shit");
             }
 
+        }
+
+        private static decimal CalCapPrice(ImportModel.Pannebakker batch)
+        {
+            // pb buy price
+            var y= batch.Price;
+            // base sales price
+            var x = (batch.Price / 0.55m);
+
+            PriceItemDTO price = PriceService.GetUnitPrice(batch.FormSize);
+                if (price != null)
+                { 
+                    var max = Convert.ToDecimal(price.MaxUnitValue * 100);
+                    var min = Convert.ToDecimal(price.MinUnitValue * 100);
+                    if (x < min)
+                    {
+                       return min + y;
+                    }
+                    if (x > max)
+                    {
+                       return max + y;
+                    }
+                }
+            return y;
         }
 
         private List<ImportModel.rawImport>  ReadInputFile()

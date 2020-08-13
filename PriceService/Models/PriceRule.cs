@@ -55,7 +55,7 @@ namespace PriceService.Models
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 11);
                 }
                 // min>=18 && max<=30
-                if (minM > 150 && maxM <= 250)
+                if (minM >= 150 && maxM <= 250)
                 {
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 12);
                 }
@@ -85,7 +85,7 @@ namespace PriceService.Models
                     // then 1
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 1);
                 }
-                if (size >= 1.0m && size <= 3.0m)
+                if (size >= 1.0m && size <= 3.0m || ( root == "P"))
                 {
                     // then 2
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 2);
@@ -172,11 +172,11 @@ namespace PriceService.Models
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 17);
                 }
                 // min>150 && max<=250
-                if (minM > 150 && maxM <= 250)
+                if (minM >= 150 && maxM <= 250)
                 {
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 18);
                 }
-                if (minM > 250)
+                if (minM >= 250)
                 {
                     return Models.PriceRules.Rules.Single(r => r.RuleNumber == 19);
                 }
@@ -204,12 +204,12 @@ namespace PriceService.Models
                     new PriceRule() {  RuleNumber = 11, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>60 && max<=150", MinUnitValue=12.0, MaxUnitValue=30.0}  ,
                     new PriceRule() {  RuleNumber = 12, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>150 && max<=250", MinUnitValue=20.0, MaxUnitValue= 40.0},
                     new PriceRule() {  RuleNumber = 13, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>250", MinUnitValue=35.0, MaxUnitValue= 60.0},
-                    new PriceRule() {  RuleNumber = 14, PlantType = PriceRule.RootType.BareRoot, Description = "range=2 && max<12", MinUnitValue=10.0, MaxUnitValue=40.0}  ,
-                    new PriceRule() {  RuleNumber = 15, PlantType = PriceRule.RootType.BareRoot, Description = "range=2 && min>12", MinUnitValue=30.0, MaxUnitValue=60.0}  ,
-                    new PriceRule() {  RuleNumber = 16, PlantType = PriceRule.RootType.BareRoot, Description = "range> 4 && max<=60", MinUnitValue=5.0, MaxUnitValue= 12.0}  ,
-                    new PriceRule() {  RuleNumber = 17, PlantType = PriceRule.RootType.BareRoot, Description = "range> 4 && min>60 && max<=150", MinUnitValue=12.0, MaxUnitValue=30.0}  ,
-                    new PriceRule() {  RuleNumber = 18, PlantType = PriceRule.RootType.BareRoot, Description = "range>4 && min>150 && max<=250", MinUnitValue=20.0, MaxUnitValue= 40.0},
-                    new PriceRule() {  RuleNumber = 19, PlantType = PriceRule.RootType.BareRoot, Description = "range>4 && min>250", MinUnitValue=35.0, MaxUnitValue= 60.0},
+                    new PriceRule() {  RuleNumber = 14, PlantType = PriceRule.RootType.BareRoot, Description = "range=6 && max<12", MinUnitValue=9.0, MaxUnitValue=15.0}  ,
+                    new PriceRule() {  RuleNumber = 15, PlantType = PriceRule.RootType.BareRoot, Description = "range=12 && min>18", MinUnitValue=10.0, MaxUnitValue=35.0}  ,
+                    new PriceRule() {  RuleNumber = 16, PlantType = PriceRule.RootType.BareRoot, Description = "range> 4 && max<=60", MinUnitValue=0.2, MaxUnitValue= 0.9}  ,
+                    new PriceRule() {  RuleNumber = 17, PlantType = PriceRule.RootType.BareRoot, Description = "range> 4 && min>60 && max<=150", MinUnitValue=0.6, MaxUnitValue=0.2}  ,
+                    new PriceRule() {  RuleNumber = 18, PlantType = PriceRule.RootType.BareRoot, Description = "range>4 && min>150 && max<=250", MinUnitValue=2.0, MaxUnitValue= 8.0},
+                    new PriceRule() {  RuleNumber = 19, PlantType = PriceRule.RootType.BareRoot, Description = "range>4 && min>250", MinUnitValue=8.0, MaxUnitValue= 15.0},
                 };
     }
 }

@@ -17,6 +17,10 @@ namespace PriceService.Controllers
             return new string[] { "value1", "value2" };
         }
 
+
+
+        
+
        //Regex expression = new Regex(@"%download%#(?<Identifier>[0-9]*)");
        //  var results = expression.Matches(input);
 
@@ -30,10 +34,10 @@ namespace PriceService.Controllers
 
             Regex expressionC = new Regex("[C][0-9]");
             Regex expressionP = new Regex("[P][0-9]");
-            Regex expressionL = new Regex("[0-9][ L]");
-            Regex expressionRB = new Regex("[RB]");
-            Regex expressionSTD = new Regex("[STD]");
-            // Regex expressionL = new Regex("[C][0-9]");
+            Regex expressionL = new Regex("[0-9] L");
+            Regex expressionRB = new Regex("RB|KL|rootball|ROOTBALL");
+            Regex expressionSTD = new Regex("STD|bare root|BARE ROOT|FEATHERED" );
+            //Regex expressionL = new Regex("[C][0-9]");
 
             var hasAc = expressionC.Matches(form);
             var hasAp = expressionP.Matches(form);
@@ -44,7 +48,7 @@ namespace PriceService.Controllers
     
 
             bool isBR = false;
-            if ((hasSTD.Count > 0) && (hasARB.Count == 0) && (hasAc.Count == 0) && (hasAp.Count == 0) && (hasAL.Count == 0))
+            if ((hasARB.Count == 0) && (hasAc.Count == 0) && (hasAp.Count == 0) && (hasAL.Count == 0))
             {
                 isBR = true;
             }
@@ -125,7 +129,7 @@ namespace PriceService.Controllers
 
 
 
-                case bool _ when isBR:
+                case bool _ when (hasSTD.Count > 0 | isBR):
                     string[] BRwords = form.Split(' ');
                     // find string with numbers
                     string BRsize = "";
@@ -177,11 +181,11 @@ namespace PriceService.Controllers
             }
         }
 
-      
-       
-
         public static string CleanString(string text)
         {
+
+            text = text.Replace("SOLITAIRE", "");
+            text = text.Replace("SOLITAIR", "");
             StringBuilder sb = new StringBuilder(text.Length);
 
             for (int i = 0; i < text.Length; i++)

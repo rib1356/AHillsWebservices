@@ -16,9 +16,6 @@ namespace ImportService.Controllers
     public class readBatchController : Controller
     {
 
-
-      
-
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, string FormSearchstring,int? page, bool? hasPB , bool? hasLocal)
         {
             ServiceLayer.BatchService.GetLocations();
@@ -194,7 +191,7 @@ namespace ImportService.Controllers
 
 
             /// get price data
-            PriceItemDTO price = PriceService.GetPUnitPrice(vm.FormSize);
+            PriceItemDTO price = PriceService.GetUnitPrice(vm.FormSize);
 
             if (price != null)
             {
