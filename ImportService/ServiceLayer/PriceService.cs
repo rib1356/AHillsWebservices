@@ -38,15 +38,15 @@ namespace ImportService.ServiceLayer
         /// WE need to modify the System URi to use the deployed services
         /// </summary>
         /// <returns></returns>
-        private static HttpClient ApiClient()
-        {
-            HttpClient client = new HttpClient();
-            // http://localhost:52009/
-            //client.BaseAddress = new System.Uri("http://localhost:61628/");
-            client.BaseAddress = new System.Uri("https://priceservice.azurewebsites.net/");
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-            return client;
-        }
+        //private static HttpClient ApiClient()
+        //{
+        //    HttpClient client = new HttpClient();
+        //    // http://localhost:52009/
+        //    //client.BaseAddress = new System.Uri("http://localhost:61628/");
+        //    client.BaseAddress = new System.Uri("https://priceservice.azurewebsites.net/");
+        //    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+        //    return client;
+        //}
 
         //public static PriceItemDTO GetPUnitPrice(string formSize)
         //{
