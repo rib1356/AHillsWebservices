@@ -78,7 +78,14 @@ namespace ImportRep
 
         public void cleanForms()
         {
-            context.sp_cleanFormSize();
+            //try
+            //    {
+            //    context.sp_cleanFormSize();
+            //}
+            //catch(Exception ex)
+            //{
+            //    var result = ex.InnerException.InnerException;
+            //}
         }
 
         public void cleanPBForms()
@@ -136,6 +143,11 @@ namespace ImportRep
             context.removeBatchDuplicates();
         }
 
+        public void EmptyPB()
+        {
+            context.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
+        }
+
 
 
 
@@ -144,10 +156,16 @@ namespace ImportRep
             return context.Pannebakkers; 
         }
 
-        public void BulkInsert(IEnumerable<ImportModel.rawImport> newRecords)
+        public void BulkInsertIntoImport(IEnumerable<ImportModel.rawImport> newRecords)
         {
             context.BulkInsert<ImportModel.rawImport>(newRecords);
             
+        }
+
+        public void BulkInsertIntoPB(IEnumerable<ImportModel.Pannebakker> newRecords)
+        {
+            context.BulkInsert<ImportModel.Pannebakker>(newRecords);
+
         }
 
         public void BulkInsertPBintoBatch(IEnumerable<ImportModel.Batch> newRecords)

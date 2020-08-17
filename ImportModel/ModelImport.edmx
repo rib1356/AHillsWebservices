@@ -23,6 +23,7 @@
           <Property Name="DateStamp" Type="date" />
           <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="FormSizeCode" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Pannebakker">
           <Key>
@@ -37,6 +38,8 @@
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
           <Property Name="Location" Type="nvarchar(max)" />
+          <Property Name="WholesalePrice" Type="int" />
+          <Property Name="Comment" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="PlantNames">
           <Key>
@@ -93,6 +96,8 @@
           <Property Name="RootBall" Type="Boolean" />
           <Property Name="BatchId" Type="Int32" />
           <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WholesalePrice" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="rawImport">
           <Key>
@@ -150,6 +155,7 @@
           <Property Name="DateStamp" Type="DateTime" Precision="0" />
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSizeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -160,6 +166,8 @@
           <EntitySetMapping Name="Pannebakkers">
             <EntityTypeMapping TypeName="HillsImportModel.Pannebakker">
               <MappingFragment StoreEntitySet="Pannebakker">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WholesalePrice" ColumnName="WholesalePrice" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
@@ -206,6 +214,7 @@
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="HillsImportModel.Batch">
               <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="BuyPrice" ColumnName="BuyPrice" />
                 <ScalarProperty Name="DateStamp" ColumnName="DateStamp" />

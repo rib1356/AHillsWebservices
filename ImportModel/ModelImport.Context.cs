@@ -20,7 +20,6 @@ namespace ImportModel
         public ImportEntities()
             : base("name=ImportEntities")
         {
-            this.Database.CommandTimeout = 600;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

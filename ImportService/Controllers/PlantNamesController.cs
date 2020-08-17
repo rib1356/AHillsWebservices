@@ -186,7 +186,7 @@ namespace ImportService.Controllers
                 RepDb.EmptyImport();
 
                 // db.BulkInsert<Pannebakker>(newRecords);
-                RepDb.BulkInsert(recordsIn);
+                RepDb.BulkInsertIntoImport(recordsIn);
                 RepDb.BulkInsertGMBatch(batchIn);
                // RepDb.RemoveDuplicateNames();
                 //AddBatch(records);

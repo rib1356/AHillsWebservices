@@ -23,6 +23,7 @@
           <Property Name="DateStamp" Type="date" />
           <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="FormSizeCode" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Pannebakker">
           <Key>
@@ -68,6 +69,7 @@
           <Property Name="DateStamp" Type="DateTime" Precision="0" />
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSizeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Pannebakker">
           <Key>
@@ -92,6 +94,7 @@
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="HillsStockModel.Batch">
               <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="BuyPrice" ColumnName="BuyPrice" />
                 <ScalarProperty Name="DateStamp" ColumnName="DateStamp" />

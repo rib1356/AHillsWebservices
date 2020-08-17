@@ -118,14 +118,15 @@ namespace ImportService.Controllers
 
             try
             {
+                #region import
                 ///// empty the import tables
                 // db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
                 db.EmptyImport();
-
                 /// insert into raw import and remove any duplicates just in case
                 // db.BulkInsert<Pannebakker>(newRecords);
-                db.BulkInsert(recordsIn);
+                db.BulkInsertIntoImport(recordsIn);
                 db.RemoveDuplicateImport();
+                #endregion import
 
                 // merge import into PB and clean form sizes
                 //AddBatch(records);
@@ -138,32 +139,30 @@ namespace ImportService.Controllers
                 
                 // remove any duplicates from PB and Batch
                 // may not be needed but just in case
-                db.RemoveDuplicateBatch();
+
+                // db.RemoveDuplicateBatch();
+
                 // clean all old PB's from batch as we are going to provide a new lot.
                 // worried about this moving frowards if quotes use batch ids from PB's i am removing
-                db.RemovePBFromBatch();
+                //db.RemovePBFromBatch();
 
 
                 var allPB = db.GetPannebakkers().ToList();
+               // db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
 
 
-                List<ImportModel.Batch> newBatches = new List<ImportModel.Batch>();
+                List<ImportModel.Pannebakker> newBatches = new List<ImportModel.Pannebakker>();
                 foreach(var b in allPB)
                 {
-                    ImportModel.Batch newB = new ImportModel.Batch();
+                    ImportModel.Pannebakker newB = new ImportModel.Pannebakker();
                     decimal price = CalCapPrice(b);
-                    newB.Active = true;
-                    newB.AllocatedQuantity = 0;
-                    newB.BuyPrice = b.Price;
+                    newB.Price = b.Price;
                     newB.FormSize = b.FormSize;
-                    newB.ImageExists = false;
-                    newB.GrowingQuantity = 0;
                     newB.Location = "PB";
                     newB.Name = b.Name;
                     newB.Sku = b.Sku;
-                    newB.Quantity = 5000;
                     newB.WholesalePrice = Convert.ToInt32(price);
-                    newB.DateStamp = DateTime.Now;
+                    newB.FormSizeCode = b.FormSizeCode;
                     if (price != b.Price)
                     {
                         newB.Comment = "Price Modified from " + b.Price + " to " + newB.WholesalePrice;
@@ -189,8 +188,9 @@ namespace ImportService.Controllers
                 //    DateStamp = DateTime.Now,
 
                 //});
-                db.BulkInsertPBintoBatch(newBatches);
-                // db.MergePbToBatch();
+                db.EmptyPB();
+                db.BulkInsertIntoPB(newBatches);
+                db.MergePbToBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
                 return View("uploadDone");

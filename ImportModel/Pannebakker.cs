@@ -23,5 +23,7 @@ namespace ImportModel
         public Nullable<bool> RootBall { get; set; }
         public Nullable<int> BatchId { get; set; }
         public string Location { get; set; }
+        public Nullable<int> WholesalePrice { get; set; }
+        public string Comment { get; set; }
     }
 }
