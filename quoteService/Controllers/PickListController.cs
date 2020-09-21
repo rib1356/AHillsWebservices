@@ -175,7 +175,7 @@ namespace QuoteService.Controllers
                 FormSize = item.FormSize,
                 Comment = item.Comment,
                 Price = item.Price ?? 0,
-                QuantityPicked = db.PlantsForPicklists.Where(x => x.PlantForQuoteId == item.PlantsForQuoteId).Sum(x => x.QuantityToPick),
+                QuantityPicked = db.PlantsForPicklists.FirstOrDefault(x => x.PlantForQuoteId == item.PlantsForQuoteId) == null ? 0 : db.PlantsForPicklists.Where(x => x.PlantForQuoteId == item.PlantsForQuoteId).Sum(x => x.QuantityPicked),
                 Active = item.Active,
             }).ToList();
 
@@ -186,6 +186,7 @@ namespace QuoteService.Controllers
         public class PlantsOnSalesOrder
         {
             public int PlantForQuoteId { get; set; }
+            public string Sku { get; set; }
             public string PlantName { get; set; }
             public string FormSize { get; set; }
             public string Comment { get; set; }
