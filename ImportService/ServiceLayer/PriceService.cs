@@ -12,7 +12,7 @@ namespace ImportService.ServiceLayer
 {
     public class PriceItemDTO
     {
-        //        <Description>=>1 and =<3</Description>
+        //<Description>=>1 and =<3</Description>
         //<MaxUnitValue>1.6</MaxUnitValue>
         //<MinUnitValue>0.4</MinUnitValue>
         //<PlantType>Pot</PlantType>
@@ -67,10 +67,10 @@ namespace ImportService.ServiceLayer
         //}
 
 
-        public static PriceItemDTO GetUnitPrice(string formSize)
+        public static PriceItemDTO GetUnitPrice(string formSize, string formSizeCode)
         {
             var priceItemDTO = new PriceItemDTO();
-            var priceItem = PriceService.Get(formSize);
+            var priceItem = PriceService.Get(formSize,formSizeCode);
             if (priceItem != null)
             {
                 
@@ -89,37 +89,125 @@ namespace ImportService.ServiceLayer
 
         }
 
-        private  static PriceRule  Get(string form)
+        private  static PriceRule  Get(string form, string formSizeCode)
         {
+
+            if (form == "125-150 C20 1 CANE")
+            {
+                var fred = true;
+            }
             PriceRule priceRule = new PriceRule();
             // this removes all special charaters
             String cleanString = CleanString(form);
 
+            // Pot
+            // ^[24].+\d[sg]?$|^0.+\d$|^10$|C\d\.$|C$|CON$|\d+C.+$|P11|[CD]\d\d\d?$
+            string potEXpression = @"^[24].+\d[sg]?$|^0.+\d$|^10$|C\d\.$|C$|CON$|\d+C.+$|P11|[CD]\d\d\d?$";
+            Regex expressionPot = new Regex(potEXpression);
+            Regex expressionBareRoot = new Regex("^2.+[ZT]$");
+            Regex expressionRootBall = new Regex("M[A-Z]{3}?$|KLUI$|KLU$|M$");
+
+
+
             Regex expressionC = new Regex("[C][0-9]");
             Regex expressionP = new Regex("[P][0-9]");
             Regex expressionL = new Regex("[0-9] L");
+            Regex expressionCon = new Regex("CONT");
             Regex expressionRB = new Regex("RB|KL|rootball|ROOTBALL");
+            Regex expressionRBFSC = new Regex("M");
             Regex expressionSTD = new Regex("STD|bare root|BARE ROOT|FEATHERED");
             //Regex expressionL = new Regex("[C][0-9]");
+            MatchCollection IsPot = null;
+            MatchCollection IsBareRoot = null;
+            MatchCollection IsRootBall = null;
+            MatchCollection hasAcFC = null;
+            MatchCollection hasApFC = null;
+            MatchCollection hasARBFC = null;
 
-            var hasAc = expressionC.Matches(form);
-            var hasAp = expressionP.Matches(form);
+            if (!( String.IsNullOrEmpty(formSizeCode)))
+            {
+                IsPot = expressionPot.Matches(formSizeCode);
+                IsBareRoot = expressionBareRoot.Matches(formSizeCode);
+                IsRootBall = expressionRootBall.Matches(formSizeCode);
+                hasAcFC = expressionC.Matches(formSizeCode);
+                hasApFC = expressionP.Matches(formSizeCode);
+                hasARBFC = expressionRB.Matches(formSizeCode);
+            }
+            var hasAc = expressionC.Matches(form); 
+            var hasAp = expressionP.Matches(form);            
             var hasAL = expressionL.Matches(form);
             var hasSTD = expressionSTD.Matches(form);
-            var hasARB = expressionRB.Matches(form);
+            var hasARB = expressionRB.Matches(form);           
+            var hasCont = expressionCon.Matches(form);
 
 
 
             bool isBR = false;
-            if ((hasARB.Count == 0) && (hasAc.Count == 0) && (hasAp.Count == 0) && (hasAL.Count == 0))
+            if ((hasARB.Count == 0) && (hasAc.Count == 0) && (hasAp.Count == 0) && (hasAL.Count == 0) && (hasCont.Count == 0))
             {
                 isBR = true;
+            }
+
+            /// check rootball status
+            bool rootBall = false;
+            if (IsRootBall == null)
+            {
+                if (hasARB.Count > 0)
+                {
+                    rootBall = true;
+                }
+            }
+            else
+            {
+                if (IsRootBall.Count > 0)
+                {
+                    rootBall = true;
+                }
+            }
+
+
+            // chack pot C
+            bool IsCPOT = false;
+            if(IsPot == null && ( hasAc.Count > 0 | hasCont.Count > 0 ))
+            {              
+                    IsCPOT = true;
+            }
+
+            //IsPot.Count > 0 && hasAp.Count > 0:
+            bool IsPPOT = false;
+            if (IsPot == null && hasAp.Count > 0)
+            {
+                IsPPOT = true;
+            }
+
+            // IsPot.Count > 0 && hasAL.Count > 0
+            bool IsLPOT = false;
+            if (IsPot == null && hasAL.Count > 0)
+            {
+                IsLPOT = true;
+            }
+
+            // IsBareRoot.Count > 0  | isBR
+            bool BareRootIam = false;
+            if (IsBareRoot == null )
+            {
+                if(isBR)
+                {
+                    BareRootIam = true;
+                } 
+            }
+            else
+            {
+                if (IsBareRoot.Count > 0)
+                {
+                    BareRootIam = true;
+                }
             }
 
 
             switch (true)
             {
-                case bool _ when hasARB.Count > 0:
+                case bool _ when rootBall:
                     // split string with space
                     string[] words = form.Split(' ');
                     // find string with numbers
@@ -139,7 +227,7 @@ namespace ImportService.ServiceLayer
                     return resultRB;
 
 
-                case bool _ when (hasAc.Count > 0):
+                case bool _ when IsCPOT:
                     // split string with space
                     string[] cWords = form.Split(' ');
                     string cSize = "";
@@ -157,7 +245,7 @@ namespace ImportService.ServiceLayer
                     return resultC;
 
 
-                case bool _ when hasAp.Count > 0:
+                case bool _ when IsPPOT:
                     // return readForm("P", cleanString);
                     string[] pWords = form.Split(' ');
                     string pSize = "";
@@ -173,7 +261,7 @@ namespace ImportService.ServiceLayer
                     var resultP = PriceRule.getPotRule("P", pSize);
                     return resultP;
 
-                case bool _ when hasAL.Count > 0:
+                case bool _ when IsLPOT:
                     string[] lWords = form.Split(' ');
                     string lSize = "";
                     foreach (var word in lWords)
@@ -192,7 +280,7 @@ namespace ImportService.ServiceLayer
 
 
 
-                case bool _ when (hasSTD.Count > 0 | isBR):
+                case bool _ when BareRootIam:
                     string[] BRwords = form.Split(' ');
                     // find string with numbers
                     string BRsize = "";

@@ -188,10 +188,11 @@ namespace ImportService.Controllers
             vm.Sku = batch.Sku;
             vm.Name = batch.Name;
             vm.FormSize = batch.FormSize;
+            vm.FormSizeCode = batch.FormSizeCode;
 
 
             /// get price data
-            PriceItemDTO price = PriceService.GetUnitPrice(vm.FormSize);
+            PriceItemDTO price = PriceService.GetUnitPrice(vm.FormSize, vm.FormSizeCode);
 
             if (price != null)
             {
@@ -319,6 +320,7 @@ namespace ImportService.Controllers
                     Id = batch.BatchId,
                     Sku = batch.Sku,
                     FormSize = batch.FormSize,
+                     FormSizeCode = batch.FormSizeCode,
                     Name = batch.Name,
                     Location = mainLocation + " " + subLocation,
                     Quantity = (batch.forSale) ? batch.Quantity : 0,

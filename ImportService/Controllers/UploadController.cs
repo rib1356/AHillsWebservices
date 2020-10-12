@@ -205,14 +205,19 @@ namespace ImportService.Controllers
 
         }
 
+        /// <summary>
+        /// Calculates the proposed sale unit sale price dependant upon form - size
+        /// </summary>
+        /// <param name="batch"></param>
+        /// <returns>Proposed unit Sale Price</returns>
         private static decimal CalCapPrice(ImportModel.Pannebakker batch)
         {
             // pb buy price
-            var y= batch.Price;
+            var y = batch.Price;
             // base sales price
             var x = (batch.Price / 0.55m);
 
-            PriceItemDTO price = PriceService.GetUnitPrice(batch.FormSize);
+            PriceItemDTO price = PriceService.GetUnitPrice(batch.FormSize,batch.FormSizeCode);
                 if (price != null)
                 { 
                     var max = Convert.ToDecimal(price.MaxUnitValue * 100);

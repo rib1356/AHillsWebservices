@@ -46,13 +46,17 @@ namespace ImportService.ServiceLayer
                         return PriceRules.Rules.Single(r => r.RuleNumber == 9);
                     }
                 }
-                else if (maxM - minM > 4.0m)
+                else if (maxM - minM > 4.0m) // need a 100 to 125 Rule
                 {
-                    if (maxM <= 60)
+                    if (maxM <= 60) // changed on 11/9
                     {
                         return PriceRules.Rules.Single(r => r.RuleNumber == 10);
                     }
-                    if (minM > 60 && maxM <= 150)
+                    if (minM >= 60 && maxM <= 100) // new rule 11/9
+                    {
+                        return PriceRules.Rules.Single(r => r.RuleNumber == 20);
+                    }
+                    if (minM >= 100 && maxM <= 150) // updated 11/9
                     {
                         return PriceRules.Rules.Single(r => r.RuleNumber == 11);
                     }
@@ -222,8 +226,9 @@ namespace ImportService.ServiceLayer
                     new PriceRule() {  RuleNumber = 7, PlantType = PriceRule.RootType.RootBall, Description = "range=2 and min<=10", MinUnitValue=9.0, MaxUnitValue= 15.0} ,
                     new PriceRule() {  RuleNumber = 8, PlantType = PriceRule.RootType.RootBall, Description = "range=2 and min>10 and max<=18", MinUnitValue=10.0, MaxUnitValue=40.0}  ,
                     new PriceRule() {  RuleNumber = 9, PlantType = PriceRule.RootType.RootBall, Description = "range=2 && min>=18 && max<=30", MinUnitValue=30.0, MaxUnitValue=60.0}  ,
-                    new PriceRule() {  RuleNumber = 10, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && max<=60", MinUnitValue=5.0, MaxUnitValue= 12.0}  ,
-                    new PriceRule() {  RuleNumber = 11, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>60 && max<=150", MinUnitValue=12.0, MaxUnitValue=30.0}  ,
+                    new PriceRule() {  RuleNumber = 10, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && max<=60", MinUnitValue=3.0, MaxUnitValue= 9.0}  ,
+                    new PriceRule() {  RuleNumber = 20, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>60 max<=100", MinUnitValue=9.0, MaxUnitValue= 12.0},
+                    new PriceRule() {  RuleNumber = 11, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>100 && max<=150", MinUnitValue=12.0, MaxUnitValue=30.0}  ,
                     new PriceRule() {  RuleNumber = 12, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>150 && max<=250", MinUnitValue=20.0, MaxUnitValue= 40.0},
                     new PriceRule() {  RuleNumber = 13, PlantType = PriceRule.RootType.RootBall, Description = "range>4 && min>250", MinUnitValue=35.0, MaxUnitValue= 60.0},
                     new PriceRule() {  RuleNumber = 14, PlantType = PriceRule.RootType.BareRoot, Description = "range=6 && max<12", MinUnitValue=9.0, MaxUnitValue=15.0}  ,

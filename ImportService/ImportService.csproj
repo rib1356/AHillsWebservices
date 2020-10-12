@@ -190,6 +190,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\FSPriceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\PannebakkersController.cs" />
@@ -310,6 +311,8 @@
     <Content Include="Views\PlantNames\Edit.cshtml" />
     <Content Include="Views\PlantNames\Index.cshtml" />
     <Content Include="Views\readBatch\Edit.cshtml" />
+    <Content Include="Views\FSPrice\Index.cshtml" />
+    <Content Include="Views\FSPrice\Calculate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BatchService\BatchService.csproj">
@@ -341,6 +344,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -19,12 +19,21 @@ namespace BatchService.Models
         public int GrowingQuantity { get; set; }
     }
 
+
+    public class BatchListDTO
+    {
+        
+        public List<BatchItemDTO> Items {get;set;}
+        public int Count { get; set; }
+    }
+
     public class BatchItemDTO
     {
         public int Id { get; set; } 
         public string Sku { get; set; }
         public string Name { get; set; }
         public string FormSize { get; set; }
+        public string FormSizeCode { get; set; }
         public string Location { get; set; }
         public int Quantity { get; set; }
         public int GrowingQuantity { get; set; }

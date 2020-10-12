@@ -34,13 +34,111 @@ namespace BatchService.Controllers
                   Name = item.Name,
                    Location = item.Location,
                    FormSize = item.FormSize,
-                    PurchasePrice = -1,
+                    PurchasePrice = 0,
                         WholesalePrice = item.WholesalePrice,
                          
                      
             });
             return result;
         }
+
+        private int? ConvertMe(decimal? buyPrice)
+        {
+            if (buyPrice != null)
+            {
+               return  Convert.ToInt32(buyPrice);
+            }
+            return null;
+        }
+
+        //A test comment1
+        [Route("api/Batches/Luke")]
+        // GET: api/Batches
+        /// Send a collection of active BatchItemDTO's 
+        /// Currently purchase Price does not exist in domain
+        public BatchListDTO GetAllBatchesForLuke()
+        {
+            var all = db.Batches;
+            int skip = 0;
+            int take = 50;
+            var queryString = System.Web.HttpContext.Current.Request.QueryString;
+            if (!(string.IsNullOrEmpty(queryString["$skip"])))
+            {
+                skip = Convert.ToInt32(queryString["$skip"]);  //paging 
+            }
+            if (!(string.IsNullOrEmpty(queryString["$top"])))
+            {
+                take = Convert.ToInt32(queryString["$top"]);  //paging 
+            }
+
+
+
+            //take = Convert.ToInt32(queryString["top"]); //paging 
+
+
+            var result = all.Select(item => new BatchItemDTO
+            {
+                Id = item.Id,
+                Sku = item.Sku,
+                Name = item.Name,
+                Location = item.Location,
+                FormSize = item.FormSize,
+                PurchasePrice = item.WholesalePrice,
+                WholesalePrice = item.WholesalePrice,
+
+
+            });
+            BatchListDTO output = new BatchListDTO();
+
+            //Items = data.Skip(skip).Take(take), 
+            //output.Items = result.OrderBy(x => x.Id).Skip(skip).Take(take).ToList();
+            output.Items = result.ToList();
+            // output.Count = output.Items.Count();
+            output.Count = result.Count();
+
+            return output;
+        }
+
+        //public object Get(int id)
+        //{
+        //    var queryString = System.Web.HttpContext.Current.Request.QueryString;
+        //    var dataa = Convert.ToString(queryString["id"]);
+        //    var data = OrdersDetails.GetAllRecords().Where(user => user.CustomerID == dataa).ToList();
+        //    return new { Items = data, Count = data.Count() };
+        //}
+
+        //[Route("api/Batches/Luke/{id}")]
+        //public BatchListDTO GetBatchDTOForLuke(int id)
+        //{
+        //    //var queryString = System.Web.HttpContext.Current.Request.QueryString;
+        //    //var uid = Convert.ToString(queryString["id"]);
+        //    //var all = db.Batches.Where(b => b.Active == true && b.Id == Convert.ToInt32(uid));
+
+        //    //var result = all.Select(item => new BatchItemDTO
+        //    //{
+        //    //    Id = item.Id,
+        //    //    Sku = item.Sku,
+        //    //    Name = item.Name,
+        //    //    Location = item.Location,
+        //    //    FormSize = item.FormSize,
+        //    //    PurchasePrice = item.WholesalePrice,
+        //    //    WholesalePrice = item.WholesalePrice,
+
+
+        //    //});
+        //    //BatchListDTO output = new BatchListDTO();
+
+        //    ////Items = data.Skip(skip).Take(take), 
+        //    //output.Items = result.ToList();
+        //    //output.Count = output.Items.Count();
+
+        //    //return output;
+
+            
+
+        //}
+
+
 
         [Route("api/Batches/All/{id}")]
         // GET: api/Batches
