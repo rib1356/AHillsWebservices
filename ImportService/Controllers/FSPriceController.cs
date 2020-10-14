@@ -1,4 +1,5 @@
 ﻿using BatchService.Models;
+using ImportRep;
 using ImportService.ServiceLayer;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,13 @@ namespace ImportService.Controllers
 {
     public class FSPriceController : Controller
     {
+
+        private IImportRepository db;
+
+        public FSPriceController()
+        {
+            this.db = new ImportRepository(new ImportModel.ImportEntities());
+        }
         // GET: FSPrice
         public ActionResult Index()
         {
@@ -22,10 +30,10 @@ namespace ImportService.Controllers
         public ActionResult Calculate()
         {
             // empty batches object to fill soon
-            var batches = new List<DTO.BatchDTO>();
+            //var batches = new List<DTO.BatchDTO>();
             var VM = new List<DTO.BatchEditVM>();
             // dear service can i have the batches please
-            batches = ServiceLayer.BatchService.GetBatches().Where(b => b.Location == "PB").ToList();
+            var batches = db.GetPBBatches();
             foreach(var b in batches)
             {
                 // lets build a model we can edit
@@ -35,9 +43,9 @@ namespace ImportService.Controllers
                 {
                     var found = true; 
                 }
-                int? WholeSalePrice = b.PurchasePrice;
+                int? WholeSalePrice = b.WholesalePrice;
                 PriceItemDTO batchWithPrice = PriceService.GetUnitPrice(b.FormSize, b.FormSizeCode);
-                if (batchWithPrice != null )
+                if (batchWithPrice != null | b.Comment != null)
                 {
                     //    var max = batchWithPrice.MaxUnitValue * 100;
                     //    var min = batchWithPrice.MinUnitValue * 100;

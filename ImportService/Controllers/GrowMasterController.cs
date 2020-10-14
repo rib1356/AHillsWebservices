@@ -130,16 +130,16 @@ namespace ImportService.Controllers
                            DateStamp = DateTime.Now
                 }).AsEnumerable();
 
-                IEnumerable<ImportModel.Batch> AllBatch = db.GetLocalBatches();
+               // IEnumerable<ImportModel.Batch> AllBatch = db.GetLocalBatches();
                 /// insert into raw import and remove any duplicates just in case
                 // db.BulkInsert<Pannebakker>(newRecords);
-                var inImportButNotInBatches= GMImport.Except(AllBatch).ToList();
-                var inList2ButNotInList = AllBatch.Except(GMImport).ToList();
+               // var inImportButNotInBatches= GMImport.Except(AllBatch).ToList();
+               //  var inList2ButNotInList = AllBatch.Except(GMImport).ToList();
   //              var InBoth = inListButNotInList2.Intersect(inList2ButNotInList).ToList();
             //    var InsertList = GMImport.Where(x => AllBatch.Any(z => x.FormSizeCode != z.FormSizeCode && x.Sku != z.Sku)).ToList();
             //   var UpdateList = AllBatch.Where(x => GMImport.Any(z => x.FormSizeCode == z.FormSizeCode && x.Sku == z.Sku)).ToList();
             // var InsertList = GMImport.Where(x => AllBatch.Any(z => x.FormSizeCode != z.FormSizeCode && x.Sku != z.Sku)).ToList();
-            // db.BulkInsertGMBatch(InsertList);
+            db.BulkInsertGMBatch(GMImport);
             //db.RemoveDuplicateImport();
                 #endregion import
 

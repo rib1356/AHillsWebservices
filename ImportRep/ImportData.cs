@@ -167,8 +167,6 @@ namespace ImportRep
         }
 
 
-
-
         public IEnumerable<ImportModel.Pannebakker> GetPannebakkers()
         {
             return context.Pannebakkers; 
@@ -177,6 +175,11 @@ namespace ImportRep
         public IEnumerable<ImportModel.Batch> GetLocalBatches()
         {
             return context.Batches.Where(b => b.Location != "PB");
+        }
+
+        public IEnumerable<ImportModel.Batch> GetPBBatches()
+        {
+            return context.Batches.Where(b => b.Location == "PB");
         }
 
         public void BulkInsertIntoImport(IEnumerable<ImportModel.rawImport> newRecords)

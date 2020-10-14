@@ -25,15 +25,12 @@
             @Html.DisplayNameFor(model => model.MainLocation)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SubLocation)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.FormSize)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FormSizeCode)
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Quantity)
         </th>
         <th>
@@ -41,7 +38,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.forSale)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.formType)
         </th>
@@ -71,16 +68,16 @@
         <td>
             @Html.DisplayFor(modelItem => item.MainLocation)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.SubLocation)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.FormSize)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FormSizeCode)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Quantity)
         </td>
         <td>
@@ -88,7 +85,7 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.forSale)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.formType)
         </td>
@@ -101,11 +98,11 @@
         <td>
             @Html.DisplayFor(modelItem => item.minPrice)
         </td>
-        <td>
+        @*<td>
             @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
             @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
             @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-        </td>
+        </td>*@
     </tr>
 }
 

@@ -15,6 +15,8 @@ namespace ImportRep
 
         IEnumerable<ImportModel.Batch> GetLocalBatches();
 
+        IEnumerable<ImportModel.Batch> GetPBBatches();
+
         void BulkInsertGMBatch(IEnumerable<ImportModel.Batch> newRecords);
 
         void BulkInsertIntoImport(IEnumerable<ImportModel.rawImport> newRecords);
