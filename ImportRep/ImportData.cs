@@ -39,32 +39,50 @@ namespace ImportRep
 
         /// <summary>
         /// /****** Object:  StoredProcedure [dbo].[sp_importmerge]    Script Date: 16/07/2019 18:48:30 ******/
-        //SET ANSI_NULLS ON
-        //GO
-        //SET QUOTED_IDENTIFIER ON
-        //GO
-        //BEGIN
-        //    -- SET NOCOUNT ON added to prevent extra result sets from
-        //    -- interfering with SELECT statements.
-        //    SET NOCOUNT ON
-        //MERGE[dbo].[Pannebakker] AS TARGET
-        //USING[dbo].[rawImport] AS SOURCE
-        //ON (TARGET.Sku = SOURCE.Sku AND TARGET.FormSizeCode = SOURCE.FormSizeCode AND TARGET.FormSize = SOURCE.FormSize AND TARGET.Name = SOURCE.Name)
-        //--When records are matched, update the records if there is any change
-        //WHEN MATCHED AND TARGET.Price<> SOURCE.Price
-        //THEN UPDATE SET TARGET.Price = SOURCE.Price
-        //--When no records are matched, insert the incoming records from source table to target table
-        //WHEN NOT MATCHED BY TARGET
-        //THEN INSERT ([Sku]
-        //           ,[FormSizeCode]
-        //           ,[Name]
-        //           ,[FormSize]
-        //           ,[Price]
-        //           ,[RootBall]
-        //           ,[BatchId]) VALUES (SOURCE.Sku, SOURCE.FormSizeCode, SOURCE.Name, SOURCE.FormSize, SOURCE.Price, SOURCE.RootBall, SOURCE.BatchId)
-        // WHEN NOT MATCHED BY SOURCE
-        //THEN DELETE;
-        //        END
+        /****** Object:  StoredProcedure [dbo].[sp_MergePBintoBatch]    Script Date: 12/10/2020 16:37:40 ******/
+                        //MERGE[dbo].[Batch] AS TARGET
+                        //USING[dbo].[Pannebakker] AS SOURCE
+                        //ON (TARGET.Sku = SOURCE.Sku AND TARGET.FormSizeCode = SOURCE.FormSizeCode)
+                        //--When records are matched, update the records if there is any change
+                        //WHEN MATCHED --  TARGET.BuyPrice<> SOURCE.Price
+                        //THEN
+                        //UPDATE SET TARGET.WholesalePrice = SOURCE.WholesalePrice, TARGET.BuyPrice = Source.Price, TARGET.Comment = SOURCE.Comment, Target.DateStamp = GETDATE()
+                        //--When no records are matched, insert the incoming records from source table to target table
+                        //WHEN NOT MATCHED BY TARGET
+                        //THEN INSERT
+                        //           ([Sku]
+                        //           ,[Name]
+                        //           ,[FormSize]
+                        //           ,[FormSizeCode]
+                        //           ,[Location]
+                        //           ,[Quantity]
+                        //           ,[WholesalePrice]
+                        //           ,[ImageExists]
+                        //           ,[Active]
+                        //           ,[GrowingQuantity]
+                        //           ,[AllocatedQuantity]
+                        //           ,[DateStamp]
+                        //           ,[BuyPrice]
+                        //           ,[Comment])
+                        //     VALUES
+                        //           (SOURCE.Sku
+                        //           , SOURCE.Name
+                        //           , SOURCE.FormSize
+                        //           , SOURCE.FormSizeCode
+                        //           ,'PB'
+                        //           ,5000
+                        //           ,SOURCE.WholesalePrice
+                        //           ,0
+                        //           ,1
+                        //           ,0
+                        //           ,0
+                        //           , GETDATE()
+                        //           , Source.Price
+                        //           , Source.Comment)
+                        // WHEN NOT MATCHED BY SOURCE AND TARGET.Location = 'PB' AND Target.AllocatedQuantity = 0
+                        //--THEN DELETE;
+                        //        THEN UPDATE SET TARGET.Active = 0;
+                        //        END
         /// </summary>
         public void MergeImportToPB()
         {
@@ -154,6 +172,11 @@ namespace ImportRep
         public IEnumerable<ImportModel.Pannebakker> GetPannebakkers()
         {
             return context.Pannebakkers; 
+        }
+
+        public IEnumerable<ImportModel.Batch> GetLocalBatches()
+        {
+            return context.Batches.Where(b => b.Location != "PB");
         }
 
         public void BulkInsertIntoImport(IEnumerable<ImportModel.rawImport> newRecords)

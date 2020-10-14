@@ -13,6 +13,8 @@ namespace ImportRep
 
         IEnumerable<Pannebakker> GetPannebakkers();
 
+        IEnumerable<ImportModel.Batch> GetLocalBatches();
+
         void BulkInsertGMBatch(IEnumerable<ImportModel.Batch> newRecords);
 
         void BulkInsertIntoImport(IEnumerable<ImportModel.rawImport> newRecords);

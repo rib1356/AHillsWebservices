@@ -166,26 +166,47 @@ namespace ImportService.ServiceLayer
             }
 
 
-            // chack pot C
             bool IsCPOT = false;
-            if(IsPot == null && ( hasAc.Count > 0 | hasCont.Count > 0 ))
-            {              
-                    IsCPOT = true;
-            }
-
-            //IsPot.Count > 0 && hasAp.Count > 0:
             bool IsPPOT = false;
-            if (IsPot == null && hasAp.Count > 0)
-            {
-                IsPPOT = true;
-            }
-
-            // IsPot.Count > 0 && hasAL.Count > 0
             bool IsLPOT = false;
-            if (IsPot == null && hasAL.Count > 0)
+            if (IsPot != null)
             {
-                IsLPOT = true;
+                if(IsPot.Count > 0)
+                {
+                    if((hasAc.Count > 0 | hasCont.Count > 0))
+                    {
+                        IsCPOT = true;
+                    }
+                    if(hasAp.Count > 0)
+                    {
+                        IsPPOT = true;
+                    }
+                    if (hasAL.Count > 0)
+                    {
+                        IsLPOT = true;
+                    }
+                }
             }
+            else
+            {
+                if ((hasAc.Count > 0 | hasCont.Count > 0))
+                {
+                    IsCPOT = true;
+                }
+                if (hasAp.Count > 0)
+                {
+                    IsPPOT = true;
+                }
+                if (hasAL.Count > 0)
+                {
+                    IsLPOT = true;
+                }
+
+            }
+        
+          
+
+
 
             // IsBareRoot.Count > 0  | isBR
             bool BareRootIam = false;

@@ -24,22 +24,52 @@ namespace BatchService.Controllers
         // GET: api/Batches
         /// Send a collection of active BatchItemDTO's 
         /// Currently purchase Price does not exist in domain
+        //public IQueryable<BatchItemDTO> GetAllBatches()
+        //{
+        //    var all = db.Batches.Where(b => b.Active == true);
+        //    var result = all.Select(item => new BatchItemDTO
+        //    {
+        //        Id = item.Id,
+        //        Sku = item.Sku,
+        //          Name = item.Name,
+        //           Location = item.Location,
+        //           FormSize = item.FormSize,
+        //            PurchasePrice = ConvertMe(item.BuyPrice * 100),
+        //                WholesalePrice = item.WholesalePrice,
+                         
+                     
+        //    });
+        //    return result;
+        //}
+
+
         public IQueryable<BatchItemDTO> GetAllBatches()
         {
             var all = db.Batches.Where(b => b.Active == true);
-            var result = all.Select(item => new BatchItemDTO
+            List<BatchItemDTO> DTO = new List<BatchItemDTO>();
+            foreach(var item in all)
             {
-                Id = item.Id,
-                Sku = item.Sku,
-                  Name = item.Name,
-                   Location = item.Location,
-                   FormSize = item.FormSize,
-                    PurchasePrice = 0,
-                        WholesalePrice = item.WholesalePrice,
-                         
-                     
-            });
-            return result;
+                var b = new BatchItemDTO {
+                    Id = item.Id,
+                    Sku = item.Sku,
+                    Name = item.Name,
+                    Location = item.Location,
+                    FormSize = item.FormSize,
+                    FormSizeCode = item.FormSizeCode,
+                    PurchasePrice = ConvertMe(item.BuyPrice),
+                    WholesalePrice = item.WholesalePrice,
+
+                };
+                DTO.Add(b);
+
+
+        };
+            return DTO.AsQueryable();
+        }
+
+        private int? TransformToInt(decimal? v)
+        {
+            throw new NotImplementedException();
         }
 
         private int? ConvertMe(decimal? buyPrice)

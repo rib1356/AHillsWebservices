@@ -191,6 +191,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\FSPriceController.cs" />
+    <Compile Include="Controllers\GrowMasterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\PannebakkersController.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\GMItem.cs" />
     <Compile Include="Models\Pannebakker.cs">
       <DependentUpon>PBModel.tt</DependentUpon>
     </Compile>
@@ -313,6 +315,8 @@
     <Content Include="Views\readBatch\Edit.cshtml" />
     <Content Include="Views\FSPrice\Index.cshtml" />
     <Content Include="Views\FSPrice\Calculate.cshtml" />
+    <Content Include="Views\GrowMaster\Index.cshtml" />
+    <Content Include="Views\GrowMaster\uploadDone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BatchService\BatchService.csproj">

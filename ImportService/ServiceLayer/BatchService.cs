@@ -20,8 +20,8 @@ namespace ImportService.ServiceLayer
             HttpClient client = new HttpClient();
             // http://localhost:52009/
             // http://localhost:64383/api/Locations
-            client.BaseAddress = new System.Uri("http://localhost:52009/");
-            //client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
+            //client.BaseAddress = new System.Uri("http://localhost:52009/");
+            client.BaseAddress = new System.Uri("https://ahillsbatchservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }
@@ -31,8 +31,8 @@ namespace ImportService.ServiceLayer
             HttpClient client = new HttpClient();
             // http://localhost:52009/
             // http://localhost:64383/api/Locations
-            client.BaseAddress = new System.Uri("http://localhost:64383/");
-            //client.BaseAddress = new System.Uri("https://ahillslocationservice.azurewebsites.net/");
+            //client.BaseAddress = new System.Uri("http://localhost:64383/");
+            client.BaseAddress = new System.Uri("https://ahillslocationservice.azurewebsites.net/");
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             return client;
         }

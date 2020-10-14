@@ -25,14 +25,17 @@ namespace ImportService.Controllers
             var batches = new List<DTO.BatchDTO>();
             var VM = new List<DTO.BatchEditVM>();
             // dear service can i have the batches please
-            batches = ServiceLayer.BatchService.GetBatches().ToList();
+            batches = ServiceLayer.BatchService.GetBatches().Where(b => b.Location == "PB").ToList();
             foreach(var b in batches)
             {
                 // lets build a model we can edit
                 /// get price datavar
                 /// 
-               
-                int? WholeSalePrice = b.Price;
+               if ( b.Id == 1012043)
+                {
+                    var found = true; 
+                }
+                int? WholeSalePrice = b.PurchasePrice;
                 PriceItemDTO batchWithPrice = PriceService.GetUnitPrice(b.FormSize, b.FormSizeCode);
                 if (batchWithPrice != null )
                 {
