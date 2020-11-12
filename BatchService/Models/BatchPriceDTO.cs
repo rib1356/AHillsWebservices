@@ -39,5 +39,6 @@ namespace BatchService.Models
         public int GrowingQuantity { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
         public Nullable<int> PurchasePrice { get; set; }
+        public string Comment { get; set; }
     }
 }

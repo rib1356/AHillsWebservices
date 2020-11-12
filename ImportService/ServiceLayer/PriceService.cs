@@ -21,7 +21,9 @@ namespace ImportService.ServiceLayer
         {
             Pot,
             RootBall,
-            BareRoot
+            BareRoot,
+            Bulb,
+            Topiary
         }
 
         public int RuleNumber { get; set; }
@@ -34,37 +36,7 @@ namespace ImportService.ServiceLayer
 
     public class PriceService
     {
-        /// <summary>
-        /// WE need to modify the System URi to use the deployed services
-        /// </summary>
-        /// <returns></returns>
-        //private static HttpClient ApiClient()
-        //{
-        //    HttpClient client = new HttpClient();
-        //    // http://localhost:52009/
-        //    //client.BaseAddress = new System.Uri("http://localhost:61628/");
-        //    client.BaseAddress = new System.Uri("https://priceservice.azurewebsites.net/");
-        //    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-        //    return client;
-        //}
-
-        //public static PriceItemDTO GetPUnitPrice(string formSize)
-        //{
-        //    HttpClient client = ApiClient();
-        //    var request = "api/Values?form=" + formSize;
-        //    HttpResponseMessage response = client.GetAsync(request).Result;
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        return response.Content.ReadAsAsync<PriceItemDTO>().Result;
-        //    }
-        //    else
-        //    {
-        //        Debug.WriteLine("Index received a bad response from the web service.");
-        //        return null;
-        //    }
-
-
-        //}
+        
 
 
         public static PriceItemDTO GetUnitPrice(string formSize, string formSizeCode)
@@ -92,143 +64,60 @@ namespace ImportService.ServiceLayer
         private  static PriceRule  Get(string form, string formSizeCode)
         {
 
-            if (form == "125-150 C20 1 CANE")
-            {
-                var fred = true;
-            }
+  
             PriceRule priceRule = new PriceRule();
             // this removes all special charaters
             String cleanString = CleanString(form);
 
-            // Pot
-            // ^[24].+\d[sg]?$|^0.+\d$|^10$|C\d\.$|C$|CON$|\d+C.+$|P11|[CD]\d\d\d?$
+
+
+            bool IsRB = false;
+            bool IsPPot = false;
+            bool IsLPot = false;
+            bool IsCPot= false;
+            bool IsBR = false;
+            bool IsBulb = false;
+            bool IsTop = false;
+
             string potEXpression = @"^[24].+\d[sg]?$|^0.+\d$|^10$|C\d\.$|C$|CON$|\d+C.+$|P11|[CD]\d\d\d?$";
-            Regex expressionPot = new Regex(potEXpression);
-            Regex expressionBareRoot = new Regex("^2.+[ZT]$");
-            Regex expressionRootBall = new Regex("M[A-Z]{3}?$|KLUI$|KLU$|M$");
+
+            IsPPot = PPotTest(formSizeCode, form, potEXpression);
+            IsLPot = LPotTest(formSizeCode, form, potEXpression);
+            IsCPot = CPotTest(formSizeCode, form, potEXpression);
+            IsTop = TopTest(formSizeCode, form);
+            IsBulb = BulbTest(formSizeCode, form);
 
 
 
-            Regex expressionC = new Regex("[C][0-9]");
-            Regex expressionP = new Regex("[P][0-9]");
-            Regex expressionL = new Regex("[0-9] L");
-            Regex expressionCon = new Regex("CONT");
-            Regex expressionRB = new Regex("RB|KL|rootball|ROOTBALL");
-            Regex expressionRBFSC = new Regex("M");
-            Regex expressionSTD = new Regex("STD|bare root|BARE ROOT|FEATHERED");
-            //Regex expressionL = new Regex("[C][0-9]");
-            MatchCollection IsPot = null;
-            MatchCollection IsBareRoot = null;
-            MatchCollection IsRootBall = null;
-            MatchCollection hasAcFC = null;
-            MatchCollection hasApFC = null;
-            MatchCollection hasARBFC = null;
-
-            if (!( String.IsNullOrEmpty(formSizeCode)))
+            // if its  pot then it IS NOT RB or BR
+            if (IsPPot | IsCPot | IsLPot)
             {
-                IsPot = expressionPot.Matches(formSizeCode);
-                IsBareRoot = expressionBareRoot.Matches(formSizeCode);
-                IsRootBall = expressionRootBall.Matches(formSizeCode);
-                hasAcFC = expressionC.Matches(formSizeCode);
-                hasApFC = expressionP.Matches(formSizeCode);
-                hasARBFC = expressionRB.Matches(formSizeCode);
-            }
-            var hasAc = expressionC.Matches(form); 
-            var hasAp = expressionP.Matches(form);            
-            var hasAL = expressionL.Matches(form);
-            var hasSTD = expressionSTD.Matches(form);
-            var hasARB = expressionRB.Matches(form);           
-            var hasCont = expressionCon.Matches(form);
-
-
-
-            bool isBR = false;
-            if ((hasARB.Count == 0) && (hasAc.Count == 0) && (hasAp.Count == 0) && (hasAL.Count == 0) && (hasCont.Count == 0))
-            {
-                isBR = true;
-            }
-
-            /// check rootball status
-            bool rootBall = false;
-            if (IsRootBall == null)
-            {
-                if (hasARB.Count > 0)
-                {
-                    rootBall = true;
-                }
+                IsRB = false;
+                IsBR = false;
             }
             else
             {
-                if (IsRootBall.Count > 0)
+                IsRB  = RootBallTest(formSizeCode, form);
+                if (!IsRB)
                 {
-                    rootBall = true;
-                }
-            }
-
-
-            bool IsCPOT = false;
-            bool IsPPOT = false;
-            bool IsLPOT = false;
-            if (IsPot != null)
-            {
-                if(IsPot.Count > 0)
-                {
-                    if((hasAc.Count > 0 | hasCont.Count > 0))
-                    {
-                        IsCPOT = true;
-                    }
-                    if(hasAp.Count > 0)
-                    {
-                        IsPPOT = true;
-                    }
-                    if (hasAL.Count > 0)
-                    {
-                        IsLPOT = true;
-                    }
-                }
-            }
-            else
-            {
-                if ((hasAc.Count > 0 | hasCont.Count > 0))
-                {
-                    IsCPOT = true;
-                }
-                if (hasAp.Count > 0)
-                {
-                    IsPPOT = true;
-                }
-                if (hasAL.Count > 0)
-                {
-                    IsLPOT = true;
-                }
-
-            }
-        
-          
-
-
-
-            // IsBareRoot.Count > 0  | isBR
-            bool BareRootIam = false;
-            if (IsBareRoot == null )
-            {
-                if(isBR)
-                {
-                    BareRootIam = true;
-                } 
-            }
-            else
-            {
-                if (IsBareRoot.Count > 0)
-                {
-                    BareRootIam = true;
+                    IsBR = BareRootTest(formSizeCode, form);
                 }
             }
 
 
             switch (true)
             {
-                case bool _ when rootBall:
+                case bool _ when IsBulb:
+
+                    return PriceRule.getBulbRule();
+
+
+                case bool _ when IsTop:
+
+                    return PriceRule.getTopiaryRule();
+
+
+                case bool _ when IsRB:
                     // split string with space
                     string[] words = form.Split(' ');
                     // find string with numbers
@@ -248,10 +137,15 @@ namespace ImportService.ServiceLayer
                     return resultRB;
 
 
-                case bool _ when IsCPOT:
+                case bool _ when IsCPot:
+
+                    string cSize = "";
+                   
                     // split string with space
                     string[] cWords = form.Split(' ');
-                    string cSize = "";
+                    
+                    Regex expressionC = new Regex("[C][0-9]|CONT");
+                    MatchCollection hasAc = expressionC.Matches(form);
                     foreach (var word in cWords)
                     {
                         if (expressionC.Matches(word).Count > 0)
@@ -260,16 +154,23 @@ namespace ImportService.ServiceLayer
                             break;
                         }
                     }
-                    //return readForm("C", cSize);
-                    //var resultC = getPotRule("C",cSize);
+
+                    Regex specialC = new Regex("2C1.4");
+                    if (specialC.Matches(formSizeCode).Count > 0)
+                    {
+                        cSize = "1.5";
+                    }
+
                     var resultC = PriceRule.getPotRule("C", cSize);
                     return resultC;
 
 
-                case bool _ when IsPPOT:
+                case bool _ when IsPPot:
                     // return readForm("P", cleanString);
                     string[] pWords = form.Split(' ');
                     string pSize = "";
+                    Regex expressionP = new Regex("[P][0-9]");
+                    MatchCollection hasAp = expressionP.Matches(form);
                     foreach (var word in pWords)
                     {
                         if (expressionP.Matches(word).Count > 0)
@@ -282,7 +183,7 @@ namespace ImportService.ServiceLayer
                     var resultP = PriceRule.getPotRule("P", pSize);
                     return resultP;
 
-                case bool _ when IsLPOT:
+                case bool _ when IsLPot:
                     string[] lWords = form.Split(' ');
                     string lSize = "";
                     foreach (var word in lWords)
@@ -294,54 +195,246 @@ namespace ImportService.ServiceLayer
                             break;
                         }
                     }
-                    //var resultL = getPotRule("L", lSize);
                     var resultL = PriceRule.getPotRule("L", lSize);
                     return resultL;
 
 
 
 
-                case bool _ when BareRootIam:
-                    string[] BRwords = form.Split(' ');
-                    // find string with numbers
-                    string BRsize = "";
-                    foreach (var word in BRwords)
-                    {
-                        if (word.Any(char.IsDigit))
-                        {
-                            BRsize = word;
-                            break;
-                        }
-                    }
-                    // split that string with -
-                    string[] BRsizes = BRsize.Split('-');
-                    // get low value get high value
-                    if (BRsizes.Length == 2)
-                    { 
-                        var resultBR = readBRForm("BR", BRsizes);
-                        return resultBR;
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                case bool _ when IsBR:
+                    string BRsize;
+                    return ProcessBareRoot(form, out BRsize);
 
                 default:
-                    return null;
+                    string BRdsize;
+                    return ProcessBareRoot(form, out BRdsize);
             }
 
 
         }
 
+        private static PriceRule ProcessBareRoot(string form, out string BRsize)
+        {
+            string[] BRwords = form.Split(' ');
+            // find string with numbers
+            BRsize = "";
+            foreach (var word in BRwords)
+            {
+                if (word.Any(char.IsDigit))
+                {
+                    BRsize = word;
+                    break;
+                }
+            }
+            // split that string with -
+            string[] BRsizes = BRsize.Split('-');
+            // get low value get high value
+            if (BRsizes.Length == 2)
+            {
+                var resultBR = readBRForm("BR", BRsizes);
+                return resultBR;
+            }
+            else
+            {
+                return readBRForm("BR", BRsizes);
+            }
+        }
+
+        private static bool TopTest(string formSizeCode, string form)
+        {
+
+            Regex expression = new Regex("Ball|Pyr|Spiral|Hedge|Pyramid|Pon Pon|Bonsai|Cone");
+            if (expression.Matches(form).Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static bool BulbTest(string formSizeCode, string form)
+        {
+
+            Regex expression = new Regex("Bulb|BULB|bulb");
+            Regex FSCexpression = new Regex("2BULB");
+            // 2BULB
+            if (expression.Matches(form).Count > 0 | FSCexpression.Matches(formSizeCode).Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static bool RootBallTest(string formSizeCode, string form)
+        {
+            Regex expressionRB = new Regex("rb|RB|KL|rootball|ROOTBALL");
+
+            Regex FCexpressionRootBall = new Regex("M[A-Z]{3}?$|KLUI$|KLU$|M$");
+            MatchCollection IsRootBall = null;
+
+            if (!(String.IsNullOrEmpty(formSizeCode)))
+            {
+                IsRootBall = FCexpressionRootBall.Matches(formSizeCode);
+                if (IsRootBall.Count > 0)
+                {
+                    return true;
+                }
+            }
+
+            if (expressionRB.Matches(form).Count > 0)
+            {
+                return true;
+            }
+
+ 
+
+            return false;
+        }
+
+        private static bool LPotTest(string formSizeCode, string form, string expression)
+        {
+            MatchCollection IsPot = null;
+            Regex expressionL = new Regex("[0-9] L|CONT|cont");
+            MatchCollection hasAL = expressionL.Matches(form);
+            Regex expressionPot = new Regex(expression);
+            if (!(String.IsNullOrEmpty(formSizeCode)))
+            {
+                IsPot = expressionPot.Matches(formSizeCode);
+                if (hasAL.Count > 0)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (hasAL.Count > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool CPotTest(string formSizeCode, string form, string expression)
+        {
+            MatchCollection IsPot = null;
+            Regex expressionC = new Regex("[C][0-9]");
+            MatchCollection hasAc = expressionC.Matches(form);
+            Regex expressionPot = new Regex(expression);
+            if (!(String.IsNullOrEmpty(formSizeCode)))
+            {
+                Regex specialC = new Regex("2C1.4");
+                if (specialC.Matches(formSizeCode).Count > 0)
+                {
+                    return true;
+                }
+                else {
+                        IsPot = expressionPot.Matches(formSizeCode);
+                        if (IsPot.Count > 0 && hasAc.Count > 0)
+                        {
+                            return true;
+                        }
+                }
+            }
+            else
+            {
+                if (hasAc.Count > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool PPotTest(string formSizeCode, string form, string expression)
+        {
+            MatchCollection IsPot = null;
+            Regex expressionPot = new Regex(expression);
+            Regex expressionP = new Regex("[P][0-9]");
+            MatchCollection hasAp = expressionP.Matches(form);
+            if (!(String.IsNullOrEmpty(formSizeCode)))
+            {
+                IsPot = expressionPot.Matches(formSizeCode);
+                if (hasAp.Count > 0)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (hasAp.Count > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool BareRootTest(string formSizeCode, string formSize)
+        {
+            var testString = formSize.ToLower();
+            Regex FSCexpressionBareRoot = new Regex("^2.+[ZT]$");
+            Regex myFSCexpression = new Regex("10Z");
+            Regex FSexpressionBareRoot = new Regex("bare root");
+            MatchCollection hasBR = FSexpressionBareRoot.Matches(testString);
+           // MatchCollection hasmyBR = myFSCexpression.Matches(formSizeCode);
+            MatchCollection IsBareRoot = null;
+            MatchCollection IsMYBareRoot = null;
+            if (!(String.IsNullOrEmpty(formSizeCode)))
+            {
+                IsBareRoot = FSCexpressionBareRoot.Matches(formSizeCode);
+                IsMYBareRoot = myFSCexpression.Matches(formSizeCode);
+                if (IsBareRoot.Count > 0 | IsMYBareRoot.Count > 0)
+                {
+                    return true;
+                }
+            }
+
+
+            if (hasBR.Count > 0)
+            {
+                return true;
+            }
+
+            if (IsBareRoot != null)
+            {
+              if(IsBareRoot.Count > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+   
+        }
+
         private static PriceRule readRBForm(string Root, string[] sizes)
         {
+            string lowNum = "0";
+            string highNum = "0";
             try {
-                var lowNum = CleanNumbers(CleanString(sizes[0].ToString()));
-                var highNum = CleanNumbers(CleanString(sizes[1].ToString()));
+                if(!String.IsNullOrEmpty(sizes[0].ToString()))
+                {
+                    lowNum = CleanNumbers(CleanString(sizes[0].ToString()));
+                }
+                if (sizes.Length > 1 )
+                {
+                    if (!String.IsNullOrEmpty(sizes[1].ToString()))
+                    {
+                        highNum = CleanNumbers(CleanString(sizes[1].ToString()));
+                    }
+                }
+                
                 return PriceRule.getRBRule("RB", lowNum, highNum);
             }
             catch{
-                return null;
+                return PriceRule.getRBRule("RB", lowNum, highNum);
             }
 
 
@@ -349,16 +442,27 @@ namespace ImportService.ServiceLayer
 
         private static PriceRule readBRForm(string Root, string[] sizes)
         {
-            try {
-                var lowNum = CleanNumbers(CleanString(sizes[0].ToString()));
-                var highNum = CleanNumbers(CleanString(sizes[1].ToString()));
+            string lowNum = "0";
+            string highNum = "0";
+            try
+            {
+                if (!String.IsNullOrEmpty(sizes[0].ToString()))
+                {
+                    lowNum = CleanNumbers(CleanString(sizes[0].ToString()));
+                }
+                if (sizes.Length > 1 & !String.IsNullOrEmpty(sizes[1].ToString()))
+                {
+                    highNum = CleanNumbers(CleanString(sizes[1].ToString()));
+                }
+
                 return PriceRule.getBRRule("BR", lowNum, highNum);
             }
-            catch {
-                return null;
+            catch
+            {
+                return PriceRule.getBRRule("BR", lowNum, highNum);
             }
 
-            
+
         }
 
         private static string readForm(string root, string cleanString)

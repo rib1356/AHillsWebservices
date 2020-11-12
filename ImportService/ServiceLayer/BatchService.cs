@@ -124,7 +124,6 @@ namespace ImportService.ServiceLayer
             }
         }
 
-
         private static IEnumerable<DTO.LocationDTO> GetSubLocationsFromervice(HttpClient client, String main)
         {
             //  // api/Locations?main={main}

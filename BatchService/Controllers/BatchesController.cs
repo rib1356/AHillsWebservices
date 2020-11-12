@@ -58,6 +58,7 @@ namespace BatchService.Controllers
                     FormSizeCode = item.FormSizeCode,
                     PurchasePrice = ConvertMe(item.BuyPrice),
                     WholesalePrice = item.WholesalePrice,
+                    Comment = item.Comment
 
                 };
                 DTO.Add(b);

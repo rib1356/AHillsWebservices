@@ -203,7 +203,6 @@
     <Compile Include="Controllers\BatchesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PannebakkerController.cs" />
-    <Compile Include="Controllers\PicklistBatchSearchController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

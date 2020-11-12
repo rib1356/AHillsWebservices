@@ -39,14 +39,26 @@ namespace ImportService.Controllers
                 // lets build a model we can edit
                 /// get price datavar
                 /// 
-               if ( b.Id == 1012043)
+               if ( b.Id == 6854)
                 {
                     var found = true; 
                 }
                 int? WholeSalePrice = b.WholesalePrice;
                 PriceItemDTO batchWithPrice = PriceService.GetUnitPrice(b.FormSize, b.FormSizeCode);
-                if (batchWithPrice != null | b.Comment != null)
+                if ( batchWithPrice == null  )
                 {
+
+                    DTO.BatchEditVM vm = new DTO.BatchEditVM();
+                    vm.BatchId = b.Id;
+                    vm.Sku = b.Sku;
+                    vm.Name = b.Name;
+                    vm.FormSize = b.FormSize;
+                    vm.FormSizeCode = b.FormSizeCode;
+                    vm.formType = "Dont Know";
+                    vm.PriceRule = "No Price Band";
+                    vm.maxPrice = 0;
+                    vm.minPrice = Convert.ToInt32(b.WholesalePrice)/100;
+                    VM.Add(vm);
                     //    var max = batchWithPrice.MaxUnitValue * 100;
                     //    var min = batchWithPrice.MinUnitValue * 100;
                     //    if (b.Price < min)
@@ -62,20 +74,10 @@ namespace ImportService.Controllers
                     //newPrice.BatchId = b.Id;
                     //newPrice.Price = Convert.ToInt32(WholeSalePrice);
 
-                 }
+                }
                 else
                 { 
-                    DTO.BatchEditVM vm = new DTO.BatchEditVM();
-                    vm.BatchId = b.Id;
-                    vm.Sku = b.Sku;
-                    vm.Name = b.Name;
-                    vm.FormSize = b.FormSize;
-                    vm.FormSizeCode = b.FormSizeCode;
-                    vm.formType = "Dont Know";
-                    vm.PriceRule = "No Price Band";
-                    vm.maxPrice = 0;
-                    vm.minPrice = 0;
-                    VM.Add(vm);
+                   // nothing yet
                 }
             }
             return View(VM);
