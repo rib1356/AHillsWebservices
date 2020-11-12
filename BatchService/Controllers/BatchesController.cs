@@ -194,7 +194,6 @@ namespace BatchService.Controllers
                 {
                     gq = 0;
                 }
-
                 
                 return new BatchItemDTO
                 {
@@ -325,7 +324,6 @@ namespace BatchService.Controllers
             return request.CreateResponse(HttpStatusCode.OK, batch);
         }
 
-
         [Route("Batches/edit")]
         // PUT: api/Batches/edit
         [ResponseType(typeof(void))]
@@ -367,9 +365,6 @@ namespace BatchService.Controllers
             }
             return request.CreateResponse(HttpStatusCode.OK, BatchPrices);
         }
-
-
-
 
         [Route("api/Batches/location")]
         // PUT: api/Batches/edit
