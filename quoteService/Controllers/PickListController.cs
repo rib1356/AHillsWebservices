@@ -40,8 +40,8 @@ namespace QuoteService.Controllers
                 IsDelivered = item.IsDelivered,
                 Comment = item.Comment,
                 EstimatedDelivery = item.EstimatedDelivery, //Boolean because its either Estimated Or Exact Delivery Date
-                PickListItemQty = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.QuantityToPick),
-                TotalAmountPicked = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.QuantityPicked),
+                PickListItemQty = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.Active == true ? x.QuantityToPick : 0),
+                TotalAmountPicked = db.PlantsForPicklists.Where(x => x.PicklistId == item.PicklistId).Sum(x => x.Active == true ? x.QuantityPicked : 0),
                 Active = item.Active,
             }).AsEnumerable();
 
@@ -294,6 +294,156 @@ namespace QuoteService.Controllers
             }
 
             return StatusCode(HttpStatusCode.OK);
+        }
+
+        // PUT: api/picklist/updateDate?={json object?}
+        [Route("updateDate")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutEditPicklistDate(EditPicklistModal editedStuff)
+        {
+            if (editedStuff != null)
+            {
+                var picklistToEdit = db.Picklists.FirstOrDefault(x => x.PicklistId == editedStuff.PicklistId);
+                
+                if (picklistToEdit != null)
+                {
+                    picklistToEdit.EstimatedDelivery = editedStuff.EstimatedDelivery;
+                    picklistToEdit.DispatchDate = Convert.ToDateTime(editedStuff.DispatchDate);
+
+                    db.SaveChanges();
+
+                    return StatusCode(HttpStatusCode.OK);
+                }
+            }
+
+            return StatusCode(HttpStatusCode.BadRequest);
+        }
+
+        public class EditPicklistModal
+        { 
+            public int PicklistId { get; set; }
+            public bool EstimatedDelivery { get; set; }
+            public string DispatchDate { get; set; }
+        }
+
+
+        // PUT: api/picklist/addItemToPicklist?={json object?}
+        [Route("addItem")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutAddItemToPicklist(AddItemPicklistModal newItem)
+        {
+            if (newItem != null)
+            {
+                var currentBatch = db.Batches.FirstOrDefault(x => x.Id == newItem.BatchId);
+                var currentPicklist = db.Picklists.FirstOrDefault(x => x.PicklistId == newItem.PicklistId);
+
+                if (currentPicklist != null)
+                {
+                    var plantForQuoteToInsert = new PlantsForQuote()  //insert new plant into quote to get id
+                    {
+                        PlantName = newItem.PlantName,
+                        FormSize = newItem.FormSize,
+                        Comment = newItem.Comment,
+                        Price = currentBatch.WholesalePrice ?? 0,
+                        Quantity = newItem.QuantityToPick,
+                        QuoteId = currentPicklist.QuoteId,
+                        Active = true,
+                    };
+                    db.PlantsForQuotes.Add(plantForQuoteToInsert);
+                    db.SaveChanges();
+                    db.Entry(plantForQuoteToInsert).Reload(); //used to get the current PlantForQuoteId
+
+                    var plantForPickListToInsert = new PlantsForPicklist()
+                    {
+                        PicklistId = newItem.PicklistId,
+                        PlantForQuoteId = plantForQuoteToInsert.PlantsForQuoteId,
+                        PlantName = newItem.PlantName,
+                        FormSize = newItem.FormSize,
+                        QuantityToPick = newItem.QuantityToPick,
+                        OriginalItem = null,
+                        DispatchLocation = null,
+                        Active = true,
+                        IsSubbed = false,
+                        BatchId = newItem.BatchId,
+                        QuantityPicked = 0,
+                    };
+                    db.PlantsForPicklists.Add(plantForPickListToInsert);
+                    db.SaveChanges();
+
+                    return StatusCode(HttpStatusCode.OK);
+                }
+            }
+            return StatusCode(HttpStatusCode.BadRequest);
+        }
+
+
+        public class AddItemPicklistModal
+        {
+            public int PicklistId { get; set; }
+            public string PlantName { get; set; }
+            public string Comment { get; set; }
+            public string FormSize { get; set; }
+            public int QuantityToPick { get; set; }
+            public int BatchId { get; set; }
+        }
+
+        // PUT: api/picklist/editPicklistRow?={json object?}
+        [Route("editPicklistRow")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutEditPicklistRow(EditPickistRowModal rowToEdit)
+        {
+            if (rowToEdit != null)
+            {
+                var plantForPicklist = db.PlantsForPicklists.FirstOrDefault(x => x.PlantForPickListId == rowToEdit.PlantForPicklistId);
+                if (plantForPicklist != null)
+                {
+                    var quoteItem = db.PlantsForQuotes.FirstOrDefault(x => x.PlantsForQuoteId == plantForPicklist.PlantForQuoteId);
+                    
+                    //If the new quantity is greater than the current plantForPicklist then work out the difference and add it onto the quoteItem
+                    if (plantForPicklist.QuantityToPick < rowToEdit.NewQuantityToPick)
+                    {
+                        int quantityToAddToQuoteItem = rowToEdit.NewQuantityToPick - plantForPicklist.QuantityToPick;
+                        quoteItem.Quantity += quantityToAddToQuoteItem;
+                    }
+                    else if (plantForPicklist.QuantityToPick > rowToEdit.NewQuantityToPick) //do the opposite
+                    {
+                        int quantityToRemoveFromQuoteItem = plantForPicklist.QuantityToPick - rowToEdit.NewQuantityToPick;
+                        quoteItem.Quantity -= quantityToRemoveFromQuoteItem;
+                    }
+                    //replace with new quantity
+                    plantForPicklist.QuantityToPick = rowToEdit.NewQuantityToPick;
+                    db.SaveChanges();
+
+                    return StatusCode(HttpStatusCode.OK);
+                }
+            }
+            return StatusCode(HttpStatusCode.BadRequest);
+        }
+
+        public class EditPickistRowModal
+        { 
+            public int PlantForPicklistId { get; set; }
+
+            public int NewQuantityToPick { get; set; }
+        }
+
+        // PUT: api/picklist/deletePicklistRow?={json object?}
+        [Route("deletePicklistRow")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutDeletePicklistRow(int PlantForPicklistId)
+        {
+            if (PlantForPicklistId != 0)
+            {
+                var plantForPicklist = db.PlantsForPicklists.FirstOrDefault(x => x.PlantForPickListId == PlantForPicklistId);
+                if (plantForPicklist != null)
+                {
+                    plantForPicklist.Active = false;
+                    db.SaveChanges();
+
+                    return StatusCode(HttpStatusCode.OK);
+                }
+            }
+            return StatusCode(HttpStatusCode.BadRequest);
         }
 
         private bool PickListExists(int id)

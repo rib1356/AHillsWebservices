@@ -22,9 +22,9 @@ namespace BatchService.Controllers
         [Route("api/search/")]
         public List<SearchResult> getPlantsBySearch(string searchQuery)
         {
-            var hillsBatches = db.Batches.Where(x => x.Location != "PB");
+            //var hillsBatches = db.Batches.Where(x => x.Location != "PB");
 
-            var toReturn = hillsBatches.Where(x => x.Name.Contains(searchQuery)).Select(x => new SearchResult
+            var toReturn = db.Batches.Where(x => x.Name.Contains(searchQuery)).Select(x => new SearchResult
             {
                 BatchId = x.Id,
                 Sku = x.Sku,

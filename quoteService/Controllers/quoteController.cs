@@ -46,7 +46,7 @@ namespace quoteService.Controllers
                     var picklists = db.Picklists.Where(x => x.QuoteId == item.QuoteId);
                     foreach(var picklist in picklists) 
                     {
-                        var toAdd = db.PlantsForPicklists.Where(y => y.PicklistId == picklist.PicklistId).Sum(y => y.QuantityToPick);
+                        var toAdd = db.PlantsForPicklists.Where(y => y.PicklistId == picklist.PicklistId).Sum(y => y.Active == true ? y.QuantityToPick : 0);
                         totalPicklistQuantity += toAdd;
                     }
                 }
@@ -269,6 +269,14 @@ namespace quoteService.Controllers
                     }
                     //Change the active flag because unless deleted on client side, it will be true
                     plantToChange.Active = plant.Active;
+
+                    if (plantToChange.Active == false) //remove the plant from the picklist too
+                    {
+                        var plantForPicklistToEdit = db.PlantsForPicklists.FirstOrDefault(x => x.PlantForQuoteId == plantToChange.PlantsForQuoteId);
+
+                        plantForPicklistToEdit.Active = false;
+                    }
+
                 } else
                 {
                     addPlant(q, plant);
