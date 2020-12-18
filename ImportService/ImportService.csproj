@@ -197,6 +197,7 @@
     <Compile Include="Controllers\PannebakkersController.cs" />
     <Compile Include="Controllers\pbServiceController.cs" />
     <Compile Include="Controllers\PlantNamesController.cs" />
+    <Compile Include="Controllers\PlantNameServiceController.cs" />
     <Compile Include="Controllers\readBatchController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="DTO\Batch.cs" />
@@ -317,6 +318,7 @@
     <Content Include="Views\FSPrice\Calculate.cshtml" />
     <Content Include="Views\GrowMaster\Index.cshtml" />
     <Content Include="Views\GrowMaster\uploadDone.cshtml" />
+    <Content Include="Views\GrowMaster\GMUpLoad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BatchService\BatchService.csproj">

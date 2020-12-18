@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +25,83 @@ namespace ImportRep
         public ImportRepository()
         {
         }
+
+
+        public void BatchUpdate(List<Batch> updateList)
+        {
+            List<UpdatePrice> updatePrices = updateList.Select(b => new UpdatePrice
+            {
+                 Id = b.Id,
+                  WholesalePrice = (int)b.WholesalePrice
+            }).ToList();
+            UpdateData(updatePrices);
+
+        }
+
+        public DataTable ConvertToDatatable(List<UpdatePrice> list)
+        {
+            var dt = new DataTable();
+
+            try
+            {
+                dt.Columns.Add("Id");
+                dt.Columns.Add("WholesalePrice");
+
+                foreach (var item in list)
+                {
+                    var row = dt.NewRow();
+
+                    row["Id"] = item.Id;
+                    row["WholesalePrice"] = item.WholesalePrice;
+
+                    dt.Rows.Add(row);
+                }
+            }
+            catch (Exception e)
+            {
+                // Handle
+                throw;
+            }
+            return dt;
+        }
+
+        public void UpdateData(List<UpdatePrice> list)
+        {
+            string cs = "Server=tcp:hills-server.database.windows.net,1433;Initial Catalog=HillsStock1;Persist Security Info=False;User ID=rib1356;Password=A-Hills-Stock;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
+            DataTable dt = new DataTable("MyTable");
+            dt = ConvertToDatatable(list);
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                using (SqlCommand command = new SqlCommand("CREATE TABLE #TmpTable([Id] int,[WholesalePrice] int)", conn))
+                {
+                    try
+                    {
+                        conn.Open();
+                        command.ExecuteNonQuery();
+                        using (SqlBulkCopy bulkcopy = new SqlBulkCopy(conn))
+                        {
+                            bulkcopy.BulkCopyTimeout = 6600;
+                            bulkcopy.DestinationTableName = "#TmpTable";
+                            bulkcopy.WriteToServer(dt);
+                            bulkcopy.Close();
+                        }
+                        command.CommandTimeout = 3000;
+                        command.CommandText = "UPDATE P SET P.[WholesalePrice]= T.[WholesalePrice] FROM [Batch] AS P INNER JOIN #TmpTable AS T ON P.[Id] = T.[Id];DROP TABLE #TmpTable;";
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    { // Handle exception properly }  finally
+                        {
+                            var exp = ex.InnerException;
+                            conn.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         public void EmptyImport()
         {

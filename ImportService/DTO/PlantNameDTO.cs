@@ -7,7 +7,7 @@ namespace ImportService.DTO
 {
     public class PlantNameDTO
     {
-        public int plantId { get; set; }
+       // public int plantId { get; set; }
         public string plantName { get; set; }
         public string Sku { get; set; }
 

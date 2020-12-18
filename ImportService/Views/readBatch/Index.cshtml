@@ -83,37 +83,40 @@
             @foreach (var item in Model)
             {
                 
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Sku)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FormSize)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Location)
-                    </td>
-                <td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sku)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+            <td>
 
-                    @*&pound;&nbsp;
-                    @{
-                        if (item.WholesalePrice != null)
-                        {
-                            var p = item.WholesalePrice;
-                            decimal d = (decimal)p / 100m;
-                            @d
+                @*&pound;&nbsp;
+            @{
+                if (item.WholesalePrice != null)
+                {
+                    var p = item.WholesalePrice;
+                    decimal d = (decimal)p / 100m;
+                    @d
 
-                        }*@
-
-
-                        @Html.ActionLink("Select", "Edit", new { id = item.BatchId }, new { @class = "btn btn-primary" })
+                }*@
 
 
-                </td>
-            </tr>
+                @Html.ActionLink("Select", "Edit", new { id = item.BatchId }, new { @class = "btn btn-primary" })
+
+
+            </td>
+        </tr>
             }
 
         </table>

@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HillsCoreModel", "HillsCore
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceRules", "PriceRules\PriceRules.csproj", "{28FA8FD1-6F05-4EA4-A3EE-325A974D15E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Purchasing1", "Purchasing1\Purchasing1.csproj", "{CC7B76EF-3C30-4B99-AD72-2D8EA2C858EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormSizeService", "FormSizeService\FormSizeService.csproj", "{41B4D4AF-D32A-44DA-801E-9741C4515807}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{28FA8FD1-6F05-4EA4-A3EE-325A974D15E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28FA8FD1-6F05-4EA4-A3EE-325A974D15E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28FA8FD1-6F05-4EA4-A3EE-325A974D15E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC7B76EF-3C30-4B99-AD72-2D8EA2C858EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC7B76EF-3C30-4B99-AD72-2D8EA2C858EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC7B76EF-3C30-4B99-AD72-2D8EA2C858EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC7B76EF-3C30-4B99-AD72-2D8EA2C858EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41B4D4AF-D32A-44DA-801E-9741C4515807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41B4D4AF-D32A-44DA-801E-9741C4515807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41B4D4AF-D32A-44DA-801E-9741C4515807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41B4D4AF-D32A-44DA-801E-9741C4515807}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,6 +11,8 @@ namespace ImportRep
     {
         void EmptyImport();
 
+
+
         IEnumerable<Pannebakker> GetPannebakkers();
 
         IEnumerable<ImportModel.Batch> GetLocalBatches();
@@ -46,5 +48,7 @@ namespace ImportRep
         void RemovePBFromBatch();
 
         void EmptyPB();
+
+        void BatchUpdate(List<Batch> updateList);
     }
 }

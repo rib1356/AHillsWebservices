@@ -111,7 +111,7 @@ namespace ImportService.Controllers
             }
             catch (Exception ex)
             {
-                //ViewBag.Error = ex.InnerException.Message;
+                ViewBag.Error = ex.InnerException.Message;
                 return View("version");
             }
 
@@ -156,6 +156,14 @@ namespace ImportService.Controllers
                 {
                     ImportModel.Pannebakker newB = new ImportModel.Pannebakker();
                     decimal price = CalCapPrice(b);
+                    if (price != 0 )
+                    {
+                        newB.WholesalePrice = Convert.ToInt32(price);
+                    }
+                    else
+                    {
+                        newB.WholesalePrice = Convert.ToInt32(b.Price);
+                    }
                     newB.Price = b.Price;
                     newB.FormSize = b.FormSize;
                     newB.Location = "PB";
@@ -166,6 +174,14 @@ namespace ImportService.Controllers
                     if (price != b.Price)
                     {
                         newB.Comment = "Price Modified from " + b.Price + " to " + newB.WholesalePrice;
+                    }
+                    if (price == b.Price)
+                    {
+                        newB.Comment = "Price Not Modified";
+                    }
+                    if (price == 0)
+                    {
+                        newB.Comment = null;
                     }
                     newBatches.Add(newB);
                 }
@@ -230,6 +246,10 @@ namespace ImportService.Controllers
                     {
                        return max + y;
                     }
+                }
+                else
+                {
+                return 0;
                 }
             return y;
         }

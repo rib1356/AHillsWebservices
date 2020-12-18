@@ -41,4 +41,15 @@ namespace BatchService.Models
         public Nullable<int> PurchasePrice { get; set; }
         public string Comment { get; set; }
     }
+
+    public class BatchFormDTO
+    {
+        
+        public string Sku { get; set; }
+        public string Name { get; set; }
+        public string FormSize { get; set; }
+        public string FormSizeCode { get; set; }
+        public decimal WholesalePrice { get; set; }
+
+    }
 }
