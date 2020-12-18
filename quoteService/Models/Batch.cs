@@ -28,5 +28,6 @@ namespace quoteService.Models
         public Nullable<System.DateTime> DateStamp { get; set; }
         public Nullable<decimal> BuyPrice { get; set; }
         public string Comment { get; set; }
+        public string FormSizeCode { get; set; }
     }
 }

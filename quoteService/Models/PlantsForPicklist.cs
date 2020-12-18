@@ -26,6 +26,7 @@ namespace quoteService.Models
         public bool IsSubbed { get; set; }
         public int BatchId { get; set; }
         public int QuantityPicked { get; set; }
+        public Nullable<bool> NeedsPurchasing { get; set; }
     
         public virtual Picklist Picklist { get; set; }
     }

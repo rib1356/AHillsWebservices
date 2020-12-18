@@ -23,6 +23,7 @@
           <Property Name="DateStamp" Type="date" />
           <Property Name="BuyPrice" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="FormSizeCode" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CustomerInformation">
           <Key>
@@ -69,6 +70,7 @@
           <Property Name="IsSubbed" Type="bit" Nullable="false" />
           <Property Name="BatchId" Type="int" Nullable="false" />
           <Property Name="QuantityPicked" Type="int" Nullable="false" />
+          <Property Name="NeedsPurchasing" Type="bit" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -229,6 +231,7 @@
           <Property Name="DateStamp" Type="DateTime" Precision="0" />
           <Property Name="BuyPrice" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FormSizeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Picklist">
           <Key>
@@ -264,6 +267,7 @@
           <Property Name="BatchId" Type="Int32" Nullable="false" />
           <Property Name="QuantityPicked" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Picklist" Relationship="HillsStock1Model.FK_PlantsForPicklist_Picklist" FromRole="PlantsForPicklist" ToRole="Picklist" />
+          <Property Name="NeedsPurchasing" Type="Boolean" />
         </EntityType>
         <Association Name="FK_PlantsForPicklist_Picklist">
           <End Type="HillsStock1Model.Picklist" Role="Picklist" Multiplicity="1" />
@@ -329,6 +333,7 @@
           <EntitySetMapping Name="Batches">
             <EntityTypeMapping TypeName="HillsStock1Model.Batch">
               <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="BuyPrice" ColumnName="BuyPrice" />
                 <ScalarProperty Name="DateStamp" ColumnName="DateStamp" />
@@ -366,6 +371,7 @@
           <EntitySetMapping Name="PlantsForPicklists">
             <EntityTypeMapping TypeName="HillsStock1Model.PlantsForPicklist">
               <MappingFragment StoreEntitySet="PlantsForPicklist">
+                <ScalarProperty Name="NeedsPurchasing" ColumnName="NeedsPurchasing" />
                 <ScalarProperty Name="QuantityPicked" ColumnName="QuantityPicked" />
                 <ScalarProperty Name="BatchId" ColumnName="BatchId" />
                 <ScalarProperty Name="IsSubbed" ColumnName="IsSubbed" />
