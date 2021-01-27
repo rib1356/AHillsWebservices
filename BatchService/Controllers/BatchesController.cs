@@ -24,23 +24,7 @@ namespace BatchService.Controllers
         // GET: api/Batches
         /// Send a collection of active BatchItemDTO's 
         /// Currently purchase Price does not exist in domain
-        //public IQueryable<BatchItemDTO> GetAllBatches()
-        //{
-        //    var all = db.Batches.Where(b => b.Active == true);
-        //    var result = all.Select(item => new BatchItemDTO
-        //    {
-        //        Id = item.Id,
-        //        Sku = item.Sku,
-        //          Name = item.Name,
-        //           Location = item.Location,
-        //           FormSize = item.FormSize,
-        //            PurchasePrice = ConvertMe(item.BuyPrice * 100),
-        //                WholesalePrice = item.WholesalePrice,
-                         
-                     
-        //    });
-        //    return result;
-        //}
+       
 
 
         public IQueryable<BatchItemDTO> GetAllBatches()
@@ -130,48 +114,53 @@ namespace BatchService.Controllers
             return output;
         }
 
-        //public object Get(int id)
-        //{
-        //    var queryString = System.Web.HttpContext.Current.Request.QueryString;
-        //    var dataa = Convert.ToString(queryString["id"]);
-        //    var data = OrdersDetails.GetAllRecords().Where(user => user.CustomerID == dataa).ToList();
-        //    return new { Items = data, Count = data.Count() };
-        //}
-
-        //[Route("api/Batches/Luke/{id}")]
-        //public BatchListDTO GetBatchDTOForLuke(int id)
-        //{
-        //    //var queryString = System.Web.HttpContext.Current.Request.QueryString;
-        //    //var uid = Convert.ToString(queryString["id"]);
-        //    //var all = db.Batches.Where(b => b.Active == true && b.Id == Convert.ToInt32(uid));
-
-        //    //var result = all.Select(item => new BatchItemDTO
-        //    //{
-        //    //    Id = item.Id,
-        //    //    Sku = item.Sku,
-        //    //    Name = item.Name,
-        //    //    Location = item.Location,
-        //    //    FormSize = item.FormSize,
-        //    //    PurchasePrice = item.WholesalePrice,
-        //    //    WholesalePrice = item.WholesalePrice,
+        
 
 
-        //    //});
-        //    //BatchListDTO output = new BatchListDTO();
 
-        //    ////Items = data.Skip(skip).Take(take), 
-        //    //output.Items = result.ToList();
-        //    //output.Count = output.Items.Count();
+        [Route("api/Batches/All/{Sku}")]
+        // GET: api/Batches
+        /// Send a collection of active BatchItemDTO's 
+        /// Currently purchase Price does not exist in domain
+        public List<BatchFormDTO> GetBatchDTO(string sku)
+        {
+            List<Batch> batch = db.Batches.Where(b => b.Sku == sku).ToList();
+            if (batch == null)
+            {
+                return null;
+            }
+            else
+            {
+                var result = batch.Select(b=> new BatchFormDTO
+                {
+                    Sku = b.Sku,
+                    Name = b.Name,
+                    FormSize = b.FormSize,
+                    WholesalePrice = Convert.ToDecimal(b.WholesalePrice)/100
 
-        //    //return output;
-
+            }).ToList();
+                return result;
+            }
             
 
-        //}
+        }
+
+        private int getGQ(Batch b)
+        { 
+            var gq = 0;
+                if (b.GrowingQuantity.HasValue && b.GrowingQuantity > 0)
+                {
+                    gq = Convert.ToInt32(b.GrowingQuantity);
+                }
+                else
+                {
+                    gq = 0;
+                }
+            return gq;
+         }
 
 
-
-        [Route("api/Batches/All/{id}")]
+        [Route("api/Batches/All/{id:int}")]
         // GET: api/Batches
         /// Send a collection of active BatchItemDTO's 
         /// Currently purchase Price does not exist in domain
@@ -194,7 +183,7 @@ namespace BatchService.Controllers
                 {
                     gq = 0;
                 }
-                
+
                 return new BatchItemDTO
                 {
                     Id = batch.Id,
@@ -202,9 +191,9 @@ namespace BatchService.Controllers
                     Name = batch.Name,
                     FormSize = batch.FormSize,
                     PurchasePrice = -1,
-                     Quantity = batch.Quantity,
-                      GrowingQuantity = gq,
-                      Location = batch.Location,
+                    Quantity = batch.Quantity,
+                    GrowingQuantity = gq,
+                    Location = batch.Location,
                     WholesalePrice = batch.WholesalePrice
                 };
             }

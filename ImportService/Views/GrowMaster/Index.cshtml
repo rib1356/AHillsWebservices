@@ -1,9 +1,13 @@
-﻿@{
+@{
     ViewBag.Title = " Batch UpLoad";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<h1>Select a File to Import</h1>
 @using (Html.BeginForm("GetFile", "GrowMaster", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
 

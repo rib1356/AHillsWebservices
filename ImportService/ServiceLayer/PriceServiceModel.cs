@@ -63,7 +63,7 @@ namespace ImportService.ServiceLayer
                     }
                 }
 
-                if (maxM - minM == 2)
+                if (maxM - minM <= 4)
                 {
                     if (minM <= 10.0m)
                     {
@@ -157,7 +157,7 @@ namespace ImportService.ServiceLayer
                         return PriceRules.Rules.Single(r => r.RuleNumber == 31);
                     }
                 }
-                if (maxM - minM == 2)
+                if (maxM - minM <=4 )
                 {
                     // max<12
                     if (maxM <= 12.0m)

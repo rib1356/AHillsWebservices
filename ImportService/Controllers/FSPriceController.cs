@@ -21,7 +21,17 @@ namespace ImportService.Controllers
         // GET: FSPrice
         public ActionResult Index()
         {
-            return View();
+            var Allbatches = db.GetPBBatches();
+            var unChanged = Allbatches.Where(b => b.BuyPrice == b.WholesalePrice);
+            List<DTO.BatchListItemVM> vm = new List<DTO.BatchListItemVM>();
+            vm = unChanged.Select(p => new DTO.BatchListItemVM
+            {
+                 BatchId = p.Id,
+                  Sku = p.Sku,
+                   Name = p.Name,
+                    FormSize = p.FormSize
+            }).ToList();
+            return View(vm);
         }
 
  
@@ -31,10 +41,12 @@ namespace ImportService.Controllers
         {
             // empty batches object to fill soon
             //var batches = new List<DTO.BatchDTO>();
-            var VM = new List<DTO.BatchEditVM>();
+            //var VM = new List<DTO.BatchEditVM>();
             // dear service can i have the batches please
-            var batches = db.GetPBBatches();
-            foreach(var b in batches)
+            var Allbatches = db.GetPBBatches();
+            var unChanged = Allbatches.Where(b => b.Comment == null);
+            List<ImportModel.Batch> updateList = new List<ImportModel.Batch>();
+            foreach (var b in unChanged)
             {
                 // lets build a model we can edit
                 /// get price datavar
@@ -48,17 +60,17 @@ namespace ImportService.Controllers
                 if ( batchWithPrice == null  )
                 {
 
-                    DTO.BatchEditVM vm = new DTO.BatchEditVM();
-                    vm.BatchId = b.Id;
-                    vm.Sku = b.Sku;
-                    vm.Name = b.Name;
-                    vm.FormSize = b.FormSize;
-                    vm.FormSizeCode = b.FormSizeCode;
-                    vm.formType = "Dont Know";
-                    vm.PriceRule = "No Price Band";
-                    vm.maxPrice = 0;
-                    vm.minPrice = Convert.ToInt32(b.WholesalePrice)/100;
-                    VM.Add(vm);
+                    //DTO.BatchEditVM vm = new DTO.BatchEditVM();
+                    //vm.BatchId = b.Id;
+                    //vm.Sku = b.Sku;
+                    //vm.Name = b.Name;
+                    //vm.FormSize = b.FormSize;
+                    //vm.FormSizeCode = b.FormSizeCode;
+                    //vm.formType = "Dont Know";
+                    //vm.PriceRule = "No Price Band";
+                    //vm.maxPrice = 0;
+                    //vm.minPrice = Convert.ToInt32(b.WholesalePrice)/100;
+                    //VM.Add(vm);
                     //    var max = batchWithPrice.MaxUnitValue * 100;
                     //    var min = batchWithPrice.MinUnitValue * 100;
                     //    if (b.Price < min)
@@ -76,11 +88,15 @@ namespace ImportService.Controllers
 
                 }
                 else
-                { 
-                   // nothing yet
+                {
+                    // nothing yet
+                    var newPrice = PriceService.CalCapPrice(b);
+                    b.WholesalePrice = Convert.ToInt32(newPrice);
+                    updateList.Add(b);
                 }
             }
-            return View(VM);
+            db.BatchUpdate(updateList);
+            return RedirectToAction("Index");
         }
 
         // GET: FSPrice/Create

@@ -36,8 +36,34 @@ namespace ImportService.ServiceLayer
 
     public class PriceService
     {
-        
 
+        public static decimal CalCapPrice(ImportModel.Batch batch)
+        {
+            // pb buy price
+            var y = batch.BuyPrice;
+            // base sales price
+            var x = (batch.BuyPrice / 0.55m);
+
+            PriceItemDTO price = PriceService.GetUnitPrice(batch.FormSize, batch.FormSizeCode);
+            if (price != null)
+            {
+                var max = Convert.ToDecimal(price.MaxUnitValue * 100);
+                var min = Convert.ToDecimal(price.MinUnitValue * 100);
+                if (x < min)
+                {
+                    return Convert.ToDecimal(min + y);
+                }
+                if (x > max)
+                {
+                    return Convert.ToDecimal(max + y);
+                }
+            }
+            else
+            {
+                return 0;
+            }
+            return Convert.ToDecimal(y);
+        }
 
         public static PriceItemDTO GetUnitPrice(string formSize, string formSizeCode)
         {

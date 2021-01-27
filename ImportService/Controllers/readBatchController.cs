@@ -402,7 +402,8 @@ namespace ImportService.Controllers
                 FormSize = b.FormSize,
                 Quantity = b.Quantity,
                 Location = b.Location,
-                WholesalePrice = b.WholesalePrice
+                WholesalePrice = b.WholesalePrice,
+                Comments = b.Comment
             }).AsEnumerable();
         }
 

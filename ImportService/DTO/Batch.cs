@@ -51,7 +51,19 @@ namespace ImportService.DTO
         public int Quantity { get; set; }
         [Display(Name = "Price")]
         public Nullable<decimal> WholesalePrice { get; set; }
+        [Display(Name ="Comments")]
+        public string Comments { get; set; }
+    }
 
+    public class BatchListItemVM
+    {
+        public int BatchId { get; set; }
+        [Display(Name="SKU")]
+        public string Sku { get; set; }
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+        [Display(Name = "Form Size")]
+        public string FormSize { get; set; }
     }
 
     public class BatchEditVM

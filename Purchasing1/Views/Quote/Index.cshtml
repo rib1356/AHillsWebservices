@@ -1,0 +1,31 @@
+﻿
+@{
+    List<object> commands = new List<object>();
+    commands.Add(new { type = "userstatus", buttonOption = new { content = "Details", cssClass = "e-flat" } });
+}
+
+@Html.EJS().Grid("DataGrid").DataSource((IEnumerable<object>)ViewBag.dataSource).AllowSorting().Columns(col=> {
+    col.Field("QuoteId").Add();
+    col.Field("CustomerReference").Add();
+    col.Field("QuoteDate").Add();
+    col.Field("SiteReference").Add();
+    col.Field("QuotePrice").Add();
+    col.Field("QuoteExpiryDate").Add();
+    col.HeaderText("Commands").Width("160").Commands(commands).Add();
+}).AllowPaging().CommandClick("commandClick").PageSettings(page => page.PageCount(4).PageSizes(true)).Render()
+
+
+<script>
+    function commandClick(args) {
+        alert(JSON.stringify(args.rowData));  // display row data
+        var data = JSON.stringify(args.rowData);
+        console.log(data);
+        var ary = JSON.parse(data);
+        var id = ary.QuoteId;
+        //var result = data[0];
+        //alert(result);
+        //alert(as[0].);
+        location.href = "/PurchaseOrder/Index/"+ id;
+    }
+
+</script>

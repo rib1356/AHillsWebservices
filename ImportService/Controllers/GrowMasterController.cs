@@ -101,16 +101,15 @@ namespace ImportService.Controllers
             }
             catch (Exception ex)
             {
-                //ViewBag.Error = ex.InnerException.Message;
-                return View("version");
+                ViewBag.Error = ex.InnerException.Message;
+                return View();
             }
 
 
             try
             {
                 #region import
-                ///// empty the import tables
-                // db.Database.ExecuteSqlCommand("TRUNCATE TABLE [Pannebakker]");
+           
 
                 IEnumerable<ImportModel.Batch> GMImport = recordsIn.Select(b => new ImportModel.Batch
                 {
@@ -130,24 +129,16 @@ namespace ImportService.Controllers
                            DateStamp = DateTime.Now
                 }).AsEnumerable();
 
-               // IEnumerable<ImportModel.Batch> AllBatch = db.GetLocalBatches();
-                /// insert into raw import and remove any duplicates just in case
-                // db.BulkInsert<Pannebakker>(newRecords);
-               // var inImportButNotInBatches= GMImport.Except(AllBatch).ToList();
-               //  var inList2ButNotInList = AllBatch.Except(GMImport).ToList();
-  //              var InBoth = inListButNotInList2.Intersect(inList2ButNotInList).ToList();
-            //    var InsertList = GMImport.Where(x => AllBatch.Any(z => x.FormSizeCode != z.FormSizeCode && x.Sku != z.Sku)).ToList();
-            //   var UpdateList = AllBatch.Where(x => GMImport.Any(z => x.FormSizeCode == z.FormSizeCode && x.Sku == z.Sku)).ToList();
-            // var InsertList = GMImport.Where(x => AllBatch.Any(z => x.FormSizeCode != z.FormSizeCode && x.Sku != z.Sku)).ToList();
-            db.BulkInsertGMBatch(GMImport);
-            //db.RemoveDuplicateImport();
+                var result = GMImport.ToList();
+                db.BulkInsertGMBatch(GMImport);
+            
                 #endregion import
 
 
                 // db.MergePbToBatch();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");
-                return View("uploadDone");
+                return RedirectToAction("index", "readBatch");
                 //return RedirectToAction("Index");
 
             }
@@ -159,37 +150,21 @@ namespace ImportService.Controllers
 
         }
 
-        /// <summary>
-        /// Calculates the proposed sale unit sale price dependant upon form - size
-        /// </summary>
-        /// <param name="batch"></param>
-        /// <returns>Proposed unit Sale Price</returns>
-        //private static decimal CalCapPrice(ImportModel.Pannebakker batch)
-        //{
-        //    // pb buy price
-        //    var y = batch.Price;
-        //    // base sales price
-        //    var x = (batch.Price / 0.55m);
-
-        //    PriceItemDTO price = PriceService.GetUnitPrice(batch.FormSize, batch.FormSizeCode);
-        //    if (price != null)
-        //    {
-        //        var max = Convert.ToDecimal(price.MaxUnitValue * 100);
-        //        var min = Convert.ToDecimal(price.MinUnitValue * 100);
-        //        if (x < min)
-        //        {
-        //            return min + y;
-        //        }
-        //        if (x > max)
-        //        {
-        //            return max + y;
-        //        }
-        //    }
-        //    return y;
-        //}
+ 
 
         private List<Models.GMItem> ReadInputFile()
         {
+            const int PBFSC = 1;
+            const int Name = 2;
+            const int GrowingQuantity = 8;
+            const int Form = 4;
+            const int Size = 3;
+            const int AllocatedQuantity = 9;
+            const int WholeSalePrice = 11;
+            const int Location = 5;
+            const int Sku = 0;
+            const int StockQuantity = 6;
+
             List<Models.GMItem> recordsIn = new List<Models.GMItem>();
             var fred = TempData["path"].ToString();
             //var filesData = Directory.GetFiles(@fred);
@@ -200,23 +175,23 @@ namespace ImportService.Controllers
             OfficeOpenXml.ExcelWorksheet workSheet = package.Workbook.Worksheets[1];
 
 
-            for (int row = workSheet.Dimension.Start.Row;
+            for (int row = (workSheet.Dimension.Start.Row + 1);
                  row <= workSheet.Dimension.End.Row;
                  row++)
             {
                 if (HasData(workSheet, row))
                 {
                     Models.GMItem obj = new Models.GMItem();
-                    obj.PBFSCode = GetPBFSC(workSheet, row);
-                    obj.Name = GetName(workSheet, row);
-                    obj.GrowingQuantity = GetGrowingQuantity(workSheet, row) ?? 0;
-                    obj.Form = GetFormDecription(workSheet, row);
-                    obj.Size = GetSizeDecription(workSheet, row);
-                    obj.AllocatedQuantity = GetAllocatedQuantity(workSheet, row)?? 0;
-                    obj.WholeSalePrice = GetPrice(workSheet, row);
-                    obj.Location = GetLocation(workSheet,row);
-                    obj.Sku = GetPBSKU(workSheet, row);
-                    obj.StockQuantity = GetStockQuantity(workSheet, row)?? 0;
+                    obj.PBFSCode = GetPBFSC(workSheet, row, PBFSC);
+                    obj.Name = GetName(workSheet, row, Name);
+                    obj.GrowingQuantity = GetGrowingQuantity(workSheet, row, GrowingQuantity) ?? 0;
+                    obj.Form = GetFormDecription(workSheet, row, Form);
+                    obj.Size = GetSizeDecription(workSheet, row,Size);
+                    obj.AllocatedQuantity = GetAllocatedQuantity(workSheet, row, AllocatedQuantity)?? 0;
+                    obj.WholeSalePrice = GetPrice(workSheet, row, WholeSalePrice);
+                    obj.Location = GetLocation(workSheet,row, Location);
+                    obj.Sku = GetPBSKU(workSheet, row, Sku);
+                    obj.StockQuantity = GetStockQuantity(workSheet, row, StockQuantity)?? 0;
                     recordsIn.Add(obj);
 
                 }
@@ -226,7 +201,7 @@ namespace ImportService.Controllers
 
         private static bool HasData(ExcelWorksheet workSheet, int row)
         {
-            if ((workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null) && (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value != null))
+            if ((workSheet.Cells[row, workSheet.Dimension.Start.Column + 0].Value != null) && (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value != null))
             {
                 return true;
             }
@@ -236,11 +211,11 @@ namespace ImportService.Controllers
             }
         }
         // 2040060C5
-        private static string GetPBFSC(ExcelWorksheet workSheet, int row)
+        private static string GetPBFSC(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 1].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -249,11 +224,11 @@ namespace ImportService.Controllers
         }
 
         // ABEGOUCH
-        private static string GetPBSKU(ExcelWorksheet workSheet, int row)
+        private static string GetPBSKU(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 2].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -262,11 +237,11 @@ namespace ImportService.Controllers
         }
 
         // Abelia 'Edward Goucher'
-        private static string GetName(ExcelWorksheet workSheet, int row)
+        private static string GetName(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 3].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -275,11 +250,11 @@ namespace ImportService.Controllers
         }
 
         // 10-20
-        private static string GetSizeDecription(ExcelWorksheet workSheet, int row)
+        private static string GetSizeDecription(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 4].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -288,11 +263,11 @@ namespace ImportService.Controllers
         }
 
         // c20
-        private static string GetFormDecription(ExcelWorksheet workSheet, int row)
+        private static string GetFormDecription(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 5].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -301,11 +276,11 @@ namespace ImportService.Controllers
         }
         
         // E23
-        private static string GetLocation(ExcelWorksheet workSheet, int row)
+        private static string GetLocation(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 6].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + 6].Value).ToString();
+                return (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value).ToString();
             }
             else
             {
@@ -314,11 +289,11 @@ namespace ImportService.Controllers
         }
 
         // 6
-        private static int? GetStockQuantity(ExcelWorksheet workSheet, int row)
+        private static int? GetStockQuantity(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 7].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + 7].Value);
+                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value);
             }
             else
             {
@@ -327,11 +302,11 @@ namespace ImportService.Controllers
         }
 
         // 6
-        private static int? GetAllocatedQuantity(ExcelWorksheet workSheet, int row)
+        private static int? GetAllocatedQuantity(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 8].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + 8].Value);
+                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value);
             }
             else
             {
@@ -339,11 +314,11 @@ namespace ImportService.Controllers
             }
         }
 
-        private static int? GetGrowingQuantity(ExcelWorksheet workSheet, int row)
+        private static int? GetGrowingQuantity(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 9].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + 9].Value);
+                return Convert.ToInt32(workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value);
             }
             else
             {
@@ -352,11 +327,11 @@ namespace ImportService.Controllers
         }
 
         // 3.23
-        private static decimal GetPrice(ExcelWorksheet workSheet, int row)
+        private static decimal GetPrice(ExcelWorksheet workSheet, int row, int position)
         {
-            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + 12].Value != null)
+            if (workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value != null)
             {
-                var data = workSheet.Cells[row, workSheet.Dimension.Start.Column + 12].Value;
+                var data = workSheet.Cells[row, workSheet.Dimension.Start.Column + position].Value;
                 return Convert.ToDecimal(data);
             }
             else
