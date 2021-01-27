@@ -74,7 +74,7 @@ namespace QuoteService.Controllers
                 PicklistId = item.PlantForPickListId,
                 PlantForQuoteId = item.PlantForQuoteId,
                 BatchId = item.BatchId,
-                BatchLocation = db.Batches.Any(x => x.Id == item.BatchId && x.Active == true) ? db.Batches.SingleOrDefault(x => x.Id == item.BatchId).Location : "No Location",
+                Location = db.Batches.Any(x => x.Id == item.BatchId && x.Active == true) ? db.Batches.SingleOrDefault(x => x.Id == item.BatchId).Location : "No Location",
                 PlantName = item.PlantName,
                 FormSize = item.FormSize,
                 QuantityToPick = item.QuantityToPick,
@@ -228,6 +228,11 @@ namespace QuoteService.Controllers
                 var pickListId = newPickList.PicklistId;
                 foreach (var plant in picklist.PickListPlants)
                 {
+                    var needsPurchasing = false;
+                    if (plant.Location == "PB")
+                    {
+                        needsPurchasing = true;
+                    }
 
                     var thisPlant = new PlantsForPicklist
                     {
@@ -240,6 +245,7 @@ namespace QuoteService.Controllers
                         IsSubbed = plant.IsSubbed,
                         DispatchLocation = plant.DispatchLocation,
                         QuantityPicked = 0, //Default this to 0 because none will have been picked on creation??
+                        NeedsPurchasing = needsPurchasing,
                         Active = true
                     };
                     db.PlantsForPicklists.Add(thisPlant);

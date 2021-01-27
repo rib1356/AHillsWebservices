@@ -49,7 +49,7 @@ namespace QuoteService.DTO
         public int PicklistId { get; set; }
         public int PlantForQuoteId { get; set; }
         public int BatchId { get; set; }
-        public string BatchLocation { get; set; }
+        public string Location { get; set; }
         public string PlantName { get; set; }
         public string FormSize { get; set; }
         public int QuantityToPick { get; set; }

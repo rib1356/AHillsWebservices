@@ -34,6 +34,7 @@ namespace BatchService.Controllers
                 Quantity = x.Quantity,
                 GrowingQuantity = x.GrowingQuantity ?? 0,
                 AllocatedQuantity = x.AllocatedQuantity ?? 0,
+                WholesalePrice = x.WholesalePrice,
                 Active = x.Active,
             }).ToList();
 
@@ -50,6 +51,7 @@ namespace BatchService.Controllers
             public int Quantity { get; set; }
             public int GrowingQuantity { get; set; }
             public int AllocatedQuantity { get; set; }
+            public int? WholesalePrice { get; set; }
             public bool Active { get; set; }
 
         }
