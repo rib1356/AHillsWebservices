@@ -192,7 +192,8 @@ namespace ImportService.Controllers
 
 
             /// get price data
-            PriceItemDTO price = PriceService.GetUnitPrice(vm.FormSize, vm.FormSizeCode);
+            // PriceItemDTO price = PriceService.GetUnitPrice(vm.FormSize, vm.FormSizeCode);
+            FormPriceRules.PriceItemDTO price = FormPriceRules.PriceService.GetUnitPrice(vm.FormSize, vm.FormSizeCode);
 
             if (price != null)
             {

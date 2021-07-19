@@ -21,7 +21,7 @@ namespace ImportService.Controllers
             if (un == "503141" && pw == "827191")
             {
                 Session["admin"] = true;
-                return RedirectToAction("Index", "Upload");
+                return RedirectToAction("Index", "StepUpload");
             }
             else
             {

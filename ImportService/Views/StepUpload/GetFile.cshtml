@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "GetFile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Step 1 - Read File into Import Table for processing</h2>
+
+
+
+<p>Press button for Step 2.</p>
+<hr />
+@using (Html.BeginForm("Import", "StepUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+
+    <div class="form-group">
+        <input type="submit" name="btnStep2" value="Step2" />
+    </div>
+}
+
+ 
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnStep2").click(function () {
+            $("#loading").fadeIn();
+        });
+    });
+</script>
+
+

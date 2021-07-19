@@ -204,10 +204,15 @@ namespace BatchService.Controllers
         public List<Batch> GetBatches()
         {
             //var batches = db.Batches.Where(x => x.Location != "PB").ToList();
-            var testBatches = db.Batches.Take(15000).ToList();
+            List<Batch> pBBatches = db.Batches.Where(b => b.Location == "PB").Take(7500).ToList();
+            List<Batch> LocalBatches = db.Batches.Where(b => b.Location != "PB").Take(7500).ToList();
             //var testBatches = db.Batches.ToList();
-            return testBatches;
+            pBBatches.AddRange(LocalBatches);
+            return pBBatches;
         }
+
+
+
 
         // GET: api/Batches/5
         [ResponseType(typeof(Batch))]

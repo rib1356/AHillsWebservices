@@ -56,6 +56,9 @@
     <Compile Include="Batch.cs">
       <DependentUpon>ModelImport.tt</DependentUpon>
     </Compile>
+    <Compile Include="Group.cs">
+      <DependentUpon>ModelImport.tt</DependentUpon>
+    </Compile>
     <Compile Include="ModelImport.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,6 +75,9 @@
       <DependentUpon>ModelImport.edmx</DependentUpon>
     </Compile>
     <Compile Include="Pannebakker.cs">
+      <DependentUpon>ModelImport.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PlantGroup.cs">
       <DependentUpon>ModelImport.tt</DependentUpon>
     </Compile>
     <Compile Include="PlantName.cs">

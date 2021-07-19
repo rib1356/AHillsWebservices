@@ -11,6 +11,27 @@
 
 <h2>Plant Name Management</h2>
 
+<table>
+    <tr>
+        <td>
+            @using (Html.BeginForm("SyncNamesWithBatch", "PlantNames", FormMethod.Get))
+            {
+                <p>
+                    This will Synchronise the list of Names with those is the Batch List
+                    (Existing Names not in Batch with be hidden but not deleted)
+                    
+                </p>
+                <p><input type="submit" value="Sync" /></p>
+            }
+        </td>
+        <td style="padding: 50px">
+            <p>
+
+            </p>
+        </td>
+    </tr>
+</table>
+
 <table >
     <tr>
         <td>
@@ -56,8 +77,9 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
+                @Html.ActionLink("Groups", "Groups", new { id = item.PlantId }) |
                 @Html.ActionLink("Edit", "Edit", new { id = item.PlantId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.PlantId }) 
+                @Html.ActionLink("Delete", "Delete", new { id = item.PlantId }) |
             </td>
         </tr>
     }

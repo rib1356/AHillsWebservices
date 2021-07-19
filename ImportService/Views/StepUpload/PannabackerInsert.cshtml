@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Pannabacker Insert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>The PB table now has the current clean set of data</h2>
+<p>Next step is to calculate our prices based upon form size</p>
+
+<hr />
+@using (Html.BeginForm("CalculateBasePrice", "StepUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <input type="number" name="margin" value="margin">
+        <input type="submit" name="btnCalculate" value="Calculate" />
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnCalculate").click(function () {
+            $("#loading").fadeIn();
+        });
+    });
+</script>
+

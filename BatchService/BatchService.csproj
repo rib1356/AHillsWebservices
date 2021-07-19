@@ -201,6 +201,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
+    <Compile Include="Controllers\BatchFilterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PannebakkerController.cs" />
     <Compile Include="Controllers\PicklistBatchSearchController.cs" />
@@ -311,6 +312,10 @@
     <ProjectReference Include="..\BatchModel\BatchModel.csproj">
       <Project>{4769d74a-e22c-4efd-b930-e680d09308b7}</Project>
       <Name>BatchModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FormSizeService\FormSizeService.csproj">
+      <Project>{41b4d4af-d32a-44da-801e-9741c4515807}</Project>
+      <Name>FormSizeService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

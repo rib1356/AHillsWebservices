@@ -27,11 +27,15 @@ namespace ImportRep
 
         void BulkInsertPBintoBatch(IEnumerable<ImportModel.Batch> newRecords);
 
-        void MergeImportToNames();
+       // void MergeImportToNames();
+
+        void MergeBatchToNames();
 
         void MergeImportToPB();
 
         void MergePbToBatch();
+
+        void ActivateBatch();
 
         void cleanForms();
 

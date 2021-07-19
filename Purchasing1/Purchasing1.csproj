@@ -182,6 +182,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Batch.cs">
+      <DependentUpon>PurchaseModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DTO.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -206,6 +209,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PurchaseModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\PurchaseOrderVM.cs" />
     <Compile Include="Models\Quotes.cs">
       <DependentUpon>PurchaseModel.tt</DependentUpon>
     </Compile>
@@ -331,6 +335,12 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\ej2\ej2.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BatchModel\BatchModel.csproj">
+      <Project>{4769D74A-E22C-4EFD-B930-E680D09308B7}</Project>
+      <Name>BatchModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

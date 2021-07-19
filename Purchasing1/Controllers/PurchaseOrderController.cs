@@ -1,4 +1,5 @@
-﻿using Purchasing1.Models;
+﻿
+using Purchasing1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,29 @@ namespace Purchasing1.Controllers
                     pl.Add(p);
                 }
             }
-            ViewBag.dataSource = pl;
+
+            List<PurchaseOrderItemVM> listVm = new List<PurchaseOrderItemVM>();
+            foreach(var p in pl)
+            {
+                PurchaseOrderItemVM poitem = new PurchaseOrderItemVM();
+                poitem.PlantName = p.PlantName;
+                poitem.FormSize = p.FormSize;
+                poitem.QuantityRequied = p.QuantityToPick;
+                poitem.BatchUnitPrice = GetPrice(p);
+                listVm.Add(poitem);
+            }
+
+
+
+
+            
             return View();
+        }
+
+        private Decimal GetPrice(PlantsForPicklist p)
+        {
+            Batch batch = db.Batch.Find(p.BatchId);
+            return Convert.ToDecimal(batch.BuyPrice / 100);
         }
     }
 }

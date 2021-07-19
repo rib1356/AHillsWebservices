@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using LocationService;
 using quoteService.DTO;
 using quoteService.Models;
+using HillsStock1Entities = quoteService.Models.HillsStock1Entities;
 
 namespace quoteService.Controllers
 {

@@ -25,6 +25,13 @@
           <Property Name="Comment" Type="nvarchar(max)" />
           <Property Name="FormSizeCode" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Groups">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Pannebakker">
           <Key>
             <PropertyRef Name="Id" />
@@ -40,6 +47,15 @@
           <Property Name="Location" Type="nvarchar(max)" />
           <Property Name="WholesalePrice" Type="int" />
           <Property Name="Comment" Type="nvarchar(max)" />
+          <Property Name="FromDate" Type="date" />
+        </EntityType>
+        <EntityType Name="PlantGroup">
+          <Key>
+            <PropertyRef Name="PlantGroupId" />
+          </Key>
+          <Property Name="PlantGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PlantId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PlantNames">
           <Key>
@@ -48,6 +64,7 @@
           <Property Name="PlantId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Sku" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Active" Type="bit" />
         </EntityType>
         <EntityType Name="rawImport">
           <Key>
@@ -62,7 +79,32 @@
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
           <Property Name="Location" Type="nvarchar(max)" />
+          <Property Name="FromDate" Type="datetime" />
         </EntityType>
+        <Association Name="FK_PlantGroup_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1" />
+          <End Role="PlantGroup" Type="Self.PlantGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="PlantGroup">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlantGroup_PlantNames">
+          <End Role="PlantNames" Type="Self.PlantNames" Multiplicity="1" />
+          <End Role="PlantGroup" Type="Self.PlantGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlantNames">
+              <PropertyRef Name="PlantId" />
+            </Principal>
+            <Dependent Role="PlantGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="removeBatchDuplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_cleanFormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_cleanPB_FormSize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -73,11 +115,22 @@
         <Function Name="sp_removedupnames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_removeimportduplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="sp_removepannebakkerduplicates" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UpdateActiveBatch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="HillsImportModelStoreContainer">
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pannebakker" EntityType="Self.Pannebakker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantGroup" EntityType="Self.PlantGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlantNames" EntityType="Self.PlantNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="rawImport" EntityType="Self.rawImport" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PlantGroup_Groups" Association="Self.FK_PlantGroup_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="PlantGroup" EntitySet="PlantGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlantGroup_PlantNames" Association="Self.FK_PlantGroup_PlantNames">
+            <End Role="PlantNames" EntitySet="PlantNames" />
+            <End Role="PlantGroup" EntitySet="PlantGroup" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -98,6 +151,7 @@
           <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="WholesalePrice" Type="Int32" />
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FromDate" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="rawImport">
           <Key>
@@ -112,6 +166,7 @@
           <Property Name="RootBall" Type="Boolean" />
           <Property Name="BatchId" Type="Int32" />
           <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FromDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityContainer Name="ImportEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Pannebakkers" EntityType="Self.Pannebakker" />
@@ -128,6 +183,17 @@
           <FunctionImport Name="sp_cleanFormSize" />
           <FunctionImport Name="sp_cleanPB_FormSize" />
           <FunctionImport Name="sp_DeletePBFromBatch" />
+          <FunctionImport Name="UpdateActiveBatch" />
+          <EntitySet Name="Groups" EntityType="HillsImportModel.Group" />
+          <EntitySet Name="PlantGroups" EntityType="HillsImportModel.PlantGroup" />
+          <AssociationSet Name="FK_PlantGroup_Groups" Association="HillsImportModel.FK_PlantGroup_Groups">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="PlantGroup" EntitySet="PlantGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlantGroup_PlantNames" Association="HillsImportModel.FK_PlantGroup_PlantNames">
+            <End Role="PlantName" EntitySet="PlantNames" />
+            <End Role="PlantGroup" EntitySet="PlantGroups" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="PlantName">
           <Key>
@@ -136,6 +202,8 @@
           <Property Name="PlantId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Sku" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
+          <NavigationProperty Name="PlantGroups" Relationship="HillsImportModel.FK_PlantGroup_PlantNames" FromRole="PlantName" ToRole="PlantGroup" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
@@ -157,6 +225,48 @@
           <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="FormSizeCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PlantGroups" Relationship="HillsImportModel.FK_PlantGroup_Groups" FromRole="Group" ToRole="PlantGroup" />
+        </EntityType>
+        <EntityType Name="PlantGroup">
+          <Key>
+            <PropertyRef Name="PlantGroupId" />
+          </Key>
+          <Property Name="PlantGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PlantId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="HillsImportModel.FK_PlantGroup_Groups" FromRole="PlantGroup" ToRole="Group" />
+          <NavigationProperty Name="PlantName" Relationship="HillsImportModel.FK_PlantGroup_PlantNames" FromRole="PlantGroup" ToRole="PlantName" />
+        </EntityType>
+        <Association Name="FK_PlantGroup_Groups">
+          <End Type="HillsImportModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="HillsImportModel.PlantGroup" Role="PlantGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="PlantGroup">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlantGroup_PlantNames">
+          <End Type="HillsImportModel.PlantName" Role="PlantName" Multiplicity="1" />
+          <End Type="HillsImportModel.PlantGroup" Role="PlantGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlantName">
+              <PropertyRef Name="PlantId" />
+            </Principal>
+            <Dependent Role="PlantGroup">
+              <PropertyRef Name="PlantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -166,6 +276,7 @@
           <EntitySetMapping Name="Pannebakkers">
             <EntityTypeMapping TypeName="HillsImportModel.Pannebakker">
               <MappingFragment StoreEntitySet="Pannebakker">
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="WholesalePrice" ColumnName="WholesalePrice" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
@@ -183,6 +294,7 @@
           <EntitySetMapping Name="rawImports">
             <EntityTypeMapping TypeName="HillsImportModel.rawImport">
               <MappingFragment StoreEntitySet="rawImport">
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
@@ -201,6 +313,7 @@
           <EntitySetMapping Name="PlantNames">
             <EntityTypeMapping TypeName="HillsImportModel.PlantName">
               <MappingFragment StoreEntitySet="PlantNames">
+                <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="PlantId" ColumnName="PlantId" />
@@ -235,6 +348,24 @@
           <FunctionImportMapping FunctionImportName="sp_cleanFormSize" FunctionName="HillsImportModel.Store.sp_cleanFormSize" />
           <FunctionImportMapping FunctionImportName="sp_cleanPB_FormSize" FunctionName="HillsImportModel.Store.sp_cleanPB_FormSize" />
           <FunctionImportMapping FunctionImportName="sp_DeletePBFromBatch" FunctionName="HillsImportModel.Store.sp_DeletePBFromBatch" />
+          <FunctionImportMapping FunctionImportName="UpdateActiveBatch" FunctionName="HillsImportModel.Store.UpdateActiveBatch" />
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="HillsImportModel.Group">
+              <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlantGroups">
+            <EntityTypeMapping TypeName="HillsImportModel.PlantGroup">
+              <MappingFragment StoreEntitySet="PlantGroup">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
+                <ScalarProperty Name="PlantGroupId" ColumnName="PlantGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
