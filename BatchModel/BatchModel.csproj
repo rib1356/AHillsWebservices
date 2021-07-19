@@ -73,6 +73,9 @@
     <Compile Include="Pannebakker.cs">
       <DependentUpon>BatchModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="PlantName.cs">
+      <DependentUpon>BatchModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,18 +12,11 @@ namespace BatchModel
     using System;
     using System.Collections.Generic;
     
-    public partial class Pannebakker
+    public partial class PlantName
     {
-        public int Id { get; set; }
+        public int PlantId { get; set; }
         public string Sku { get; set; }
-        public string FormSizeCode { get; set; }
         public string Name { get; set; }
-        public string FormSize { get; set; }
-        public decimal Price { get; set; }
-        public Nullable<bool> RootBall { get; set; }
-        public Nullable<int> BatchId { get; set; }
-        public string Location { get; set; }
-        public Nullable<int> WholesalePrice { get; set; }
-        public string Comment { get; set; }
+        public Nullable<bool> Active { get; set; }
     }
 }

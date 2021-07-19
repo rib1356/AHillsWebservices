@@ -24,7 +24,7 @@ namespace BatchService.Controllers
         {
             //var hillsBatches = db.Batches.Where(x => x.Location != "PB");
 
-            var toReturn = db.Batches.Where(x => x.Name.Contains(searchQuery)).Select(x => new SearchResult
+            var toReturn = db.Batches.Where(x => x.Name.Contains(searchQuery) && x.Active).Select(x => new SearchResult
             {
                 BatchId = x.Id,
                 Sku = x.Sku,
@@ -53,6 +53,27 @@ namespace BatchService.Controllers
             public int AllocatedQuantity { get; set; }
             public int? WholesalePrice { get; set; }
             public bool Active { get; set; }
+
+        }
+
+        [Route("api/plantsearch/")]
+        public List<SearchedPlantName> getPlantNameBySearch(string searchQuery)
+        {
+            //var hillsBatches = db.Batches.Where(x => x.Location != "PB");
+
+            var toReturn = db.PlantNames.Where(x => x.Name.Contains(searchQuery) && x.Active == true).Select(x => new SearchedPlantName
+            {
+                Sku = x.Sku,
+                PlantName = x.Name,
+            }).ToList();
+
+            return toReturn;
+        }
+
+        public class SearchedPlantName
+        {
+            public string Sku { get; set; }
+            public string PlantName { get; set; }
 
         }
     }

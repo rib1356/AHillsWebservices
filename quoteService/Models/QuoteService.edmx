@@ -37,6 +37,17 @@
           <Property Name="CustomerReference" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="SageCustomer" Type="bit" Nullable="false" />
           <Property Name="CustomerTel2" Type="nvarchar" MaxLength="20" />
+          <Property Name="CustomerIsWholesale" Type="bit" />
+        </EntityType>
+        <EntityType Name="GrossProfitMargin">
+          <Key>
+            <PropertyRef Name="gpmId" />
+          </Key>
+          <Property Name="gpmId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gpmValue" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="rowMin" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="rowMax" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="gpmRuleset" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Picklist">
           <Key>
@@ -126,6 +137,7 @@
         <EntityContainer Name="HillsStock1ModelStoreContainer">
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CustomerInformation" EntityType="Self.CustomerInformation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GrossProfitMargin" EntityType="Self.GrossProfitMargin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Picklist" EntityType="Self.Picklist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlantsForPicklist" EntityType="Self.PlantsForPicklist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlantsForQuote" EntityType="Self.PlantsForQuote" Schema="dbo" store:Type="Tables" />
@@ -158,6 +170,7 @@
             <End Role="Picklist" EntitySet="Picklists" />
             <End Role="PlantsForPicklist" EntitySet="PlantsForPicklists" />
           </AssociationSet>
+          <EntitySet Name="GrossProfitMargins" EntityType="HillsStock1Model.GrossProfitMargin" />
         </EntityContainer>
         <EntityType Name="CustomerInformation">
           <Key>
@@ -171,6 +184,7 @@
           <Property Name="CustomerReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SageCustomer" Type="Boolean" Nullable="false" />
           <Property Name="CustomerTel2" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerIsWholesale" Type="Boolean" />
         </EntityType>
         <EntityType Name="PlantsForQuote">
           <Key>
@@ -281,6 +295,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GrossProfitMargin">
+          <Key>
+            <PropertyRef Name="gpmId" />
+          </Key>
+          <Property Name="gpmId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gpmValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="rowMin" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="rowMax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="gpmRuleset" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -290,6 +314,7 @@
           <EntitySetMapping Name="CustomerInformations">
             <EntityTypeMapping TypeName="HillsStock1Model.CustomerInformation">
               <MappingFragment StoreEntitySet="CustomerInformation">
+                <ScalarProperty Name="CustomerIsWholesale" ColumnName="CustomerIsWholesale" />
                 <ScalarProperty Name="CustomerTel2" ColumnName="CustomerTel2" />
                 <ScalarProperty Name="SageCustomer" ColumnName="SageCustomer" />
                 <ScalarProperty Name="CustomerReference" ColumnName="CustomerReference" />
@@ -384,6 +409,17 @@
                 <ScalarProperty Name="PlantForQuoteId" ColumnName="PlantForQuoteId" />
                 <ScalarProperty Name="PicklistId" ColumnName="PicklistId" />
                 <ScalarProperty Name="PlantForPickListId" ColumnName="PlantForPickListId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GrossProfitMargins">
+            <EntityTypeMapping TypeName="HillsStock1Model.GrossProfitMargin">
+              <MappingFragment StoreEntitySet="GrossProfitMargin">
+                <ScalarProperty Name="gpmRuleset" ColumnName="gpmRuleset" />
+                <ScalarProperty Name="rowMax" ColumnName="rowMax" />
+                <ScalarProperty Name="rowMin" ColumnName="rowMin" />
+                <ScalarProperty Name="gpmValue" ColumnName="gpmValue" />
+                <ScalarProperty Name="gpmId" ColumnName="gpmId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

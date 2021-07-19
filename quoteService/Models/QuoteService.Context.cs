@@ -31,5 +31,6 @@ namespace quoteService.Models
         public virtual DbSet<Batch> Batches { get; set; }
         public virtual DbSet<Picklist> Picklists { get; set; }
         public virtual DbSet<PlantsForPicklist> PlantsForPicklists { get; set; }
+        public virtual DbSet<GrossProfitMargin> GrossProfitMargins { get; set; }
     }
 }

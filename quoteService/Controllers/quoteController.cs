@@ -43,7 +43,7 @@ namespace quoteService.Controllers
                 var picklistExists = db.Picklists.Any(x => x.QuoteId == item.QuoteId);
                 if (picklistExists)
                 {
-                    var picklists = db.Picklists.Where(x => x.QuoteId == item.QuoteId);
+                    var picklists = db.Picklists.Where(x => x.QuoteId == item.QuoteId).ToList();
                     foreach(var picklist in picklists) 
                     {
                         var toAdd = db.PlantsForPicklists.Where(y => y.PicklistId == picklist.PicklistId).Sum(y => y.Active == true ? y.QuantityToPick : 0);
@@ -120,6 +120,19 @@ namespace quoteService.Controllers
                 TotalPrice = item.QuotePrice ?? 0,
                 Active = item.Active,
             }).AsEnumerable();
+            return dto;
+        }
+
+        [Route("gpm")]
+        public IEnumerable<GrossProfitMarginDTO> GetGrossProfitMargins()
+        {
+            var dto = db.GrossProfitMargins.Select(x => new GrossProfitMarginDTO
+            {
+                gpmId = x.gpmId,
+                rowMax = x.rowMax,
+                rowMin = x.rowMin,
+                ruleSet = x.gpmRuleset,
+            });
             return dto;
         }
 

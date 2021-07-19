@@ -38,10 +38,22 @@
           <Property Name="RootBall" Type="bit" />
           <Property Name="BatchId" Type="int" />
           <Property Name="Location" Type="nvarchar(max)" />
+          <Property Name="WholesalePrice" Type="int" />
+          <Property Name="Comment" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="PlantNames">
+          <Key>
+            <PropertyRef Name="PlantId" />
+          </Key>
+          <Property Name="PlantId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sku" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Active" Type="bit" />
         </EntityType>
         <EntityContainer Name="HillsStockModelStoreContainer">
           <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pannebakker" EntityType="Self.Pannebakker" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantNames" EntityType="Self.PlantNames" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -50,6 +62,7 @@
         <EntityContainer Name="HillsStockEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Batches" EntityType="HillsStockModel.Batch" />
           <EntitySet Name="Pannebakkers" EntityType="HillsStockModel.Pannebakker" />
+          <EntitySet Name="PlantNames" EntityType="HillsStockModel.PlantName" />
         </EntityContainer>
         <EntityType Name="Batch">
           <Key>
@@ -84,6 +97,17 @@
           <Property Name="RootBall" Type="Boolean" />
           <Property Name="BatchId" Type="Int32" />
           <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WholesalePrice" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="PlantName">
+          <Key>
+            <PropertyRef Name="PlantId" />
+          </Key>
+          <Property Name="PlantId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sku" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -115,6 +139,8 @@
           <EntitySetMapping Name="Pannebakkers">
             <EntityTypeMapping TypeName="HillsStockModel.Pannebakker">
               <MappingFragment StoreEntitySet="Pannebakker">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="WholesalePrice" ColumnName="WholesalePrice" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="BatchId" ColumnName="BatchId" />
                 <ScalarProperty Name="RootBall" ColumnName="RootBall" />
@@ -124,6 +150,16 @@
                 <ScalarProperty Name="FormSizeCode" ColumnName="FormSizeCode" />
                 <ScalarProperty Name="Sku" ColumnName="Sku" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlantNames">
+            <EntityTypeMapping TypeName="HillsStockModel.PlantName">
+              <MappingFragment StoreEntitySet="PlantNames">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Sku" ColumnName="Sku" />
+                <ScalarProperty Name="PlantId" ColumnName="PlantId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

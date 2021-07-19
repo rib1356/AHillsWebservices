@@ -14,5 +14,6 @@ namespace quoteService.DTO
         public string CustomerAddress { get; set; }
         public string CustomerEmail { get; set; }
         public bool SageCustomer { get; set; }
+        public bool CustomerIsWholesale { get; set; }
     }
 }

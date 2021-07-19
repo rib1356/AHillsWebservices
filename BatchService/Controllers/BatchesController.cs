@@ -209,6 +209,13 @@ namespace BatchService.Controllers
             return testBatches;
         }
 
+        [Route("api/getBatchCount")]
+        public int GetBatchCount()
+        {
+            var batchCount = db.Batches.Where(x => x.Active).Count();
+            return batchCount;
+        }
+
         // GET: api/Batches/5
         [ResponseType(typeof(Batch))]
         public IHttpActionResult GetBatch(int id)

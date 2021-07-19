@@ -12,16 +12,12 @@ namespace quoteService.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CustomerInformation
+    public partial class GrossProfitMargin
     {
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerTel { get; set; }
-        public string CustomerAddress { get; set; }
-        public string CustomerEmail { get; set; }
-        public string CustomerReference { get; set; }
-        public bool SageCustomer { get; set; }
-        public string CustomerTel2 { get; set; }
-        public Nullable<bool> CustomerIsWholesale { get; set; }
+        public int gpmId { get; set; }
+        public decimal gpmValue { get; set; }
+        public decimal rowMin { get; set; }
+        public decimal rowMax { get; set; }
+        public int gpmRuleset { get; set; }
     }
 }

@@ -203,6 +203,7 @@
     <Compile Include="Controllers\quoteController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\CustomerDTO.cs" />
+    <Compile Include="DTO\GrossProfitMarginDTO.cs" />
     <Compile Include="DTO\PickListDTO.cs" />
     <Compile Include="DTO\QuoteDTO.cs" />
     <Compile Include="DTO\QuoteDetailDTO.cs" />
@@ -213,6 +214,9 @@
       <DependentUpon>QuoteService.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CustomerInformation.cs">
+      <DependentUpon>QuoteService.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GrossProfitMargin.cs">
       <DependentUpon>QuoteService.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Picklist.cs">
