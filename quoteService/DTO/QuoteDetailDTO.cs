@@ -5,6 +5,21 @@ using System.Web;
 
 namespace quoteService.DTO
 {
+
+    public class BatchQuoteItem
+    {
+        public int BatchId { get; set; }
+        public int PriceIn { get; set; }
+    }
+
+    public class FormSizePriceItem
+    {
+        public int BatchId { get; set; }
+        public int PriceIn { get; set; }
+        public int PriceOut { get; set; }
+        public string Description { get; set; }
+    }
+
     public class SelectedQuoteDTO
     {
         public int QuoteId { get; set; }

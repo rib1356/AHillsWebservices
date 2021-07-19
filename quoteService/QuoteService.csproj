@@ -197,11 +197,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\FormPricingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PickListController.cs" />
-    <Compile Include="Controllers\PurchaseController.cs" />
     <Compile Include="Controllers\quoteController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\CustomerDTO.cs" />
     <Compile Include="DTO\GrossProfitMarginDTO.cs" />
     <Compile Include="DTO\PickListDTO.cs" />
@@ -358,6 +357,20 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LocationService\LocationService.csproj">
+      <Project>{19B925FF-C5FA-4B98-8565-CC56EF3E8F73}</Project>
+      <Name>LocationService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlantService\PlantService.csproj">
+      <Project>{E24B980E-9952-418D-A4FE-8E9F7961FBAC}</Project>
+      <Name>PlantService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriceRules\PriceRules.csproj">
+      <Project>{28FA8FD1-6F05-4EA4-A3EE-325A974D15E9}</Project>
+      <Name>PriceRules</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "CalculateBasePrice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Batch has been merged</h2>
+<p>Final Step is activate new batches</p>
+
+
+<hr />
+@using (Html.BeginForm("BatchActiveCheck", "StepUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+
+    <div class="form-group">
+        <input type="submit" name="btnActivate" value="Activate" />
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnActivate").click(function () {
+            $("#loading").fadeIn();
+        });
+    });
+</script>
+

@@ -109,7 +109,7 @@ namespace ImportRep
         }
 
 
-        public void MergeImportToNames()
+        public void MergeBatchToNames()
         {
             context.sp_mergenames();
 
@@ -172,6 +172,11 @@ namespace ImportRep
         public void MergePbToBatch()
         {
             context.sp_MergePBintoBatch();
+        }
+
+        public void ActivateBatch()
+        {
+            context.UpdateActiveBatch();
         }
 
         public void cleanForms()

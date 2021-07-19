@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ImportModel.PlantGroup>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Group Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlantName.Sku)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlantName.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Group.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PlantName.Sku)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PlantName.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.PlantGroupId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.PlantGroupId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.PlantGroupId })
+        </td>
+    </tr>
+}
+
+</table>

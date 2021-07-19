@@ -47,7 +47,7 @@ namespace ImportService.Controllers
             ViewBag.CurrentFilter = searchString;
            // List<PlantNameDTO> vm = new List<PlantNameDTO>();
             List<PlantName> vm = new List<PlantName>();
-            var allPlantNames = db.PlantNames;
+            var allPlantNames = db.PlantNames.Where(p => p.Active == true);
            // var allPlantNames = ServiceLayer.PlantNameService.GetNames();
 
             if (!String.IsNullOrEmpty(searchString))
@@ -84,6 +84,17 @@ namespace ImportService.Controllers
             return View(vm.ToPagedList(pageNumber, pageSize));
         }
 
+
+        public ActionResult Groups(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            List<PlantGroup> plantGroups = plantGroups = db.PlantGroups.Include(p => p.Group).Include(p => p.PlantName).Where(p => p.PlantId == id).ToList();
+            return View(plantGroups);
+        }
+
         // GET: PlantNames/Details/5
         public ActionResult Details(int? id)
         {
@@ -99,10 +110,19 @@ namespace ImportService.Controllers
             return View(plantName);
         }
 
+
+
         // GET: PlantNames/Create
         public ActionResult Create()
         {
             return View();
+        }
+
+        public ActionResult SyncNamesWithBatch()
+        {
+            RepDb.RemoveDuplicateNames();
+            RepDb.MergeBatchToNames();
+            return RedirectToAction("Index");
         }
 
         #region fileUpload
@@ -150,7 +170,7 @@ namespace ImportService.Controllers
         public ActionResult SyncNames()
         {
             RepDb.RemoveDuplicateNames();
-            RepDb.MergeImportToNames();
+            RepDb.MergeBatchToNames();
             return RedirectToAction("Index");
         }
 
@@ -190,7 +210,7 @@ namespace ImportService.Controllers
                 RepDb.BulkInsertGMBatch(batchIn);
                // RepDb.RemoveDuplicateNames();
                 //AddBatch(records);
-                RepDb.MergeImportToNames();
+                RepDb.MergeBatchToNames();
                 RepDb.RemoveDuplicateNames();
                 ViewBag.Title = "done";
                 Response.Write("<script>console.log('Data has been saved to db');</script>");

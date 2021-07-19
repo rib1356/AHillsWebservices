@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "CalculateBasePrice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Base Prices have been Calculated</h2>
+<p>Next Step is to Merge this data with exiting Batches</p>
+
+
+<hr />
+@using (Html.BeginForm("BatchMerge", "StepUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+
+    <div class="form-group">
+        <input type="submit" name="btnMerge" value="Merge" />
+    </div>
+}
+
+    <script type="text/javascript">
+    $(function () {
+        $("#btnMerge").click(function () {
+            $("#loading").fadeIn();
+        });
+    });
+    </script>
+

@@ -3,7 +3,7 @@
 @Html.EJS().Grid("DataGrid").DataSource((IEnumerable<object>)ViewBag.dataSource).AllowSorting().Columns(col=> {
     col.Field("PlantName").Add();
     col.Field("FormSize").Add();
-    col.Field("QuantityTpPIck").Add();
+    col.Field("QuantityToPick").Add();
 }).AllowPaging().PageSettings(page => page.PageCount(4).PageSizes(true)).Render()
 
 

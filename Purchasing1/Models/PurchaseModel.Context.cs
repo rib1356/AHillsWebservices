@@ -28,5 +28,6 @@ namespace Purchasing1.Models
         public virtual DbSet<PlantsForPicklist> PlantsForPicklist { get; set; }
         public virtual DbSet<PlantsForQuote> PlantsForQuote { get; set; }
         public virtual DbSet<Quotes> Quotes { get; set; }
+        public virtual DbSet<Batch> Batch { get; set; }
     }
 }

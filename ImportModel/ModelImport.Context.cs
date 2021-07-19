@@ -20,6 +20,7 @@ namespace ImportModel
         public ImportEntities()
             : base("name=ImportEntities")
         {
+            this.Database.CommandTimeout = 420;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -31,6 +32,8 @@ namespace ImportModel
         public virtual DbSet<rawImport> rawImports { get; set; }
         public virtual DbSet<PlantName> PlantNames { get; set; }
         public virtual DbSet<Batch> Batches { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<PlantGroup> PlantGroups { get; set; }
     
         public virtual int sp_importmerge()
         {
@@ -80,6 +83,11 @@ namespace ImportModel
         public virtual int sp_DeletePBFromBatch()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_DeletePBFromBatch");
+        }
+    
+        public virtual int UpdateActiveBatch()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateActiveBatch");
         }
     }
 }

@@ -9,6 +9,10 @@
         <EntityTypeShape EntityType="HillsImportModel.rawImport" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HillsImportModel.PlantName" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="HillsImportModel.Batch" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="HillsImportModel.Group" Width="1.5" PointX="3.75" PointY="10" />
+        <EntityTypeShape EntityType="HillsImportModel.PlantGroup" Width="1.5" PointX="6" PointY="4.75" />
+        <AssociationConnector Association="HillsImportModel.FK_PlantGroup_Groups" />
+        <AssociationConnector Association="HillsImportModel.FK_PlantGroup_PlantNames" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

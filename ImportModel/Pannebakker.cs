@@ -25,5 +25,6 @@ namespace ImportModel
         public string Location { get; set; }
         public Nullable<int> WholesalePrice { get; set; }
         public string Comment { get; set; }
+        public Nullable<System.DateTime> FromDate { get; set; }
     }
 }

@@ -1,0 +1,50 @@
+﻿@model ImportService.Controllers.GroupPlantVM
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Plants in the Group @Model.GroupName </h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            SKU
+        </th>
+        <th>
+            Plant Name
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.GroupPlants) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sku)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @if (item.Active == false)
+            {
+                <span>NOT In Stock</span>
+            }
+            else
+            {
+              <span>In Stock</span>
+            }
+        </td>
+        <td>
+            @Html.ActionLink("Change", "Change", new { id=item.PlantId, gid = Model.GroupId }) |
+ |
+            @Html.ActionLink("Remove", "Remove", new { id=item.PlantId, gid = Model.GroupId })
+        </td>
+    </tr>
+}
+
+</table>

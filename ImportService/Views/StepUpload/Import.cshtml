@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Import";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Import Table now has data from File</h2>
+<p>Step 3 is to test and clean the data</p>
+<hr />
+@using (Html.BeginForm("PannabackerInsert", "StepUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+
+
+    <div class="form-group">
+        <input type="submit" name="btnStep3" value="Step3" />
+    </div>
+}
+
+    <script type="text/javascript">
+    $(function () {
+        $("#btnStep3").click(function () {
+            $("#loading").fadeIn();
+        });
+    });
+    </script>
+

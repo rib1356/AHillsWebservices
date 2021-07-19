@@ -14,8 +14,18 @@ namespace ImportModel
     
     public partial class PlantName
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public PlantName()
+        {
+            this.PlantGroups = new HashSet<PlantGroup>();
+        }
+    
         public int PlantId { get; set; }
         public string Sku { get; set; }
         public string Name { get; set; }
+        public Nullable<bool> Active { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PlantGroup> PlantGroups { get; set; }
     }
 }

@@ -72,11 +72,11 @@ namespace ImportService.ServiceLayer
             if (priceItem != null)
             {
                 
-                priceItemDTO.Description = priceItem.Description;
+                priceItemDTO.Description = "Rule:" + priceItem.RuleNumber  + " : " +  priceItem.Description;
                 priceItemDTO.MaxUnitValue = priceItem.MaxUnitValue;
                 priceItemDTO.MinUnitValue = priceItem.MinUnitValue;
                 priceItemDTO.PlantType = (RootType)priceItem.PlantType;
-                priceItem.RuleNumber = priceItem.RuleNumber;
+                priceItemDTO.RuleNumber = priceItem.RuleNumber;
                 return priceItemDTO;
             }
             else
@@ -89,8 +89,6 @@ namespace ImportService.ServiceLayer
 
         private  static PriceRule  Get(string form, string formSizeCode)
         {
-
-  
             PriceRule priceRule = new PriceRule();
             // this removes all special charaters
             String cleanString = CleanString(form);
@@ -246,7 +244,7 @@ namespace ImportService.ServiceLayer
             BRsize = "";
             foreach (var word in BRwords)
             {
-                if (word.Any(char.IsDigit))
+                if (word.Any(char.IsDigit) && !(word.Contains("/")) )
                 {
                     BRsize = word;
                     break;
