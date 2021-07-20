@@ -19,7 +19,7 @@ namespace quoteService.Controllers
     {
         private HillsStock1Entities db = new HillsStock1Entities();
 
-        [HttpPost]
+       
         [Route("list")]
         public IEnumerable<FormSizePriceItem> GetPrices(IEnumerable<BatchQuoteItem> items)
         {
