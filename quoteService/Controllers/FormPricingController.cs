@@ -14,11 +14,13 @@ namespace quoteService.Controllers
 {
     
     [EnableCors("*", "*", "*")]
- 
+    [RoutePrefix("api/formpricing")]
     public class FormPricingController : ApiController
     {
         private HillsStock1Entities db = new HillsStock1Entities();
 
+        [HttpPost]
+        [Route("list")]
         public IEnumerable<FormSizePriceItem> GetPrices(IEnumerable<BatchQuoteItem> items)
         {
             //var 

@@ -198,7 +198,6 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\FormPricingController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PickListController.cs" />
     <Compile Include="Controllers\quoteController.cs" />
     <Compile Include="DTO\CustomerDTO.cs" />
@@ -297,6 +296,7 @@
     <Content Include="Models\QuoteService.edmx.diagram">
       <DependentUpon>QuoteService.edmx</DependentUpon>
     </Content>
+    <Content Include="App_Data\Input.json" />
     <None Include="Properties\PublishProfiles\AHillsQuoteService - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\AHillsQuoteService - ReadOnly - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\AHillsQuoteService - Web Deploy.pubxml" />
@@ -323,9 +323,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>
